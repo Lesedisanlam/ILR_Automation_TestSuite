@@ -5,17 +5,15 @@
   <version>0.0.1-SNAPSHOT</version>
 <build>
 
-
-
-
-
-
-
         <plugins>
 
 
 
             <plugin>
+
+
+
+
 
 
 
@@ -167,7 +165,7 @@
 
 
 
-                            <cucumberOutput>target/cucumber-reports/cucumber.json</cucumberOutput>
+
 
 
 
@@ -175,7 +173,7 @@
 
 
 
-                            <parallelTesting>false</parallelTesting>
+
 
 
 
@@ -293,7 +291,32 @@
 		</dependency>
 
 
-	</dependencies>
+
+    <dependency>
+        <groupId>com.aventstack</groupId>
+        <artifactId>extentreports</artifactId>
+        <version>3.0.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>7.5</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>7.5</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.aventstack</groupId>
+        <artifactId>extentreports</artifactId>
+        <version>5.0.6</version>
+    </dependency>
+</dependencies>
 
 
 
