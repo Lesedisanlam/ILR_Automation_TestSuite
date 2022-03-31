@@ -9,6 +9,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class Tbase {
 	ExtentReports extent;
 @BeforeTest
@@ -16,7 +19,9 @@ public class Tbase {
 public void config(){
 	// extentreports ,extentsparkreportter
 
-String path =	System.getProperty("user.dir")+"\\index.html";
+	String timestamp = new SimpleDateFormat("yyy-mm-dd_HH:mm:ss").format(Calendar.getInstance().getTime());
+
+String path =	System.getProperty("user.dir")+"\\"+timestamp+".html";
 	ExtentSparkReporter report = new ExtentSparkReporter(path);
      report.config().setReportName("ILR Policy servicing Automation Results");
      report.config().setDocumentTitle("Test Results");
