@@ -25,7 +25,6 @@ String path =	System.getProperty("user.dir")+"\\index.html";
 extent.attachReporter(report);
  extent.setSystemInfo("Tester","Nape Boshielo");
 
-
 }
 
 	@Test
