@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Tbase {
 	ExtentReports extent;
@@ -19,9 +20,13 @@ public class Tbase {
 public void config(){
 	// extentreports ,extentsparkreportter
 
-	String timestamp = new SimpleDateFormat("yyy-mm-dd_HH:mm:ss").format(Calendar.getInstance().getTime());
+	//String timestamp = new SimpleDateFormat("yyyy_m_dd_HHmmss").format(Calendar.getInstance().getTime());
 
-String path =	System.getProperty("user.dir")+"\\"+timestamp+".html";
+	String pattern = "yyyy-MM-dd";
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+	String date = simpleDateFormat.format(new Date());
+
+String path =	System.getProperty("user.dir")+"\\"+date+".html";
 	ExtentSparkReporter report = new ExtentSparkReporter(path);
      report.config().setReportName("ILR Policy servicing Automation Results");
      report.config().setDocumentTitle("Test Results");
