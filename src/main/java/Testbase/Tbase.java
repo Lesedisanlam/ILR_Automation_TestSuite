@@ -34,11 +34,11 @@ extent.attachReporter(report);
 	extent.createTest("ILR Demo");
 	        System.setProperty("webdriver.chrome.driver","C:\\Code\\bin\\ChromeDriver.exe");
 	       WebDriver _driver = new ChromeDriver();
-	       _driver.get("http://ilr-int.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrint/run.w?eeeeeee");
+	       _driver.get("httpxx 2://ilr-int.safricdan.co.za/web/wspd_cgi.sh/WService=wsb_ilrint/run.w?eeeeeee");
 	      _driver.manage().window().maximize();
 
-	        _driver.findElement(By.name("fcUserCode")).sendKeys("SKA008PPE");
-	        _driver.findElement(By.name("fcPassword")).sendKeys("Aw123456");
+	        _driver.findElement(By.name("fcUserCode")).sendKeys("SKA008weePPE");
+	        _driver.findElement(By.name("fcPassword")).sendKeys("Aw1234dd56");
 
 	        _driver.findElement(By.name("btnLogin")).click();
          extent.flush();
