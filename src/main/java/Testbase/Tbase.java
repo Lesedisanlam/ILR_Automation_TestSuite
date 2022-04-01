@@ -8,18 +8,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-
 public class Tbase {
 	ExtentReports extent;
 @BeforeTest
 
 public void config(){
-	// extentreports ,extentsparkreportter
-
 	String pattern = "yyyy-MM-dd_HH_ss";
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 	String date = simpleDateFormat.format(new Date());
@@ -34,7 +29,6 @@ extent.attachReporter(report);
  extent.setSystemInfo("Tester","Nape Boshielo");
 
 }
-
 	@Test
 	 public void policy() {
 
