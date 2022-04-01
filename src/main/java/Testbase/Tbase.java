@@ -34,7 +34,7 @@ extent.attachReporter(report);
 	extent.createTest("ILR Demo");
 	        System.setProperty("webdriver.chrome.driver","C:\\Code\\bin\\ChromeDriver.exe");
 	       WebDriver _driver = new ChromeDriver();
-	       _driver.get("http://ilr-int.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrint/run.w?");
+	       _driver.get("http://ilr-int.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrint/run.w?eeeeeee");
 	      _driver.manage().window().maximize();
 
 	        _driver.findElement(By.name("fcUserCode")).sendKeys("SKA008PPE");
@@ -44,7 +44,10 @@ extent.attachReporter(report);
          extent.flush();
 	    }
 
-	
+
+
+
+
 }
 
 
