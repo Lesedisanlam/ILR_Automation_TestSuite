@@ -22,7 +22,7 @@ public void config(){
 
 	//String timestamp = new SimpleDateFormat("yyyy_m_dd_HHmmss").format(Calendar.getInstance().getTime());
 
-	String pattern = "yyyy-MM-dd";
+	String pattern = "yyyy-MM-dd HH:ss";
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 	String date = simpleDateFormat.format(new Date());
 
