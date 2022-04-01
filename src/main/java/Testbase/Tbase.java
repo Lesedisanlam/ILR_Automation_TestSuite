@@ -20,7 +20,7 @@ public class Tbase {
 public void config(){
 	// extentreports ,extentsparkreportter
 
-	String pattern = "yyyy-MM-dd HH:ss";
+	String pattern = "yyyy-MM-dd_HH_ss";
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 	String date = simpleDateFormat.format(new Date());
 
