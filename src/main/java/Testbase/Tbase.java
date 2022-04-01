@@ -25,7 +25,6 @@ public void config(){
 	String pattern = "yyyy-MM-dd HH:ss";
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 	String date = simpleDateFormat.format(new Date());
-
 String path =	System.getProperty("user.dir")+"\\"+date+".html";
 	ExtentSparkReporter report = new ExtentSparkReporter(path);
      report.config().setReportName("ILR Policy servicing Automation Results");
