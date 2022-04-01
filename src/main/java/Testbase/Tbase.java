@@ -13,7 +13,6 @@ import java.util.Date;
 public class Tbase {
 	ExtentReports extent;
 @BeforeTest
-
 public void config(){
 	String pattern = "yyyy-MM-dd_HH_ss";
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
