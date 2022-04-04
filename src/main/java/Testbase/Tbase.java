@@ -2,47 +2,61 @@ package Testbase;
 
 
 import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 public class Tbase {
 	ExtentReports extent;
-@BeforeTest
-public void config(){
-	String pattern = "yyyy-MM-dd_HH_ss";
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-	String date = simpleDateFormat.format(new Date());
+	WebDriver _driver;
+	ChromeOptions chromeOptions;
+	@BeforeTest
+	public void reportConfig(){
 
-String path =	System.getProperty("user.dir")+"\\"+date+".html";
-	ExtentSparkReporter report = new ExtentSparkReporter(path);
-     report.config().setReportName("ILR Policy servicing Automation Results");
-     report.config().setDocumentTitle("Test Results");
+		String pattern = "yyyy-MM-dd_HH_ss";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String date = simpleDateFormat.format(new Date());
 
-	 extent = new ExtentReports();
-extent.attachReporter(report);
- extent.setSystemInfo("Tester","Nape Boshielo");
+		String path =	System.getProperty("user.dir")+"\\"+date+".html";
+		ExtentSparkReporter report = new ExtentSparkReporter(path);
+		report.config().setReportName("ILR Policy servicing Automation Results");
+		report.config().setDocumentTitle("Test Results");
 
-}
+		extent = new ExtentReports();
+		extent.attachReporter(report);
+		extent.setSystemInfo("Tester","Nape Boshielo");
+
+	}
 	@Test
-	 public void policy() {
+	public void Browser() {
 
-	extent.createTest("ILR Demo");
-	        System.setProperty("webdriver.chrome.driver","C:\\Code\\bin\\ChromeDriver.exe");
-	       WebDriver _driver = new ChromeDriver();
-	       _driver.get("httpxx 2://ilr-int.safricdan.co.za/web/wspd_cgi.sh/WService=wsb_ilrint/run.w?eeeeeee");
-	      _driver.manage().window().maximize();
+		ExtentTest test = extent.createTest("ILR Demo") ;
+//checks for the latest version of the specified WebDriver binary
+		chromeOptions = new ChromeOptions();
+		WebDriverManager.chromedriver().driverVersion("90.0.4430.72").setup();
+		_driver = new ChromeDriver(chromeOptions);
 
-	        _driver.findElement(By.name("fcUserCode")).sendKeys("SKA008weePPE");
-	        _driver.findElement(By.name("fcPassword")).sendKeys("Aw1234dd56");
+		_driver.get("http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w");
+		_driver.manage().window().maximize();
 
-	        _driver.findElement(By.name("btnLogin")).click();
-         extent.flush();
-	    }
+		_driver.findElement(By.name("fcUserCode")).sendKeys("SKA008PPE");
+		_driver.findElement(By.name("fcPassword")).sendKeys("Aw123456");
+
+		_driver.findElement(By.name("btnLogin")).click();
+		test.fail("wrong Login Details");
+
+
+
+
+		extent.flush();
+	}
 
 
 
