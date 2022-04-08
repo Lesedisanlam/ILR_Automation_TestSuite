@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -103,25 +104,56 @@ public class Base {
 
     }
     @Test
-    public static void getPolicyNoFromExcel() throws IOException {
-        FileInputStream file = new FileInputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\src\\test\\java\\TestData.xlsx"));
-        Workbook workbook = new XSSFWorkbook(file);
-        Sheet sheet = workbook.getSheetAt(0);
-
-        Map<Integer, List<String>> data = new HashMap<>();
-        int i = 0;
-        for (Row row : sheet) {
-            data.put(i, new ArrayList<String>());
-            for (Cell cell : row) {
-                switch (cell.getCellType()) {
-
-                    default:
-                        data.get(new Integer(i)).add(" ");
-                }
-            }
-            i++;
-        }
+    public void start() {
+        System.out.println(getPolicyNoFromExcel("Policy-Servicing","IncreaseSumAssured"));
     }
+    public String getPolicyNoFromExcel(String ws , String func) {
+        String policyNo=  "";
+        try
+        {
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
+            String fun = func;
+            //Create Workbook instance holding reference to .xlsx file
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
 
+            //Get first/desired sheet from the workbook
+            XSSFSheet sheet = workbook.getSheet(ws);
 
+            //Iterate through each rows one by one
+            Iterator<Row> rowIterator = sheet.iterator();
+            int rw = 0;
+            while (rowIterator.hasNext())
+            {
+                Row row = rowIterator.next();
+                //For each row, iterate through all the columns
+                Iterator<Cell> cellIterator = row.cellIterator();
+                if(rw != 0){
+                while (cellIterator.hasNext())
+                {
+                    Cell cell = cellIterator.next();
+                    int colNo = cell.getColumnIndex();
+                    if(colNo == 0){
+                        policyNo = cell.getStringCellValue();
+                    }
+                    if ( colNo == 1 ){
+                        String exlFunc = cell.getStringCellValue();
+                        if(exlFunc.contains(fun)){
+                           return policyNo;
+                        }
+
+                    }
+
+                }
+
+                }
+                rw ++;
+            }
+            file.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return policyNo;
+    }
 }
