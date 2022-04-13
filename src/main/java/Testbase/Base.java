@@ -1,10 +1,11 @@
 package Testbase;
 import org.apache.commons.io.FileUtils;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.formula.atp.Switch;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.OutputType;
@@ -16,7 +17,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -105,14 +106,13 @@ public class Base {
     }
     @Test
     public void start() {
-        System.out.println(getPolicyNoFromExcel("Policy-Servicing","IncreaseSumAssured"));
+        writeResults("Policy-Servicing","SS00256539","Passed","Coments");
     }
     public String getPolicyNoFromExcel(String ws , String func) {
         String policyNo=  "";
         try
         {
             FileInputStream file = new FileInputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
-            String fun = func;
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
 
@@ -137,7 +137,7 @@ public class Base {
                     }
                     if ( colNo == 1 ){
                         String exlFunc = cell.getStringCellValue();
-                        if(exlFunc.contains(fun)){
+                        if(exlFunc.contains(func)){
                            return policyNo;
                         }
 
@@ -155,5 +155,122 @@ public class Base {
             e.printStackTrace();
         }
         return policyNo;
+    }
+    public double getPremiumFromRateTable(double age, String rolePlayer, String sumAsured, String product)
+    {
+        double premium = 0.0;
+        String cover = rolePlayer + "_" + sumAsured;
+        try {
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
+            //Create Workbook instance holding reference to .xlsx file
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+
+            //Get first/desired sheet from the workbook
+            XSSFSheet sheet = workbook.getSheet(product);
+
+            //Iterate through each rows one by one
+            Iterator<Row> rowIterator = sheet.iterator();
+            int coverColNo = 0;
+            int ageRowNo = 0;
+            while (rowIterator.hasNext())
+            {
+                Row row = rowIterator.next();
+                //For each row, iterate through all the columns
+                Iterator<Cell> cellIterator = row.cellIterator();
+
+                    String band;
+                    double exclAge;
+                    while (cellIterator.hasNext())
+                    {
+                        Cell cell = cellIterator.next();
+                        int colNo = cell.getColumnIndex();
+                        int rowNo = cell.getRowIndex();
+
+                        if(rowNo < 1 && colNo > 0){
+                            band = cell.getStringCellValue();
+                            if(band.contains(cover)){
+                                coverColNo = cell.getColumnIndex();
+                                break;
+                            }
+                        }
+                        if(rowNo > 0 && colNo < 1){
+                            exclAge = cell.getNumericCellValue();
+                            if (exclAge == age){
+                                ageRowNo = cell.getRowIndex();
+                                break;
+                            }
+                        }
+
+
+
+                    }
+            }
+            premium = sheet.getRow(ageRowNo).getCell(coverColNo).getNumericCellValue();
+            file.close();
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return premium;
+    }
+    public void writeResults(String ws,String policyNo, String results, String commnents) {
+        try
+        {
+
+            FileInputStream inputxls = new FileInputStream("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx");
+            XSSFWorkbook testDataSheet = new XSSFWorkbook(inputxls);
+            XSSFSheet testDataworksheet = testDataSheet.getSheet(ws);
+
+            ArrayList<String> colContents = new ArrayList<String>();
+            //looop through the rows
+            int rwNum =  testDataworksheet.getPhysicalNumberOfRows();
+            for (int i = 1; i < testDataworksheet.getLastRowNum(); i++ )
+            {
+                Row rw = testDataworksheet.getRow(i);
+                if(rw != null && rw.getCell(0).getStringCellValue().contains(policyNo)) {
+                    int colNo = rw.getPhysicalNumberOfCells()-3;
+                    for (int j = 0; j < colNo; j++) {
+                        colContents.add(rw.getCell(j).getStringCellValue());
+                    }
+                    break;
+                }
+            }
+            inputxls.close();
+
+
+            FileInputStream myxls = new FileInputStream("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx");
+            XSSFWorkbook studentsSheet = new XSSFWorkbook(myxls);
+            XSSFSheet worksheet = studentsSheet.getSheet(ws);
+
+            //Append the datalist with test results
+            colContents.add(results);
+            colContents.add(commnents);
+
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            colContents.add(dtf.format(now));
+
+            int lastRow=worksheet.getLastRowNum();
+            System.out.println(lastRow);
+            Row row = worksheet.createRow(++lastRow);
+            if(!colContents.isEmpty()) {
+                for (int i = 0; i < colContents.size(); i++) {
+                    row.createCell(i).setCellValue(colContents.get(i));
+                }
+            }
+            myxls.close();
+            FileOutputStream output_file =new FileOutputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx"));
+                    //write changes
+                    studentsSheet.write(output_file);
+            output_file.close();
+            System.out.println(" is successfully written");
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }
