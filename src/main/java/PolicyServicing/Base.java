@@ -1,13 +1,17 @@
-package Testbase;
+package PolicyServicing;
 import org.apache.commons.io.FileUtils;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.formula.atp.Switch;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -33,12 +37,13 @@ public class Base {
     private String _screenShotFolder;
     private String _connStr;
     private String target_url;
+    String path;
 
     @Test
     public void startBrowser() {
         System.setProperty("webdriver.chrome.driver", "C:\\Code\\bin\\chromeDriver.exe");
         _driver = new ChromeDriver();
-        _screenShotFolder = "C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\src\\test\\java\\";
+        _screenShotFolder = "C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\src\\test\\java\\";
         _screenShotFolder.concat(screenShotDailyFolderName() + "\\");
         //Creating a File object
         File file = new File(_screenShotFolder);
@@ -94,25 +99,31 @@ public class Base {
 
     }
 
-    public WebDriver siteConnection() {
+
+    public WebDriver siteConnection() throws InterruptedException {
         startBrowser();
         target_url = "http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w";
-        username = "SKA008PPE";//
-        password = "Aw123456";
+        username = "SKA008PPE";
+        password = "SKA008PPE/c";
         _driver.get(target_url);
+        _driver.manage().window().maximize();
+        Delay(2);
+        _driver.findElement(By.name("fcUserCode")).sendKeys(username);
+        Delay(5);
+        _driver.findElement(By.name("fcPassword")).sendKeys(password);
+        Delay(2);
+        _driver.findElement(By.name("btnLogin")).click();
+        Delay(2);
 
         return _driver;
+    }
 
-    }
-    @Test
-    public void start() {
-        writeResults("Policy-Servicing","SS00256539","Passed","Coments");
-    }
     public String getPolicyNoFromExcel(String ws , String func) {
         String policyNo=  "";
         try
         {
             FileInputStream file = new FileInputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
+            String fun = func;
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
 
@@ -128,22 +139,22 @@ public class Base {
                 //For each row, iterate through all the columns
                 Iterator<Cell> cellIterator = row.cellIterator();
                 if(rw != 0){
-                while (cellIterator.hasNext())
-                {
-                    Cell cell = cellIterator.next();
-                    int colNo = cell.getColumnIndex();
-                    if(colNo == 0){
-                        policyNo = cell.getStringCellValue();
-                    }
-                    if ( colNo == 1 ){
-                        String exlFunc = cell.getStringCellValue();
-                        if(exlFunc.contains(func)){
-                           return policyNo;
+                    while (cellIterator.hasNext())
+                    {
+                        Cell cell = cellIterator.next();
+                        int colNo = cell.getColumnIndex();
+                        if(colNo == 0){
+                            policyNo = cell.getStringCellValue();
+                        }
+                        if ( colNo == 1 ){
+                            String exlFunc = cell.getStringCellValue();
+                            if(exlFunc.contains(fun)){
+                                return policyNo;
+                            }
+
                         }
 
                     }
-
-                }
 
                 }
                 rw ++;
@@ -156,6 +167,17 @@ public class Base {
         }
         return policyNo;
     }
+
+    public void Delay(int delaySeconds) throws InterruptedException {
+
+        Thread.sleep(delaySeconds * 1000);
+
+    }
+    @Test
+    public void start() throws InterruptedException {
+        writeResults("Policy-Servicing","SS00256539","Passed","Coments");
+    }
+
     public double getPremiumFromRateTable(double age, String rolePlayer, String sumAsured, String product)
     {
         double premium = 0.0;
@@ -178,32 +200,32 @@ public class Base {
                 //For each row, iterate through all the columns
                 Iterator<Cell> cellIterator = row.cellIterator();
 
-                    String band;
-                    double exclAge;
-                    while (cellIterator.hasNext())
-                    {
-                        Cell cell = cellIterator.next();
-                        int colNo = cell.getColumnIndex();
-                        int rowNo = cell.getRowIndex();
+                String band;
+                double exclAge;
+                while (cellIterator.hasNext())
+                {
+                    Cell cell = cellIterator.next();
+                    int colNo = cell.getColumnIndex();
+                    int rowNo = cell.getRowIndex();
 
-                        if(rowNo < 1 && colNo > 0){
-                            band = cell.getStringCellValue();
-                            if(band.contains(cover)){
-                                coverColNo = cell.getColumnIndex();
-                                break;
-                            }
+                    if(rowNo < 1 && colNo > 0){
+                        band = cell.getStringCellValue();
+                        if(band.contains(cover)){
+                            coverColNo = cell.getColumnIndex();
+                            break;
                         }
-                        if(rowNo > 0 && colNo < 1){
-                            exclAge = cell.getNumericCellValue();
-                            if (exclAge == age){
-                                ageRowNo = cell.getRowIndex();
-                                break;
-                            }
-                        }
-
-
-
                     }
+                    if(rowNo > 0 && colNo < 1){
+                        exclAge = cell.getNumericCellValue();
+                        if (exclAge == age){
+                            ageRowNo = cell.getRowIndex();
+                            break;
+                        }
+                    }
+
+
+
+                }
             }
             premium = sheet.getRow(ageRowNo).getCell(coverColNo).getNumericCellValue();
             file.close();
@@ -263,8 +285,8 @@ public class Base {
             }
             myxls.close();
             FileOutputStream output_file =new FileOutputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx"));
-                    //write changes
-                    studentsSheet.write(output_file);
+            //write changes
+            studentsSheet.write(output_file);
             output_file.close();
             System.out.println(" is successfully written");
         }
