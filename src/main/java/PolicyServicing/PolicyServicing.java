@@ -1,5 +1,7 @@
-package PolicyServicing;
+package src.main.java.PolicyServicing;
 import org.openqa.selenium.By;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.openqa.selenium.WebDriver;
@@ -16,14 +18,14 @@ import java.time.format.DateTimeFormatter;
 
 public class PolicyServicing extends Base {
 
-    @BeforeTest
+@BeforeClass
     public WebDriver login() throws InterruptedException {
         super.siteConnection();
         return _driver;
 
     }
 
-    @Test
+  /*  @Test
     public void addBeneficiary() throws InterruptedException {
 
         getPolicyNoFromExcel("Policy-Servicing","addBeneficiary");
@@ -86,11 +88,13 @@ public class PolicyServicing extends Base {
 
 
         }
-        Delay(3);
 
+
+        Delay(3);
+writeResults("Policy-Servicing","PolicyNo","results","");
         //super.writeResultsToExcell(results, sheet, "addBeneficiary");
     }
-
+*/
     @Test
     public void ReInstate() throws InterruptedException  {
 
@@ -179,10 +183,10 @@ public class PolicyServicing extends Base {
             results = "Failed";
         }
 
-
+        writeResults("Policy-Servicing","PolicyNo","results","");
         //super.writeResultsToExcell(results, sheet, "ReInstate");
     }
-    @Test
+    @Test(dependsOnMethods = {"ReInstate"},alwaysRun = true)
     public void CancelPolicy() throws InterruptedException  {
 
         getPolicyNoFromExcel("Policy-Servicing","CancelPolicy");
@@ -271,10 +275,10 @@ public class PolicyServicing extends Base {
             results = "Failed";
         }
         //super.writeResultsToExcell(results, sheet, "CancelPolicy");
-
+        writeResults("Policy-Servicing","PolicyNo","results","");
 
     }
-    @Test
+    @Test(dependsOnMethods = {"CancelPolicy"},alwaysRun = true)
     public void ChangeCollectionMethod() throws InterruptedException {
 
 
@@ -380,11 +384,11 @@ public class PolicyServicing extends Base {
             results = "Failed";
         }
 
-
+        writeResults("Policy-Servicing","PolicyNo","results","");
         //super.writeResultsToExcell(results, sheet, "ChangeCollectionMethod");
 
     }
-    @Test
+    @Test(dependsOnMethods = {"ChangeCollectionMethod"},alwaysRun = true)
     public void ChangeCollectionNegative() throws InterruptedException {
 
         getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionNegative");
@@ -485,10 +489,10 @@ public class PolicyServicing extends Base {
         }
 
 
-
+        writeResults("Policy-Servicing","PolicyNo","results","");
     }
 
-    @Test
+    @Test(dependsOnMethods = {"ChangeCollectionNegative"},alwaysRun = true)
     private void PostDatedDowngrade() throws InterruptedException {
 
 
@@ -605,12 +609,12 @@ public class PolicyServicing extends Base {
             results = "Failed";
         }
 
-
+        writeResults("Policy-Servicing","PolicyNo","results","");
         //super.writeResultsToExcell(results, sheet, "PostDatedDowngrade");
 
     }
 
-    @Test
+    @Test(dependsOnMethods = {"PostDatedDowngrade"},alwaysRun = true)
     private void PostDatedUpgrade() throws InterruptedException {
 
 
@@ -727,7 +731,7 @@ public class PolicyServicing extends Base {
             results = "Failed";
         }
 
-
+        writeResults("Policy-Servicing","PolicyNo","results","");
 
         //super.writeResultsToExcell(results, sheet, "PostDatedUpgrade");
 
