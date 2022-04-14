@@ -98,8 +98,7 @@ writeResults("Policy-Servicing","PolicyNo","results","");
     @Test
     public void ReInstate() throws InterruptedException  {
 
-        String PolicyNo = "";
-        getPolicyNoFromExcel("Policy-Servicing","ReInstate");
+        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","ReInstate");;
         clickOnMainMenu();
         Delay(2);
         policySearch(PolicyNo);
@@ -189,8 +188,8 @@ writeResults("Policy-Servicing","PolicyNo","results","");
     @Test(dependsOnMethods = {"ReInstate"},alwaysRun = true)
     public void CancelPolicy() throws InterruptedException  {
 
-        getPolicyNoFromExcel("Policy-Servicing","CancelPolicy");
-        String PolicyNo = "";
+
+        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","CancelPolicy");
         clickOnMainMenu();
         Delay(2);
         policySearch(PolicyNo);
@@ -282,8 +281,8 @@ writeResults("Policy-Servicing","PolicyNo","results","");
     public void ChangeCollectionMethod() throws InterruptedException {
 
 
-        getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionMethod");
-        String PolicyNo = "";
+        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionMethod");
+
         clickOnMainMenu();
         Delay(2);
         policySearch(PolicyNo);
@@ -391,9 +390,9 @@ writeResults("Policy-Servicing","PolicyNo","results","");
     @Test(dependsOnMethods = {"ChangeCollectionMethod"},alwaysRun = true)
     public void ChangeCollectionNegative() throws InterruptedException {
 
-        getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionNegative");
+        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionNegative");;
         clickOnMainMenu();
-        String PolicyNo = "";
+
         Delay(2);
         policySearch(PolicyNo);
 
@@ -496,8 +495,8 @@ writeResults("Policy-Servicing","PolicyNo","results","");
     private void PostDatedDowngrade() throws InterruptedException {
 
 
-        getPolicyNoFromExcel("Policy-Servicing","PostDatedDowngrade");
-        String PolicyNo = "";
+        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","PostDatedDowngrade");;
+
         clickOnMainMenu();
         Delay(2);
         policySearch(PolicyNo);
@@ -617,9 +616,7 @@ writeResults("Policy-Servicing","PolicyNo","results","");
     @Test(dependsOnMethods = {"PostDatedDowngrade"},alwaysRun = true)
     private void PostDatedUpgrade() throws InterruptedException {
 
-
-        getPolicyNoFromExcel("Policy-Servicing","PostDatedDowngrade");
-        String PolicyNo = "";
+        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","PostDatedUpgrade");;
         clickOnMainMenu();
         Delay(2);
         policySearch(PolicyNo);
