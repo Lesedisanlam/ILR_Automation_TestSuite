@@ -1,4 +1,4 @@
-package PolicyServicing;
+package src.main.java.PolicyServicing;
 import org.apache.commons.io.FileUtils;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -39,18 +39,7 @@ public class Base {
     private String target_url;
     String path;
 
-    @Test
-    public void startBrowser() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Code\\bin\\chromeDriver.exe");
-        _driver = new ChromeDriver();
-        _screenShotFolder = "C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\src\\test\\java\\";
-        _screenShotFolder.concat(screenShotDailyFolderName() + "\\");
-        //Creating a File object
-        File file = new File(_screenShotFolder);
-        //Creating the directory
-        file.mkdir();
 
-    }
 
     private String screenShotDailyFolderName() {
         LocalDateTime dateObj = LocalDateTime.now();
@@ -100,12 +89,13 @@ public class Base {
     }
 
 
-    public WebDriver siteConnection() throws InterruptedException {
-        startBrowser();
-        target_url = "http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w";
+    public void siteConnection() throws InterruptedException {
+        System.setProperty("webdriver.chrome.driver", "C:\\Code\\bin\\chromeDriver.exe");
+        _driver = new ChromeDriver();
+        _driver.get("http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w") ;
         username = "SKA008PPE";
         password = "SKA008PPE/c";
-        _driver.get(target_url);
+      //  _driver.get(target_url);
         _driver.manage().window().maximize();
         Delay(2);
         _driver.findElement(By.name("fcUserCode")).sendKeys(username);
@@ -115,14 +105,14 @@ public class Base {
         _driver.findElement(By.name("btnLogin")).click();
         Delay(2);
 
-        return _driver;
     }
 
     public String getPolicyNoFromExcel(String ws , String func) {
         String policyNo=  "";
+
         try
         {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\E697642\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
             String fun = func;
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
@@ -165,7 +155,10 @@ public class Base {
         {
             e.printStackTrace();
         }
+        System.out.println(policyNo);
+
         return policyNo;
+
     }
 
     public void Delay(int delaySeconds) throws InterruptedException {
@@ -173,17 +166,14 @@ public class Base {
         Thread.sleep(delaySeconds * 1000);
 
     }
-    @Test
-    public void start() throws InterruptedException {
-        writeResults("Policy-Servicing","SS00256539","Passed","Coments");
-    }
+
 
     public double getPremiumFromRateTable(double age, String rolePlayer, String sumAsured, String product)
     {
         double premium = 0.0;
         String cover = rolePlayer + "_" + sumAsured;
         try {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\E697642\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
 
@@ -242,7 +232,7 @@ public class Base {
         try
         {
 
-            FileInputStream inputxls = new FileInputStream("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx");
+            FileInputStream inputxls = new FileInputStream("C:\\Users\\E697642\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx");
             XSSFWorkbook testDataSheet = new XSSFWorkbook(inputxls);
             XSSFSheet testDataworksheet = testDataSheet.getSheet(ws);
 
@@ -263,7 +253,7 @@ public class Base {
             inputxls.close();
 
 
-            FileInputStream myxls = new FileInputStream("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx");
+            FileInputStream myxls = new FileInputStream("C:\\Users\\E697642\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx");
             XSSFWorkbook studentsSheet = new XSSFWorkbook(myxls);
             XSSFSheet worksheet = studentsSheet.getSheet(ws);
 
@@ -284,7 +274,7 @@ public class Base {
                 }
             }
             myxls.close();
-            FileOutputStream output_file =new FileOutputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx"));
+            FileOutputStream output_file =new FileOutputStream(new File("C:\\Users\\E697642\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx"));
             //write changes
             studentsSheet.write(output_file);
             output_file.close();
