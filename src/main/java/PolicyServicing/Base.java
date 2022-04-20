@@ -109,6 +109,7 @@ public class Base {
 
     public String getPolicyNoFromExcel(String ws , String func) {
         String policyNo=  "";
+
         try
         {
             FileInputStream file = new FileInputStream(new File("C:\\Users\\E697642\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
@@ -157,6 +158,7 @@ public class Base {
         System.out.println(policyNo);
 
         return policyNo;
+
     }
 
     public void Delay(int delaySeconds) throws InterruptedException {
