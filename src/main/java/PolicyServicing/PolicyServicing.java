@@ -9,6 +9,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.Alert;
+import java.util.Iterator;
+import java.util.Set;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -96,93 +98,80 @@ writeResults("Policy-Servicing","PolicyNo","results","");
     }
 */
     @Test
-    public void ReInstate() throws InterruptedException  {
+    public void ReInstate() throws InterruptedException {
 
-        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","ReInstate");;
-        clickOnMainMenu();
-        Delay(2);
-        policySearch(PolicyNo);
+        String results;
+        try {
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "ReInstate");
+            ;
+            clickOnMainMenu();
+            Delay(2);
+            policySearch(PolicyNo);
+            results = "";
 
-        //Click on contract search
-        _driver.findElement(By.name("alf-ICF8_00000222")).click();
-        Delay(2);
+            Delay(4);
 
+            Delay(2);
 
-        //Type in contract ref
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDateTime now = LocalDateTime.now();
 
-        _driver.findElement(By.name("frmContractReference")).sendKeys(PolicyNo);
+            //Contract Status validation
+            Delay(2);
+            String Cancelled = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[2]/td[2]/u/font")).getText();
 
-        Delay(4);
+            WebElement policyOptionElement3 = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
 
-        //Click on Search Icon
-        _driver.findElement(By.name("btncbcts0")).click();
-        Delay(2);
-        _driver.findElement(By.xpath("//*[@id='AppArea']/table[2]/tbody/tr[2]/td[1]/a")).click();
-
-
-
-        String test_url_1 = "http://ilr-int.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrint/run.w?";
-        String test_url_1_title = "MIP - Sanlam ARL - Warpspeed Lookup Window";
-        JavaScriptExecutor js = (JavaScriptExecutor) _driver;
-
-        String results = "";
+            //Creating object of an Actions class
+            Actions action2 = new Actions(_driver);
 
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        LocalDateTime now = LocalDateTime.now();
+            //Performing the mouse hover action on the target element.
+            action2.moveToElement(policyOptionElement3).perform();
+            Delay(2);
 
 
-        //Contract Status validation
-        Delay(2);
-        String Cancelled = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[2]/td[2]/u/font")).getText();
-
-        WebElement policyOptionElement3 = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
+            //Click on Reinstate
+            _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[10]/td/div/div[3]/a/img")).click();
+            Delay(2);
 
 
-        //Creating object of an Actions class
-        Actions action2 = new Actions(_driver);
+            Select selecCom = new Select(_driver.findElement(By.name("frmReason")));
+            selecCom.selectByValue("ReinstateReason2");
+            Delay(2);
 
 
-        //Performing the mouse hover action on the target element.
-        action2.moveToElement(policyOptionElement3).perform();
-        Delay(2);
+            //Click submit
+            _driver.findElement(By.name("btnctcrereinstatecsu5")).click();
+            Delay(4);
+
+            //Click submit
+            _driver.findElement(By.name("btnctcrereinstatecsu2")).click();
+            Delay(5);
 
 
-        //Click on Reinstate
-        _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[10]/td/div/div[3]/a/img")).click();
-        Delay(2);
+            //Contract Status validation
+
+            String StatusInForce = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[2]/td[2]/u/font")).getText();
 
 
-        Select selecCom = new Select(_driver.findElement(By.name("frmReason")));
-        selecCom.selectByValue("ReinstateReason2");
-        Delay(2);
+            assert (StatusInForce.equals("In-Force"));
 
+            Delay(3);
 
-        //Click submit
-        _driver.findElement(By.name("btnctcrereinstatecsu5")).click();
-        Delay(4);
+            if (StatusInForce.equals("In-Force")) {
+                results = "Passed";
+            } else {
+                results = "Failed";
+            }
 
-        //Click submit
-        _driver.findElement(By.name("btnctcrereinstatecsu2")).click();
-        Delay(5);
+            writeResults("Policy-Servicing", "PolicyNo", "results", "");
+        } catch (Exception e) {
 
-
-        //Contract Status validation
-
-        String StatusInForce = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[2]/td[2]/u/font")).getText();
-
-
-        assert (StatusInForce.equals("In-Force"));
-
-        Delay(3);
-
-        if (StatusInForce.equals("In-Force")) {
-            results = "Passed";
-        } else {
+            e.printStackTrace();
             results = "Failed";
+            writeResults("Policy-Servicing", "PolicyNo", "results", "");
         }
-
-        writeResults("Policy-Servicing","PolicyNo","results","");
         //super.writeResultsToExcell(results, sheet, "ReInstate");
     }
     @Test(dependsOnMethods = {"ReInstate"},alwaysRun = true)
@@ -195,33 +184,9 @@ writeResults("Policy-Servicing","PolicyNo","results","");
         policySearch(PolicyNo);
 
         String results = "";
-
-        String date = String.format("%1$s", LocalDateTime.now());
-
         Delay(2);
         String   commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
         String dt = "commDate";
-        /*
-        String splitedDate  = dt.split("[/]", -1);
-        String year = splitedDate[0];
-        int month = (int)splitedDate[1];
-        String strMonth;
-        if (month == 12)
-        {
-            strMonth = "01";
-            year = "" + ((int)year + 1);
-        }
-        else if (month < 10)
-        {
-            strMonth = "0" + (month + 1);
-        }
-        else
-        {
-            strMonth = (String.valueOf(month);
-        }
-
-        commDate = year + "/" + strMonth + "/" + "01";
-*/
 
         Delay(3);
         //Hover on policy options
@@ -237,13 +202,6 @@ writeResults("Policy-Servicing","PolicyNo","results","");
         //Click on Cancel
         _driver.findElement(By.xpath("//table[@id='m0t0']/tbody/tr/td/div/div[3]/a/img")).click();
         Delay(5);
-
-        _driver.findElement(By.name("frmTerminationDate")).clear();
-        Delay(3);
-        _driver.findElement(By.name("frmTerminationDate")).sendKeys(commDate);
-        Delay(3);
-
-
 
         Select selecCom = new Select(_driver.findElement(By.name("frmCancelReason")));
         selecCom.selectByValue("Cancelled by external service");
@@ -261,7 +219,7 @@ writeResults("Policy-Servicing","PolicyNo","results","");
         // '.Accept()' is used to accept the alert '(click on the Ok button)'
         alert.accept();
 
-        Delay(5);
+        Delay(7);
 
         String newStatus = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[2]/td[2]/u/font")).getText();
 
@@ -282,7 +240,6 @@ writeResults("Policy-Servicing","PolicyNo","results","");
 
 
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionMethod");
-
         clickOnMainMenu();
         Delay(2);
         policySearch(PolicyNo);
@@ -346,27 +303,26 @@ writeResults("Policy-Servicing","PolicyNo","results","");
         //Search employee
         _driver.findElement(By.name("fcEmployerButton")).click();
 
-        /* handle /////////////////////////////////////////
-        assert 2 == _driver.neCount;
+        String MainWindow=_driver.getWindowHandle();
+        // To handle all new opened window.
+        Set<String> s1=_driver.getWindowHandles();
+        Iterator<String> i1=s1.iterator();
+        while(i1.hasNext())
+        {
+            String ChildWindow  =i1.next();
+            if(!MainWindow.equalsIgnoreCase(ChildWindow))
+        {
 
-        StringHelper newWindowHandle = _driver.getWindowHandles([1]);
-        assert!tangible.StringHelper.isNullOrEmpty(newWindowHandle);
-
-       // Assert.AreEqual(driver.SwitchTo().Window(newWindowHandle).Url, "http://ilr-int.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrint/run.w?");
-        String expectedNewWindowTitle = test_url_2_title;
-        assert _driver.switchTo().window(newWindowHandle).Title == expectedNewWindowTitle;
-
-
-
+        // Switching to Child window
+        _driver.switchTo().window(ChildWindow);
         //Search employee
-        _driver.findElement(By.xpath("//*[@id='lkpResultsTable']/tbody/tr[17]")).click();
-        Delay(5);
-
-
-        // Return to the window with handle = 0
-        _driver.switchTo().window(_driver.getWindowHandle());
-        Delay(5);
-     */
+            _driver.findElement(By.name("fcEmployerButton")).click(); Delay(5);
+            // Closing the Child Window.
+            _driver.close(); }
+        }
+        //Switching to Parent window i.e Main Window.
+        _driver.switchTo().window(MainWindow);
+        Delay(3);
 
         //Click on submit
         _driver.findElement(By.id("GBLbl-1")).click();
