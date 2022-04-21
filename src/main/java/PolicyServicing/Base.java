@@ -99,7 +99,7 @@ public class Base {
         _driver.manage().window().maximize();
         Delay(2);
         _driver.findElement(By.name("fcUserCode")).sendKeys(username);
-        Delay(5);
+        Delay(4);
         _driver.findElement(By.name("fcPassword")).sendKeys(password);
         Delay(2);
         _driver.findElement(By.name("btnLogin")).click();
@@ -112,7 +112,7 @@ public class Base {
 
         try
         {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\E697642\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
             String fun = func;
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
