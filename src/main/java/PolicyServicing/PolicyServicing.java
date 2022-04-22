@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.Alert;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.List;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -674,6 +675,270 @@ writeResults("Policy-Servicing","PolicyNo","results","");
         //super.writeResultsToExcell(results, sheet, "PostDatedUpgrade");
 
     }
+     @Test
+    private void AddRole_NextMonth(String contractRef) throws InterruptedException {
+
+         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","AddRole_NextMonth");;
+         clickOnMainMenu();
+         Delay(2);
+         policySearch(PolicyNo);
+         String results = "";
+         String title = "", first_name = "", surname = "", initials = "", dob = "", gender = "", id_number = "", relationship = "", Comm_date = "";
+         Delay(2);
+
+        SetproductName("AddRole_NextMonth");
+        Delay(3);
+
+        //get commencement date
+        var commencementDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
+
+        //click add role player
+        _driver.findElement(By.name("btnAddRolePlayer")).click();
+
+        //Select role
+        WebElement selectRole = _driver.findElement(By.name("frmRoleObj"));
+        Select s = new Select(selectRole);
+        s.selectByIndex(4);
+        Delay(3);
+        //Click calendar
+
+        Delay(1);
+        _driver.findElement(By.name("frmEffectiveFromDate")).clear();
+        _driver.findElement(By.name("frmEffectiveFromDate")).sendKeys(commencementDate);
+
+
+        Delay(4);
+
+
+        _driver.findElement(By.xpath("//*[@id='GBLbl-4']/span/a")).click();
+
+
+        //click next to enter new role player
+        _driver.findElement(By.xpath("//*[@id='GBLbl-5']/span/a")).click();
+
+
+        ///get excel  values
+
+
+
+        //enter initials
+        _driver.findElement(By.name("frmPersonInitials")).clear();
+        _driver.findElement(By.name("frmPersonInitials")).sendKeys(initials);
+        Delay(2);
+        //enter name
+        _driver.findElement(By.name("frmPersonFirstName")).clear();
+        _driver.findElement(By.name("frmPersonFirstName")).sendKeys(first_name);
+        Delay(2);
+        //enter surname
+        _driver.findElement(By.name("frmPersonLastName")).clear();
+        _driver.findElement(By.name("frmPersonLastName")).sendKeys(surname);
+        Delay(2);
+        //enter
+
+
+        _driver.findElement(By.name("frmPersonIDNumber")).sendKeys(id_number);
+        Delay(2);
+        //enter
+        _driver.findElement(By.name("frmPersonDateOfBirth")).sendKeys(dob);
+        Delay(2);
+        //marital status
+        WebElement marital = _driver.findElement(By.name("frmPersonMaritalStatus"));
+        Select iselect = new Select(marital);
+        iselect.selectByIndex(1);
+
+
+        //Select gender
+        List<WebElement> rdos = _driver.findElements(By.xpath("//input[@name='frmPersonGender']"));
+
+        for (WebElement radio : rdos)
+        {
+
+            if (radio.getAttribute("value").equals("er_AcPerGenMal"))
+            {
+
+                radio.click();
+                break;
+
+            }
+            else
+            {
+
+                radio.findElement(By.xpath("//*[@id='frmSubCbmre']/tbody/tr[1]/td[4]/table/tbody/tr/td[3]/input")).click();
+
+            }
+
+        }
+
+        //Select Relationship
+        var V_relationship = "";
+        switch (relationship)
+        {
+
+            case "Additional parent":
+                V_relationship = "951372577.488";
+                break;
+            case "Spouse":
+                V_relationship = "854651144.248";
+                break;
+            case "Additional child":
+                V_relationship = "905324120.488";
+                break;
+            case "Child":
+                V_relationship = "905324138.488";
+                break;
+            case "Parent":
+                V_relationship = "347901097.188";
+                break;
+
+            case "Brother":
+                V_relationship = "951371842.488";
+                break;
+
+        }
+        WebElement relation = _driver.findElement(By.name("frmRelationshipCodeObj"));
+        Select oselect = new Select(relation);
+        oselect.selectByValue(V_relationship);
+        //Title
+        var value = "";
+        switch (title)
+        {
+            case "Mr":
+                value = "er_AcPerTitleMr";
+                break;
+            case "Mrs":
+                value = "er_AcPerTitleMrs";
+                break;
+
+            case "Ms":
+                value = "er_AcPerTitleMs";
+                break;
+
+            case "Prf":
+                value = "er_AcPerTitlePrf";
+                break;
+            case "Dr":
+                value = "er_AcPerTitleDoc";
+                break;
+
+            case "Adm":
+                value = "er_AcPerTitleADM";
+                break;
+
+            case "Miss":
+                value = "er_AcPerTitleMiss";
+                break;
+
+            default:
+                break;
+        }
+
+        Select oSelect = new Select(_driver.findElement(By.name("frmPersonTitle")));
+        oSelect.selectByValue(value);
+
+
+
+        Delay(2);
+        //save
+        _driver.findElement(By.xpath(" //*[@id='GBLbl-5']/span/a")).click();
+        Delay(2);
+        //Roleplayer ID
+        var LifeA_ID = _driver.findElement(By.xpath(" //*[@id='frmSubCbmre']/tbody/tr[4]/td[4]")).getText();
+
+        //validation
+        if (LifeA_ID.equals(id_number))
+        {
+            results = "Passed";
+
+        }
+        else
+
+        {
+            results = "Fail";
+
+        }
+
+         writeResults("Policy-Servicing","PolicyNo","results","");
+
+        clickOnMainMenu();
+
+        Delay(2);
+        //click contract summary
+        _driver.findElement(By.xpath(" //*[@id='t0_82']/table/tbody/tr/td[3]/a")).click();
+
+        Delay(3);
+        // _driver.Navigate().Refresh();
+        //click on add componet
+        _driver.findElement(By.xpath("   //*[@id='GBLbl-5']/span/a")).click();
+
+
+        Delay(3);
+
+        _driver.findElement(By.xpath("//*[@id='GBLbl-6']/span/a")).click();
+
+
+        Delay(3);
+        //Click calendar
+        _driver.findElement(By.name("frmCCStartDate")).clear();
+        _driver.findElement(By.name("frmCCStartDate")).sendKeys(Comm_date);
+
+
+        Delay(3);
+        _driver.findElement(By.xpath("//*[@id='GB-6']")).click();
+        Delay(2);
+
+        //Dropdown
+        WebElement elem = _driver.findElement(By.name("frmRolePlayers"));
+        Select option = new Select(elem);
+        option.deselectAll();
+
+
+
+         for (int i = 1; i < 30; i++)
+         {
+             String roles = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[6]/td[2]/select/option[{i.ToString()}]")).getText();
+
+             String Ridno1 = roles.Split(" ")[roles.Split(" ").Length - 1].ToString();
+             String ID1 = Ridno1.Substring(1, 13);
+
+             if (ID1 == id_number)
+             {
+
+
+                 option.selectByVisibleText(roles);
+                 break;
+             }
+
+
+         }
+
+
+
+        Delay(3);
+
+
+        //next
+        _driver.findElement(By.xpath(" //*[@id='GBLbl-7']/span/a")).click();
+
+        //Validate roleplayer ID number
+        Delay(2);
+
+        var RoleINno = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[9]/td[2]")).getText();
+
+        var Ridno = RoleINno.split(java.util.regex.Pattern.quote(" "), -1)[RoleINno.split(java.util.regex.Pattern.quote(" "), -1).length - 1].toString();
+        var ID = Ridno.substring(1, 14);
+
+        assert id_number == ID;
+
+        Delay(2);
+
+        _driver.findElement(By.xpath("//*[@id='GBLbl-7']/span/a")).click();
+
+        Delay(2);
+
+
+    }
+
+
 
 
     @Test
@@ -710,7 +975,6 @@ writeResults("Policy-Servicing","PolicyNo","results","");
         _driver.findElement(By.name("btncbcts0")).click();
         Delay(2);
         _driver.findElement(By.xpath("//*[@id='AppArea']/table[2]/tbody/tr[2]/td[1]/a")).click();
-
 
     }
 
