@@ -97,11 +97,11 @@ public class Base {
         password = "SKA008PPE/c";
       //  _driver.get(target_url);
         _driver.manage().window().maximize();
-        Delay(2);
+        Delay(3);
         _driver.findElement(By.name("fcUserCode")).sendKeys(username);
-        Delay(4);
-        _driver.findElement(By.name("fcPassword")).sendKeys(password);
-        Delay(2);
+        Delay(6);
+         _driver.findElement(By.name("fcPassword")).sendKeys(password);
+        Delay(3);
         _driver.findElement(By.name("btnLogin")).click();
         Delay(2);
 
@@ -173,7 +173,7 @@ public class Base {
         double premium = 0.0;
         String cover = rolePlayer + "_" + sumAsured;
         try {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\E697642\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
 
@@ -232,7 +232,7 @@ public class Base {
         try
         {
 
-            FileInputStream inputxls = new FileInputStream("C:\\Users\\E697642\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx");
+            FileInputStream inputxls = new FileInputStream("C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx");
             XSSFWorkbook testDataSheet = new XSSFWorkbook(inputxls);
             XSSFSheet testDataworksheet = testDataSheet.getSheet(ws);
 
@@ -253,7 +253,7 @@ public class Base {
             inputxls.close();
 
 
-            FileInputStream myxls = new FileInputStream("C:\\Users\\E697642\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx");
+            FileInputStream myxls = new FileInputStream("C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx");
             XSSFWorkbook studentsSheet = new XSSFWorkbook(myxls);
             XSSFSheet worksheet = studentsSheet.getSheet(ws);
 
@@ -274,7 +274,7 @@ public class Base {
                 }
             }
             myxls.close();
-            FileOutputStream output_file =new FileOutputStream(new File("C:\\Users\\E697642\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx"));
+            FileOutputStream output_file =new FileOutputStream(new File("C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx"));
             //write changes
             studentsSheet.write(output_file);
             output_file.close();

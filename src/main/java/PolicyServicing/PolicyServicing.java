@@ -172,117 +172,99 @@ writeResults("Policy-Servicing","PolicyNo","results","");
             results = "Failed";
             writeResults("Policy-Servicing", "PolicyNo", "results", "");
         }
-        //super.writeResultsToExcell(results, sheet, "ReInstate");
     }
     @Test(dependsOnMethods = {"ReInstate"},alwaysRun = true)
-    public void CancelPolicy() throws InterruptedException  {
+    public void CancelPolicy() throws InterruptedException {
+
+        String results;
+        try {
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "CancelPolicy");
+            clickOnMainMenu();
+            Delay(2);
+            policySearch(PolicyNo);
+            results = "";
+            Delay(2);
+            String commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
+            String dt = "commDate";
+
+            Delay(3);
+            //Hover on policy options
+            WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
+
+            //Creating object of an Actions class
+            Actions action = new Actions(_driver);
+
+            //Performing the mouse hover action on the target element.
+            action.moveToElement(policyOptionElement).perform();
+
+            Delay(5);
+            //Click on Cancel
+            _driver.findElement(By.xpath("//table[@id='m0t0']/tbody/tr/td/div/div[3]/a/img")).click();
+            Delay(5);
+
+            Select selecCom = new Select(_driver.findElement(By.name("frmCancelReason")));
+            selecCom.selectByValue("Cancelled by external service");
+            Delay(2);
 
 
-        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","CancelPolicy");
-        clickOnMainMenu();
-        Delay(2);
-        policySearch(PolicyNo);
-
-        String results = "";
-        Delay(2);
-        String   commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
-        String dt = "commDate";
-
-        Delay(3);
-        //Hover on policy options
-        WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
-
-        //Creating object of an Actions class
-        Actions action = new Actions(_driver);
-
-        //Performing the mouse hover action on the target element.
-        action.moveToElement(policyOptionElement).perform();
-
-        Delay(5);
-        //Click on Cancel
-        _driver.findElement(By.xpath("//table[@id='m0t0']/tbody/tr/td/div/div[3]/a/img")).click();
-        Delay(5);
-
-        Select selecCom = new Select(_driver.findElement(By.name("frmCancelReason")));
-        selecCom.selectByValue("Cancelled by external service");
-        Delay(2);
+            //cancel
+            _driver.findElement(By.name("btnSubmit")).click();
+            Delay(2);
 
 
-        //cancel
-        _driver.findElement(By.name("btnSubmit")).click();
-        Delay(2);
+            // Switching to Alert
+            Alert alert = _driver.switchTo().alert();
 
+            // '.Accept()' is used to accept the alert '(click on the Ok button)'
+            alert.accept();
 
-        // Switching to Alert
-        Alert alert = _driver.switchTo().alert();
+            Delay(7);
 
-        // '.Accept()' is used to accept the alert '(click on the Ok button)'
-        alert.accept();
+            String newStatus = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[2]/td[2]/u/font")).getText();
 
-        Delay(7);
+            if (newStatus.equals("Cancelled") || newStatus.equals("Not Taken Up")) {
+                results = "Passed";
+            } else {
+                results = "Failed";
+            }
+            writeResults("Policy-Servicing", "PolicyNo", "results", "");
 
-        String newStatus = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[2]/td[2]/u/font")).getText();
+        } catch (Exception e) {
 
-        if (newStatus.equals("Cancelled") || newStatus.equals("Not Taken Up"))
-        {
-            results = "Passed";
-        }
-        else
-        {
+            e.printStackTrace();
             results = "Failed";
+            writeResults("Policy-Servicing", "PolicyNo", "results", "");
         }
-        //super.writeResultsToExcell(results, sheet, "CancelPolicy");
-        writeResults("Policy-Servicing","PolicyNo","results","");
-
     }
-    @Test(dependsOnMethods = {"CancelPolicy"},alwaysRun = true)
+    @Test
     public void ChangeCollectionMethod() throws InterruptedException {
-
-
+        String results="";
+        try {
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionMethod");
         clickOnMainMenu();
         Delay(2);
         policySearch(PolicyNo);
-
-        String test_url_1 = "http://ilr-int.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrint/run.w?";
-        String test_url_2_title = "MIP - Sanlam ARL - Warpspeed Lookup Window";
-        JavaScriptExecutor js = (JavaScriptExecutor) _driver;
-
-        String results = "";
-
-        String date = String.format("%1$s", LocalDateTime.now());
-
         String employee_number1 = "";
-
-        policySearch(PolicyNo);
-
+        String date = String.format("%1$s", LocalDateTime.now());
 
         Delay(4);
 
-        SetproductName("ChangeCollectionMethod");
-
-        Delay(3);
 
 
         //click on policy payer
         _driver.findElement(By.name("fcRoleEntityLink3")).click();
 
-
         WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
-
-
         //Creating object of an Actions class
         Actions action = new Actions(_driver);
-
-
         //Performing the mouse hover action on the target element.
         action.moveToElement(policyOptionElement).perform();
 
-
         //Click on options
+        Delay(1);
         _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[3]/td/div/div[3]/a/img")).click();
 
-
+        Delay(4);
         Select oSelect7 = new Select(_driver.findElement(By.name("fcCollectionMethod")));
 
         oSelect7.selectByValue("108978.19");
@@ -303,26 +285,23 @@ writeResults("Policy-Servicing","PolicyNo","results","");
         //Search employee
         _driver.findElement(By.name("fcEmployerButton")).click();
 
-        String MainWindow=_driver.getWindowHandle();
-        // To handle all new opened window.
-        Set<String> s1=_driver.getWindowHandles();
-        Iterator<String> i1=s1.iterator();
-        while(i1.hasNext())
-        {
-            String ChildWindow  =i1.next();
-            if(!MainWindow.equalsIgnoreCase(ChildWindow))
-        {
+        Delay(6);
+        String mainwindow = _driver.getWindowHandle();
+        Set<String> s2 = _driver.getWindowHandles();
+        Iterator<String> i1 = s2.iterator();
 
-        // Switching to Child window
-        _driver.switchTo().window(ChildWindow);
-        //Search employee
-            _driver.findElement(By.name("fcEmployerButton")).click(); Delay(5);
-            // Closing the Child Window.
-            _driver.close(); }
+        while (i1.hasNext()) {
+            String ChildWindow = i1.next();
+            if (!mainwindow.equalsIgnoreCase(ChildWindow)) {
+                _driver.switchTo().window(ChildWindow);
+                 _driver.findElement(By.xpath("//*[@id='lkpResultsTable']/tbody/tr[5]/td[5]")).click();
+
+            }
         }
-        //Switching to Parent window i.e Main Window.
-        _driver.switchTo().window(MainWindow);
-        Delay(3);
+        //  Switch back to the main window which is the parent window.
+        _driver.switchTo().window(mainwindow);
+        Delay(5);
+
 
         //Click on submit
         _driver.findElement(By.id("GBLbl-1")).click();
@@ -341,31 +320,30 @@ writeResults("Policy-Servicing","PolicyNo","results","");
 
         writeResults("Policy-Servicing","PolicyNo","results","");
         //super.writeResultsToExcell(results, sheet, "ChangeCollectionMethod");
+        } catch (Exception e) {
 
+            e.printStackTrace();
+            results = "Failed";
+            writeResults("Policy-Servicing", "PolicyNo", "results", "");
+        }
     }
-    @Test(dependsOnMethods = {"ChangeCollectionMethod"},alwaysRun = true)
+
+
+    @Test
     public void ChangeCollectionNegative() throws InterruptedException {
 
+        String results="";
+        try {
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionNegative");;
         clickOnMainMenu();
-
         Delay(2);
         policySearch(PolicyNo);
-
-        String test_url_1 = "http://ilr-int.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrint/run.w?";
-        String test_url_2_title = "MIP - Sanlam ARL - Warpspeed Lookup Window";
-        JavaScriptExecutor js = (JavaScriptExecutor)_driver;
-
-        String results = "";
-
+        String employee_number2 = "";
         String date = String.format("%1$s", LocalDateTime.now());
 
-        String employee_number2 = "";
+        Delay(4);
 
-        policySearch(PolicyNo);
-        Delay(3);
-
-        SetproductName("ChangeCollectionNegative");
+        //SetproductName("ChangeCollectionNegative");
 
         Delay(3);
 
@@ -376,16 +354,14 @@ writeResults("Policy-Servicing","PolicyNo","results","");
 
 
 
-        WebElement ele = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
-
+        WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
         //Creating object of an Actions class
         Actions action = new Actions(_driver);
-
         //Performing the mouse hover action on the target element.
-        action.moveToElement(ele).perform();
-
+        action.moveToElement(policyOptionElement).perform();
 
         //Click on options
+        Delay(1);
         _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[3]/td/div/div[3]/a/img")).click();
 
 
@@ -400,26 +376,30 @@ writeResults("Policy-Servicing","PolicyNo","results","");
         Delay(5);
 
         //Click on EMPLOYEE NUMBER
-        _driver.findElement(By.name("fcEmployeeNumber")).sendKeys("88989898");
+        _driver.findElement(By.name("fcEmployeeNumber")).sendKeys("88977898");
         Delay(5);
 
 
         //Search employee
         _driver.findElement(By.name("fcEmployerButton")).click();
 
-        //get window handle////////////////////////////////////////////////
+        Delay(6);
+        String mainwindow = _driver.getWindowHandle();
+        Set<String> s2 = _driver.getWindowHandles();
+        Iterator<String> i1 = s2.iterator();
 
+        while (i1.hasNext()) {
+            String ChildWindow = i1.next();
+            if (!mainwindow.equalsIgnoreCase(ChildWindow)) {
+                _driver.switchTo().window(ChildWindow);
+                _driver.findElement(By.xpath("//*[@id='lkpResultsTable']/tbody/tr[19]")).click();
 
-
-        //Search employee
-        _driver.findElement(By.xpath("//*[@id='lkpResultsTable']/tbody/tr[17]")).click();
+            }
+        }
+        //  Switch back to the main window which is the parent window.
+        _driver.switchTo().window(mainwindow);
         Delay(5);
 
-
-        /* Return to the window with handle = 0
-        _driver.switchTo().window(_driver.getWindowHandles();
-        Delay(5);
-        */
 
 
 
@@ -445,35 +425,36 @@ writeResults("Policy-Servicing","PolicyNo","results","");
 
 
         writeResults("Policy-Servicing","PolicyNo","results","");
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            results = "Failed";
+            writeResults("Policy-Servicing", "PolicyNo", "results", "");
+        }
     }
 
-    @Test(dependsOnMethods = {"ChangeCollectionNegative"},alwaysRun = true)
+    @Test
     private void PostDatedDowngrade() throws InterruptedException {
 
-
+        String results="";
+        try {
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","PostDatedDowngrade");;
-
         clickOnMainMenu();
         Delay(2);
         policySearch(PolicyNo);
-
-        String results = "";
         String date = String.format("%1$s", LocalDateTime.now());
         String currentSumAssured = "";
 
         Delay(2);
 
-        SetproductName("PostDatedDowngrade");
+        //SetproductName("PostDatedDowngrade");
 
         Delay(3);
 
         String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
 
-
-
         //Click on user  component
         _driver.findElement(By.name("fccComponentDescription1")).click();
-
 
         Delay(4);
         //Get The current Sum Assured for the life assured
@@ -486,8 +467,6 @@ writeResults("Policy-Servicing","PolicyNo","results","");
 
         //Creating object of an Actions class
         Actions action = new Actions(_driver);
-
-
 
         //Performing the mouse hover action on the target element.
         action.moveToElement(policyOptionElement).perform();
@@ -567,9 +546,15 @@ writeResults("Policy-Servicing","PolicyNo","results","");
         writeResults("Policy-Servicing","PolicyNo","results","");
         //super.writeResultsToExcell(results, sheet, "PostDatedDowngrade");
 
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            results = "Failed";
+            writeResults("Policy-Servicing", "PolicyNo", "results", "");
+        }
     }
 
-    @Test(dependsOnMethods = {"PostDatedDowngrade"},alwaysRun = true)
+    @Test
     private void PostDatedUpgrade() throws InterruptedException {
 
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","PostDatedUpgrade");;
