@@ -20,6 +20,8 @@ import java.time.LocalDateTime;
 
 import java.time.format.DateTimeFormatter;
 
+import static java.lang.System.in;
+
 public class PolicyServicing extends Base {
 
 @BeforeClass
@@ -724,7 +726,7 @@ writeResults("Policy-Servicing","PolicyNo","results","");
         _driver.findElement(By.xpath("//*[@id='GBLbl-5']/span/a")).click();
 
 
-        ///get excel  values
+        ///get excel  values///////////////////////////////////////
 
 
 
@@ -1331,6 +1333,7 @@ writeResults("Policy-Servicing","PolicyNo","results","");
         //Click on the terminate btn
         _driver.findElement(By.name("btncbmcc29")).click();
         Delay(3);
+
         String commSplit = commDate.Split('/');
         commDate = "";
         foreach (String item in commSplit)
