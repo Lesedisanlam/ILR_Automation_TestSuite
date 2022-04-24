@@ -1351,7 +1351,7 @@ writeResults("Policy-Servicing","PolicyNo","results","");
         Delay(3);
         newPremium = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr/td[2]")).getText();
         Delay(3);
-        results = convert.ToDouble(newPremium) < convert.ToDouble(currentPremium) ? "Passed" : "Failed";
+        results = Double.valueOf(newPremium) < Double.valueOf(currentPremium) ? "Passed" : "Failed";
         Delay(4);
 
         writeResults("Policy-Servicing","PolicyNo","results","");
