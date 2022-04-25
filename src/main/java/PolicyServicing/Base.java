@@ -37,7 +37,7 @@ public class Base {
     private String _screenShotFolder;
     private String _connStr;
     private String target_url;
-    String path;
+    String path,gCODE;
 
 
 
@@ -95,6 +95,7 @@ public class Base {
         _driver.get("http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w") ;
         username = "SKA008PPE";
         password = "SKA008PPE/c";
+        gCODE = "G992127";
       //  _driver.get(target_url);
         _driver.manage().window().maximize();
         Delay(3);
@@ -106,13 +107,56 @@ public class Base {
         Delay(2);
 
     }
+    public Dictionary getDataFromSheet(String ws)
+    {
+        Dictionary data = new Hashtable();
+        ArrayList<String> colContents = new ArrayList<String>();
+        ArrayList<String> headers = new ArrayList<String>();
+        try {
+
+            FileInputStream inputxls = new FileInputStream("C:\\Users\\" + gCODE + "\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx");
+            XSSFWorkbook testDataSheet = new XSSFWorkbook(inputxls);
+            XSSFSheet testDataworksheet = testDataSheet.getSheet(ws);
+
+
+            //looop through the rows
+            for (int i = 0; i <= testDataworksheet.getLastRowNum(); i++) {
+                Row rw = testDataworksheet.getRow(i);
+                if (rw != null && i==0) {
+                    for (Cell cell:rw) {
+                        headers.add(cell.getStringCellValue());
+                    }
+                }
+                else if(rw!=null && i==1){
+                    for (Cell cell:rw) {
+                        colContents.add(cell.getStringCellValue());
+
+                    }
+                    break;
+                }else {
+                    break;
+                }
+            }
+            inputxls.close();
+            //add data to dictionary
+            if(!headers.isEmpty() && !colContents.isEmpty()) {
+                for (int i = 0; i < headers.size(); i++) {
+                    data.put(headers.get(i), colContents.get(i));
+                }
+            }
+        }catch (Exception ex){
+
+        }
+
+        return  data;
+    }
 
     public String getPolicyNoFromExcel(String ws , String func) {
         String policyNo=  "";
 
         try
         {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
             String fun = func;
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
@@ -173,7 +217,7 @@ public class Base {
         double premium = 0.0;
         String cover = rolePlayer + "_" + sumAsured;
         try {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
 
@@ -228,11 +272,11 @@ public class Base {
 
         return premium;
     }
-    public void writeResults(String ws,String policyNo, String results, String commnents) {
+    public void writeResults(String ws,String function, String results, String commnents) {
         try
         {
 
-            FileInputStream inputxls = new FileInputStream("C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx");
+            FileInputStream inputxls = new FileInputStream("C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx");
             XSSFWorkbook testDataSheet = new XSSFWorkbook(inputxls);
             XSSFSheet testDataworksheet = testDataSheet.getSheet(ws);
 
@@ -242,7 +286,7 @@ public class Base {
             for (int i = 1; i < testDataworksheet.getLastRowNum(); i++ )
             {
                 Row rw = testDataworksheet.getRow(i);
-                if(rw != null && rw.getCell(0).getStringCellValue().contains(policyNo)) {
+                if(rw != null && rw.getCell(1).getStringCellValue().contains(function)) {
                     int colNo = rw.getPhysicalNumberOfCells()-3;
                     for (int j = 0; j < colNo; j++) {
                         colContents.add(rw.getCell(j).getStringCellValue());
@@ -253,7 +297,7 @@ public class Base {
             inputxls.close();
 
 
-            FileInputStream myxls = new FileInputStream("C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx");
+            FileInputStream myxls = new FileInputStream("C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx");
             XSSFWorkbook studentsSheet = new XSSFWorkbook(myxls);
             XSSFSheet worksheet = studentsSheet.getSheet(ws);
 
@@ -274,7 +318,7 @@ public class Base {
                 }
             }
             myxls.close();
-            FileOutputStream output_file =new FileOutputStream(new File("C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx"));
+            FileOutputStream output_file =new FileOutputStream(new File("C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx"));
             //write changes
             studentsSheet.write(output_file);
             output_file.close();
