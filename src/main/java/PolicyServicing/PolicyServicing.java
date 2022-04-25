@@ -1,5 +1,6 @@
 package src.main.java.PolicyServicing;
 import org.openqa.selenium.By;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
@@ -104,8 +105,8 @@ public class PolicyServicing extends Base {
 
 
             Delay(3);
-            writeResults("Policy-Servicing", "addBeneficiary", results,comments);
-            //super.writeResultsToExcell(results, sheet, "addBeneficiary");
+            writeResults("Policy-Servicing", "addBeneficiary", results,"Method Failed");
+
         }catch (Exception ex)
         {
             writeResults("Policy-Servicing","addBeneficiary","Failed",ex.toString());
@@ -179,11 +180,11 @@ public class PolicyServicing extends Base {
                 results = "Failed";
             }
 
-            writeResults("Policy-Servicing", "PolicyNo", "results", "");
+            writeResults("Policy-Servicing", "ReInstate", results, "");
         } catch (Exception e) {
 
             results = "Failed";
-            writeResults("Policy-Servicing", " ReInstate", results, e.toString());
+            writeResults("Policy-Servicing", "ReInstate", results, e.toString());
         }
     }
     @Test(dependsOnMethods = {"ReInstate"},alwaysRun = true)
@@ -240,7 +241,7 @@ public class PolicyServicing extends Base {
             } else {
                 results = "Failed";
             }
-            writeResults("Policy-Servicing", "PolicyNo", "results", "");
+            writeResults("Policy-Servicing", "CancelPolicy", results, "");
 
         } catch (Exception e) {
 
@@ -329,8 +330,8 @@ public class PolicyServicing extends Base {
             results = "Failed";
         }
 
-        writeResults("Policy-Servicing","PolicyNo","results","");
-        //super.writeResultsToExcell(results, sheet, "ChangeCollectionMethod");
+        writeResults("Policy-Servicing","ChangeCollectionMethod",results,"");
+
         } catch (Exception e) {
 
             results = "Failed";
@@ -433,7 +434,7 @@ public class PolicyServicing extends Base {
         }
 
 
-        writeResults("Policy-Servicing","PolicyNo","results","");
+        writeResults("Policy-Servicing","ChangeCollectionNegative",results,"");
         } catch (Exception e) {
 
             results = "Failed";
@@ -1269,7 +1270,7 @@ public class PolicyServicing extends Base {
 @Test
     private void RemovalOfNonCompulsoryLife() throws InterruptedException
 {
-        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","RemovalOfNonCompulsoryLife");;
+        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","RemovalOfNonCompulsoryLife");
         clickOnMainMenu();
         Delay(2);
         try {
@@ -1321,55 +1322,61 @@ public class PolicyServicing extends Base {
     }
 
     @Test
-    private void AddRolePlayer() throws InterruptedException {
+    private void AddaLife() throws InterruptedException {
+
         try
         {
-            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","AddRolePlayer");;
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","AddaLife");
+            Dictionary testData =  getDataFromSheet("AddaLife");
             clickOnMainMenu();
             Delay(2);
             policySearch(PolicyNo);
-
             JavaScriptExecutor js2 = (JavaScriptExecutor)_driver;
 
+
+
             String results = "";
-            String title = "", first_name = "", surname = "", initials = "", dob = "", gender = "", id_number = "", relationship = "";
+            String title = testData.get("Title").toString(),
+                    first_name = testData.get("First_Name").toString(),
+                    surname = testData.get("Surname").toString(),
+                    initials = testData.get("Initials").toString(),
+                    dob = testData.get("dob").toString(),
+                    gender = testData.get("Gender").toString(),
+                    id_number = testData.get("ID_number").toString(),
+                    relationship = testData.get("Relationship").toString();
 
             Delay(2);
 
-            SetproductName("AddRolePlayer");
+            SetproductName("AddaLife");
 
-            Delay(5);
+            String oldPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
+            //Get the Commencement date from contract summary screen
+            String commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
 
+            //click add policy
 
-
-            //get commencement date
-            String commencementDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
-
-            //click add role player
-            _driver.findElement(By.name("btnAddRolePlayer")).click();
+            _driver.findElement(By.xpath("//*[@id='GBLbl-1']/span/a")).click();
 
             //Select role
             WebElement selectRole = _driver.findElement(By.name("frmRoleObj"));
             Select s = new Select(selectRole);
-            s.deselectByIndex(4);
-            Delay(3);
-            //Click calendar
+            s.selectByIndex(4);
 
-            Delay(1);
+            Delay(2);
             _driver.findElement(By.name("frmEffectiveFromDate")).clear();
-            _driver.findElement(By.name("frmEffectiveFromDate")).sendKeys(commencementDate);
-
-
+            Delay(2);
+            _driver.findElement(By.name("frmEffectiveFromDate")).sendKeys(commDate);
             Delay(4);
 
 
             _driver.findElement(By.xpath("//*[@id='GBLbl-4']/span/a")).click();
-            //assert
 
             //click next to enter new role player
             _driver.findElement(By.xpath("//*[@id='GBLbl-5']/span/a")).click();
-            //extract excell data
 
+
+
+            //get excel data
 
 
             //enter initials
@@ -1389,32 +1396,38 @@ public class PolicyServicing extends Base {
 
             _driver.findElement(By.name("frmPersonIDNumber")).sendKeys(id_number);
             Delay(2);
+
+
+
             //enter
+            _driver.findElement(By.name("frmPersonDateOfBirth")).clear();
             _driver.findElement(By.name("frmPersonDateOfBirth")).sendKeys(dob);
             Delay(2);
+
+
             //marital status
-            WebElement merital = _driver.findElement(By.name("frmPersonMaritalStatus"));
-            Select iselect = new Select(merital);
-            iselect.selectByIndex(1);
+            WebElement marital = _driver.findElement(By.name("frmPersonMaritalStatus"));
+            Select select = new Select(marital);
+            select.selectByIndex(1);
 
 
             //Select gender
-            List<WebElement> rdos = _driver.findElement(By.xpath("//input[@name='frmPersonGender']"));
+            List<WebElement> rdos = _driver.findElements(By.xpath("//input[@name='frmPersonGender']"));
 
-            foreach (WebElement radio in rdos)
+            for  (WebElement radio : rdos)
             {
 
-                if (radio.GetAttribute("value").Equals("er_AcPerGenMal"))
+                if (radio.getAttribute("value").equals("er_AcPerGenMal"))
                 {
 
-                    radio.Click();
+                    radio.click();
                     break;
 
                 }
                 else
                 {
 
-                    radio.FindElement(By.xpath("//*[@id='frmSubCbmre']/tbody/tr[1]/td[4]/table/tbody/tr/td[3]/input")).Click();
+                    radio.findElement(By.xpath("//*[@id='frmSubCbmre']/tbody/tr[1]/td[4]/table/tbody/tr/td[3]/input")).click();
 
                 }
 
@@ -1488,11 +1501,381 @@ public class PolicyServicing extends Base {
             Select oSelect = new Select(_driver.findElement(By.name("frmPersonTitle")));
             oSelect.selectByValue(value);
 
+            Delay(2);
+            //save
+            _driver.findElement(By.xpath(" //*[@id='GBLbl-5']/span/a")).click();
+            Delay(2);
 
 
 
-            string url2 = _driver.Url;
-            Assert.AreEqual(url2, "http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w?");
+            clickOnMainMenu();
+
+            //click contract summary
+            _driver.findElement(By.name("2000175333.8")).click();
+
+
+
+            Delay(2);
+            //click on componet
+            _driver.findElement(By.xpath("//*[@id='GBLbl-5']/span/a")).click();
+
+
+            Delay(2);
+
+            WebElement parentcomponent = _driver.findElement(By.name("frmParentComponentObj"));
+            Select selecCom = new Select(parentcomponent);
+            selecCom.selectByIndex(1);
+            Delay(2);
+
+            _driver.findElement(By.xpath("//*[@id='GBLbl-6']/span/a")).click();
+
+            Delay(2);
+            _driver.findElement(By.name("frmCCStartDate")).clear();
+            Delay(2);
+            _driver.findElement(By.name("frmCCStartDate")).sendKeys(commDate);
+
+            Select oSelect4 = new Select(_driver.findElement(By.name("frmSPAmount")));
+            oSelect4.selectByValue("10000");
+            Delay(2);
+
+            //Click next
+            _driver.findElement(By.name("btncbmcc2")).click();
+            Delay(2);
+
+
+            //Click on next
+            _driver.findElement(By.name("btncbmcc5")).click();
+            Delay(2);
+
+            //Click on finish
+            _driver.findElement(By.name("btncbmcc11")).click();
+            Delay(2);
+
+
+
+
+
+
+            String newPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr/td[2]")).getText();
+
+
+
+            JavaScriptExecutor js3 = (JavaScriptExecutor)_driver;
+
+
+            if (Double.parseDouble(newPrem) > Double.parseDouble(oldPrem))
+            {
+                results = "Passed";
+            }
+            else
+            {
+                results = "Failed";
+
+            }
+            writeResults("Policy-Servicing","AddaLife",results,"");
+        }
+        catch (Exception e)
+        {
+
+            String results = "Failed";
+            writeResults("Policy-Servicing", "AddaLife", "Failed", e.toString());
+
+        }
+
+    }
+    @Test
+    private void IncreaseSumAssured() throws InterruptedException {
+
+        try
+        {
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","    private void IncreaseSumAssured(string contractRef)\n");;
+            clickOnMainMenu();
+            Delay(2);
+            policySearch(PolicyNo);
+            String results = "";
+
+            String date = LocalDateTime.now().toString();
+
+            String currentSumAssured = "";
+            String commDate = "";
+            Delay(2);
+
+            SetproductName("IncreaseSumAssured");
+
+            Delay(3);
+            //Get the Commencement date from contract summary screen
+            commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
+
+            //Scroll Down
+            Delay(2);
+
+            JavaScriptExecutor js = (JavaScriptExecutor)_driver;
+
+
+            Delay(4);
+
+
+            String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
+
+
+
+            //Click on user  component
+            _driver.findElement(By.name("fccComponentDescription1")).click();
+
+
+            Delay(4);
+            //Get The current Sum Assured for the life assured
+            currentSumAssured = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[8]/td[4]")).getText();
+
+
+            Delay(2);
+            WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
+
+
+            //Creating object of an Actions class
+            Actions action = new Actions(_driver);
+
+
+
+            //Performing the mouse hover action on the target element.
+            action.moveToElement(policyOptionElement).perform();
+
+            //Click on options
+            _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[1]/td/div/div[3]/a/img")).click();
+
+
+
+            //Date selection
+            Delay(4);
+            _driver.findElement(By.name("frmCCStartDate")).clear();
+            Delay(2);
+            _driver.findElement(By.name("frmCCStartDate")).sendKeys(commDate);
+
+            Delay(5);
+
+            String newSumAssured = "";
+            //Do a  upgrade on current sum assured by 5000
+            if (Integer.parseInt(currentSumAssured) > 10000 || Integer.parseInt(currentSumAssured) == 10000)
+            {
+                newSumAssured =  Integer.toString((Integer.parseInt(currentSumAssured) + 10000));
+            }
+            else
+            {
+
+                newSumAssured = String.valueOf(60000);
+            }
+
+            Select oSelect = new Select(_driver.findElement(By.name("frmSPAmount")));
+
+            oSelect.selectByValue(newSumAssured);
+
+
+            //Click on next
+            _driver.findElement(By.name("btncbmcc13")).click();
+            Delay(2);
+
+
+            //Click on next
+            _driver.findElement(By.name("btncbmcc17")).click();
+            Delay(2);
+
+            // Click on finish
+            _driver.findElement(By.name("btncbmcc23")).click();
+            Delay(5);
+            var newPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr/td[2]")).getText();
+
+            if (Double.parseDouble(newPrem) > Double.parseDouble(contractPrem))
+            {
+                results = "Passed";
+            }
+            else
+            {
+                results = "Failed";
+            }
+
+            writeResults("Policy-Servicing","IncreaseSumAssured",results,"");
+        } catch (Exception e)
+        {
+
+            e.printStackTrace();
+            String results = "Failed";
+            writeResults("Policy-Servicing", "IncreaseSumAssured", results, e.toString());
+        }
+    }
+
+    @Test
+    private void AddRolePlayer() throws InterruptedException {
+        Dictionary testData = getDataFromSheet("AddRolePlayer");
+        String title = testData.get("Title").toString(),
+                first_name = testData.get("First_Name").toString(),
+                surname = testData.get("Surname").toString(),
+                initials = testData.get("Initials").toString(),
+                dob = testData.get("DOB").toString(),
+                gender = testData.get("Gender").toString(),
+                id_number = testData.get("ID_number").toString(),
+                relationship = testData.get("Relationship").toString(),
+                Comm_date = testData.get("Comm_date").toString();
+        try
+        {
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","AddRolePlayer");;
+            clickOnMainMenu();
+            Delay(2);
+            policySearch(PolicyNo);
+
+            JavaScriptExecutor js2 = (JavaScriptExecutor)_driver;
+
+            String results = "";
+
+            Delay(2);
+
+            SetproductName("AddRolePlayer");
+
+            Delay(5);
+
+
+
+            //get commencement date
+            String commencementDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
+
+            //click add role player
+            _driver.findElement(By.name("btnAddRolePlayer")).click();
+
+            //Select role
+            WebElement selectRole = _driver.findElement(By.name("frmRoleObj"));
+            Select s = new Select(selectRole);
+            s.deselectByIndex(4);
+            Delay(3);
+            //Click calendar
+
+            Delay(1);
+            _driver.findElement(By.name("frmEffectiveFromDate")).clear();
+            _driver.findElement(By.name("frmEffectiveFromDate")).sendKeys(commencementDate);
+
+
+            Delay(4);
+
+
+            _driver.findElement(By.xpath("//*[@id='GBLbl-4']/span/a")).click();
+            //assert
+
+            //click next to enter new role player
+            _driver.findElement(By.xpath("//*[@id='GBLbl-5']/span/a")).click();
+            //extract excell data
+
+
+
+            //enter initials
+            _driver.findElement(By.name("frmPersonInitials")).clear();
+            _driver.findElement(By.name("frmPersonInitials")).sendKeys(initials);
+            Delay(2);
+            //enter name
+            _driver.findElement(By.name("frmPersonFirstName")).clear();
+            _driver.findElement(By.name("frmPersonFirstName")).sendKeys(first_name);
+            Delay(2);
+            //enter surname
+            _driver.findElement(By.name("frmPersonLastName")).clear();
+            _driver.findElement(By.name("frmPersonLastName")).sendKeys(surname);
+            Delay(2);
+            //enter
+
+
+            _driver.findElement(By.name("frmPersonIDNumber")).sendKeys(id_number);
+            Delay(2);
+            //enter
+            _driver.findElement(By.name("frmPersonDateOfBirth")).sendKeys(dob);
+            Delay(2);
+            //marital status
+            WebElement merital = _driver.findElement(By.name("frmPersonMaritalStatus"));
+            Select iselect = new Select(merital);
+            iselect.selectByIndex(1);
+
+
+
+//Select gender
+                List<WebElement> rdos = _driver.findElements(By.xpath("//input[@name='frmPersonGender']")); for (WebElement radio : rdos)
+        { if (radio.getAttribute("value").equals("er_AcPerGenMal"))
+        { radio.click();
+            break; }
+        else
+        { radio.findElement(By.xpath("//*[@id='frmSubCbmre']/tbody/tr[1]/td[4]/table/tbody/tr/td[3]/input")).click(); }
+
+
+
+
+        }
+
+            //Select Relationship
+            String V_relationship = "";
+            switch (relationship)
+            {
+
+                case "Additional parent":
+                    V_relationship = "951372577.488";
+                    break;
+                case "Spouse":
+                    V_relationship = "854651144.248";
+                    break;
+                case "Additional child":
+                    V_relationship = "905324120.488";
+                    break;
+                case "Child":
+                    V_relationship = "905324138.488";
+                    break;
+                case "Parent":
+                    V_relationship = "347901097.188";
+                    break;
+
+                case "Brother":
+                    V_relationship = "951371842.488";
+                    break;
+
+            }
+
+            WebElement relation = _driver.findElement(By.name("frmRelationshipCodeObj"));
+            Select oselect = new Select(relation);
+            oselect.selectByValue(V_relationship);
+            //Title
+            String value = "";
+            switch (title)
+            {
+                case "Mr":
+                    value = "er_AcPerTitleMr";
+                    break;
+                case "Mrs":
+                    value = "er_AcPerTitleMrs";
+                    break;
+
+                case "Ms":
+                    value = "er_AcPerTitleMs";
+                    break;
+
+                case "Prf":
+                    value = "er_AcPerTitlePrf";
+                    break;
+                case "Dr":
+                    value = "er_AcPerTitleDoc";
+                    break;
+
+                case "Adm":
+                    value = "er_AcPerTitleADM";
+                    break;
+
+                case "Miss":
+                    value = "er_AcPerTitleMiss";
+                    break;
+
+                default:
+                    break;
+            }
+
+            Select oSelect = new Select(_driver.findElement(By.name("frmPersonTitle")));
+            oSelect.selectByValue(value);
+
+
+
+
+            String url2 = _driver.getCurrentUrl();
+            Assert.assertEquals(url2, "http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w?");
 
             Delay(2);
             //save
@@ -1514,14 +1897,14 @@ public class PolicyServicing extends Base {
 
             }
 
-            writeResults("Policy-Servicing","PolicyNo","results","");
+            writeResults("Policy-Servicing","AddRolePlayer",results,"");
 
         } catch (Exception e)
         {
 
 
             String results = "Failed";
-            writeResults("Policy-Servicing", "PolicyNo", "Failed", "");
+            writeResults("Policy-Servicing", "AddRolePlayer", results, e.toString());
         }
 
         clickOnMainMenu();
@@ -1574,8 +1957,10 @@ public class PolicyServicing extends Base {
             var Ridno1 = roles.split(" ")[roles.split(" ").length - 1].toString();
             var ID1 = Ridno1.substring(1, 13);
 
-            if (ID1 == id_number)
+            if (ID1 ==id_number )
             {
+
+
                 option.selectByVisibleText(roles);
                 break;
             }
@@ -1589,7 +1974,7 @@ public class PolicyServicing extends Base {
 
 
         //next
-        _driver.findElement(By.xpath(" //*[@id='GBLbl-7']/span/a")).c();
+        _driver.findElement(By.xpath(" //*[@id='GBLbl-7']/span/a"));
 
         //Validate roleplayer ID number
         Delay(2);
@@ -1598,6 +1983,8 @@ public class PolicyServicing extends Base {
 
         var Ridno = RoleINno.split(" ")[RoleINno.split(" ").length - 1].toString();
         var ID = Ridno.substring(1, 13);
+
+        Assert.assertEquals(id_number, ID);
 
         Delay(2);
 
@@ -1611,8 +1998,6 @@ public class PolicyServicing extends Base {
     }
 
 
-
-    @Test
     private void SetproductName(String methodname) {
 
     }
