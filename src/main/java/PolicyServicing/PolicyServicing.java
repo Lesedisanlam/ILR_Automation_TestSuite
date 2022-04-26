@@ -1331,12 +1331,10 @@ public class PolicyServicing extends Base {
             clickOnMainMenu();
             Delay(2);
             policySearch(PolicyNo);
-            JavaScriptExecutor js2 = (JavaScriptExecutor)_driver;
-
-
-
+            Delay(2);
             String results = "";
-            String title = testData.get("Title").toString(),
+
+                    String title = testData.get("Title").toString(),
                     first_name = testData.get("First_Name").toString(),
                     surname = testData.get("Surname").toString(),
                     initials = testData.get("Initials").toString(),
@@ -1347,7 +1345,6 @@ public class PolicyServicing extends Base {
 
             Delay(2);
 
-            SetproductName("AddaLife");
 
             String oldPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
             //Get the Commencement date from contract summary screen
@@ -1373,10 +1370,6 @@ public class PolicyServicing extends Base {
 
             //click next to enter new role player
             _driver.findElement(By.xpath("//*[@id='GBLbl-5']/span/a")).click();
-
-
-
-            //get excel data
 
 
             //enter initials
@@ -1588,14 +1581,12 @@ public class PolicyServicing extends Base {
 
         try
         {
-            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","    private void IncreaseSumAssured(string contractRef)\n");;
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","IncreaseSumAssured");;
             clickOnMainMenu();
             Delay(2);
             policySearch(PolicyNo);
             String results = "";
-
             String date = LocalDateTime.now().toString();
-
             String currentSumAssured = "";
             String commDate = "";
             Delay(2);
@@ -1604,20 +1595,12 @@ public class PolicyServicing extends Base {
 
             Delay(3);
             //Get the Commencement date from contract summary screen
-            commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
+             commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
 
             //Scroll Down
             Delay(2);
 
-            JavaScriptExecutor js = (JavaScriptExecutor)_driver;
-
-
-            Delay(4);
-
-
             String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
-
-
 
             //Click on user  component
             _driver.findElement(By.name("fccComponentDescription1")).click();
@@ -1791,7 +1774,7 @@ public class PolicyServicing extends Base {
 
 
 
-//Select gender
+            //Select gender
                 List<WebElement> rdos = _driver.findElements(By.xpath("//input[@name='frmPersonGender']")); for (WebElement radio : rdos)
         { if (radio.getAttribute("value").equals("er_AcPerGenMal"))
         { radio.click();
