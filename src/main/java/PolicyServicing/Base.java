@@ -98,9 +98,10 @@ public class Base {
         gCODE = "G992107";
       //  _driver.get(target_url);
         _driver.manage().window().maximize();
-        Delay(3);
+        Delay(2);
         _driver.findElement(By.name("fcUserCode")).sendKeys(username);
-        Delay(7);
+        Delay(5);
+        _driver.findElement(By.name("fcPassword")).click();
          _driver.findElement(By.name("fcPassword")).sendKeys(password);
         Delay(3);
         _driver.findElement(By.name("btnLogin")).click();

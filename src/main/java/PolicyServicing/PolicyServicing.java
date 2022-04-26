@@ -1509,7 +1509,7 @@ public class PolicyServicing extends Base {
 
 
             Delay(2);
-            //click on componet
+            //click on component
             _driver.findElement(By.xpath("//*[@id='GBLbl-5']/span/a")).click();
 
 
@@ -1528,12 +1528,12 @@ public class PolicyServicing extends Base {
             _driver.findElement(By.name("frmCCStartDate")).sendKeys(commDate);
 
             Select oSelect4 = new Select(_driver.findElement(By.name("frmSPAmount")));
-            oSelect4.selectByValue("10000");
+            oSelect4.selectByValue("20000");
             Delay(2);
 
             //Click next
             _driver.findElement(By.name("btncbmcc2")).click();
-            Delay(2);
+            Delay(3);
 
 
             //Click on next
@@ -1544,16 +1544,8 @@ public class PolicyServicing extends Base {
             _driver.findElement(By.name("btncbmcc11")).click();
             Delay(2);
 
-
-
-
-
-
             String newPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr/td[2]")).getText();
 
-
-
-            JavaScriptExecutor js3 = (JavaScriptExecutor)_driver;
 
 
             if (Double.parseDouble(newPrem) > Double.parseDouble(oldPrem))
@@ -1602,31 +1594,35 @@ public class PolicyServicing extends Base {
 
             String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
 
+            clickOnMainMenu();
+            //Click on user  contract summary
+            _driver.findElement(By.xpath("//*[@id='t0_771']/table/tbody/tr/td[1]/a/img[2]")).click();
+
+
+
             //Click on user  component
-            _driver.findElement(By.name("fccComponentDescription1")).click();
+            _driver.findElement(By.xpath("//*[@id='t0_774']/a")).click();
 
 
             Delay(4);
+
+            //  click on user  component
+            _driver.findElement(By.name("fccComponentDescription1")).click();
+
             //Get The current Sum Assured for the life assured
             currentSumAssured = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[8]/td[4]")).getText();
 
 
             Delay(2);
+
             WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
-
-
             //Creating object of an Actions class
             Actions action = new Actions(_driver);
-
-
-
             //Performing the mouse hover action on the target element.
             action.moveToElement(policyOptionElement).perform();
-
             //Click on options
+            Delay(1);
             _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[1]/td/div/div[3]/a/img")).click();
-
-
 
             //Date selection
             Delay(4);
