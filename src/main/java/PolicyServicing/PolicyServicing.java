@@ -2,8 +2,6 @@ package src.main.java.PolicyServicing;
 import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -14,15 +12,12 @@ import java.util.Dictionary;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.List;
-import java.lang.System.Logger;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
 import java.time.format.DateTimeFormatter;
-
-import static java.lang.System.in;
 
 public class PolicyServicing extends Base {
 
@@ -355,7 +350,7 @@ public class PolicyServicing extends Base {
 
         Delay(4);
 
-        //SetproductName("ChangeCollectionNegative");
+        SetproductName("ChangeCollectionNegative");
 
         Delay(3);
 
@@ -775,7 +770,7 @@ public class PolicyServicing extends Base {
         }
 
         //Select Relationship
-        var V_relationship = "";
+        String V_relationship = "";
         switch (relationship) {
 
             case "Additional parent":
@@ -844,7 +839,7 @@ public class PolicyServicing extends Base {
         _driver.findElement(By.xpath(" //*[@id='GBLbl-5']/span/a")).click();
         Delay(2);
         //Roleplayer ID
-        var LifeA_ID = _driver.findElement(By.xpath(" //*[@id='frmSubCbmre']/tbody/tr[4]/td[4]")).getText();
+        String LifeA_ID = _driver.findElement(By.xpath(" //*[@id='frmSubCbmre']/tbody/tr[4]/td[4]")).getText();
 
         //validation
         if (LifeA_ID.equals(id_number)) {
@@ -855,7 +850,6 @@ public class PolicyServicing extends Base {
 
         }
         writeResults("Policy-Servicing","AddRole_NextMonth",results,"");
-
 
         clickOnMainMenu();
 
@@ -985,6 +979,179 @@ public class PolicyServicing extends Base {
 
             writeResults("Policy-Servicing", "TerminateRoleNext_month", results, "");
         }catch (Exception e) {
+            writeResults("Policy-Servicing", "TerminateRoleNext_month", "Failed", e.toString());
+        }
+    }@Test
+    private void IncreaseSumAssuredAge() throws InterruptedException {
+        try {
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "IncreaseSumAssuredAge");
+            ;
+            clickOnMainMenu();
+            Delay(2);
+            policySearch(PolicyNo);
+            String results = "";
+            String currentCoverAmount = "";
+            String currentPremium = "";
+            String newPremium = "";
+            String commDate = "";
+            String newSumAssured = "";
+            Delay(2);
+
+
+            String product = SetproductName("IncreaseSumAssuredAge");
+            //Get the Commencement date from contract summary screen
+            commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
+            //Scroll Down
+
+            Delay(4);
+            //Get Current premium
+            currentPremium = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
+            Delay(4);
+            //Select the component
+            var component = "";
+
+                    //Loop thhough the componets and select the correct one
+                    var max_benefits = 23;
+                    var comp = "";
+
+                    for (int i = 1; i < (max_benefits + 1); i++) {
+                        i = i + 1;
+                        var path = "//*[@id='CntContentsDiv14']/table/tbody/tr[" + i + "]/td[1]";
+                        comp = _driver.findElement(By.xpath(path)).getText();
+                        if (comp.contains(component)) {
+                            _driver.findElement(By.xpath(path)).click();
+                            break;
+
+                        }
+                    }
+
+
+            if (product.equals("Safrican Provide and Protect Plan (4000)")) {
+                Delay(4);
+
+                //Get start date
+                commDate = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[3]/td[4]")).getText();
+
+
+                _driver.findElement(By.xpath("//*[@id='t0_771']/table/tbody/tr/td[1]/a/img[2]")).click();
+
+                //Click on user  component
+                _driver.findElement(By.xpath("//*[@id='t0_774']/a")).click();
+
+
+                Delay(4);
+
+                //  click on user  component
+                _driver.findElement(By.name("fccComponentDescription1")).click();
+
+                //Get The current Sum Assured for the life assured
+                currentCoverAmount =  _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[8]/td[4]")).getText();
+
+
+
+                Delay(2);
+
+                WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
+                //Creating object of an Actions class
+                Actions action = new Actions(_driver);
+                //Performing the mouse hover action on the target element.
+                action.moveToElement(policyOptionElement).perform();
+                //Click on options
+                Delay(1);
+                _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[1]/td/div/div[3]/a/img")).click();
+
+
+                Delay(4);
+                _driver.findElement(By.name("frmCCStartDate")).clear();
+                Delay(2);
+                _driver.findElement(By.name("frmCCStartDate")).sendKeys(commDate);
+
+                _driver.findElement(By.name("frmSPAmount")).clear();
+                _driver.findElement(By.name("frmSPAmount")).sendKeys(newSumAssured);
+
+                Delay(4);
+                _driver.findElement(By.name("btncbmcc13")).click();
+                Delay(4);
+                _driver.findElement(By.name("btncbmcc17")).click();
+                Delay(4);
+
+                _driver.findElement(By.name("btncbmcc23")).click();
+                Delay(4);
+                _driver.findElement(By.name("2000175333.8")).click();
+                Delay(3);
+                newPremium = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
+                Delay(3);
+
+                if (Double.parseDouble(currentPremium) < Double.parseDouble(newPremium))
+                {
+                    results = "Passed";
+                } else {
+                    results = "Failed";
+                }
+
+            } else {
+
+                Delay(4);
+                //Get The current Sum Assured for the life assured
+                currentCoverAmount = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[8]/td[4]")).getText();
+
+
+                WebElement policyOptionElement = _driver.findElement(By.xpath("/html/body/center/center/form[3]/table/tbody/tr[2]/td[3]/center/table[1]/tbody/tr[4]/td[2]/span/table/tbody/tr[1]/td/table/tbody/tr/td[1]/table/tbody/tr/td/div[3]/table/tbody/tr/td/div/div[3]"));
+
+                //Creating object of an Actions class
+                Actions action = new Actions(_driver);
+
+                //Performing the mouse hover action on the target element.
+                action.moveToElement(policyOptionElement).perform();
+
+                Delay(5);
+
+                _driver.findElement(By.xpath("//div[3]/a/img")).click();
+
+                Delay(4);
+                _driver.findElement(By.name("frmCCStartDate")).clear();
+                Delay(2);
+                _driver.findElement(By.name("frmCCStartDate")).sendKeys(commDate);
+
+                Select oSelect = new Select(_driver.findElement(By.name("frmSPAmount")));
+
+                oSelect.selectByValue(newSumAssured);
+                Delay(4);
+                _driver.findElement(By.name("btncbmcc13")).click();
+                Delay(4);
+                _driver.findElement(By.name("btncbmcc17")).click();
+                //Calculate age based on IdNo
+                String idElement = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[9]/td[2]")).getText();
+                String idNo = (idElement.split(java.util.regex.Pattern.quote(" "), -1)[idElement.split(java.util.regex.Pattern.quote(" "), -1).length - 1]).toString();
+                String birthYear = idNo.substring(1, 3);
+
+                birthYear = "19" + birthYear;
+                String age = (LocalDateTime.now().getYear() - String.valueOf(int)birthYear);
+                Delay(2);
+
+                String premuimfromRateTable = super.getPremiumFromRateTable(age,"ML", "newSumAssured", product"");
+                Delay(2);
+                _driver.findElement(By.name("btncbmcc23")).click();
+                Delay(6);
+
+                //Get the new Premium
+                //js.ExecuteScript("window.scrollBy(0,1000)", "");
+                newPremium = _driver.findElement(By.xpath("//*[@id='CntContentsDiv5']/table/tbody/tr[2]/td[7]")).getText();
+
+                //Do Age validation
+
+
+                if
+                (premuimfromRateTable(Double.parseDouble(newPremium) && Double.parseDouble(currentPremium) > (Double.parseDouble(newPremium)
+                {
+                    results = "Passed";
+                } else {
+                    results = "Failed";
+                }
+            }
+
+            writeResults("Policy-Servicing", "TerminateRoleNext_month", results, "");
+        } catch (Exception e) {
             writeResults("Policy-Servicing", "TerminateRoleNext_month", "Failed", e.toString());
         }
     }
@@ -1975,8 +2142,12 @@ public class PolicyServicing extends Base {
     }
 
 
-    private void SetproductName(String methodname) {
+    private String SetproductName(String methodname)
+    {
+        String product = _driver.findElement(By.xpath("//*[@id='CntContentsDiv5']/table/tbody/tr[1]/td[2]")).getText();
 
+
+        return product;
     }
 
     private void clickOnMainMenu()
