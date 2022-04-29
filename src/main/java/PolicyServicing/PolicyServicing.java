@@ -32,7 +32,7 @@ public class PolicyServicing extends Base {
         return _driver;
 
     }
-    @Test
+    @Test(priority=11)
     public void addBeneficiary() throws InterruptedException {
 
 
@@ -112,7 +112,8 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing","addBeneficiary","Failed",ex.toString());
         }
     }
-    @Test
+
+    @Test(priority=1)
     public void ReInstate() throws InterruptedException {
 
         String results;
@@ -187,7 +188,7 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing", "ReInstate", results, e.toString());
         }
     }
-    @Test(dependsOnMethods = {"ReInstate"},alwaysRun = true)
+    @Test(priority=0)
     public void CancelPolicy() throws InterruptedException {
 
         String results;
@@ -199,57 +200,46 @@ public class PolicyServicing extends Base {
             results = "";
             Delay(2);
             String commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
-            String dt = "commDate";
-
             Delay(3);
             //Hover on policy options
             WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
-
             //Creating object of an Actions class
             Actions action = new Actions(_driver);
-
             //Performing the mouse hover action on the target element.
             action.moveToElement(policyOptionElement).perform();
-
             Delay(5);
             //Click on Cancel
             _driver.findElement(By.xpath("//table[@id='m0t0']/tbody/tr/td/div/div[3]/a/img")).click();
             Delay(5);
-
+            //Set Cancellation data
+            _driver.findElement(By.name("frmTerminationDate")).clear();
+            Delay(1);
+            _driver.findElement(By.name("frmTerminationDate")).sendKeys(commDate);
             Select selecCom = new Select(_driver.findElement(By.name("frmCancelReason")));
             selecCom.selectByValue("Cancelled by external service");
             Delay(2);
-
-
             //cancel
             _driver.findElement(By.name("btnSubmit")).click();
             Delay(2);
-
-
             // Switching to Alert
             Alert alert = _driver.switchTo().alert();
-
             // '.Accept()' is used to accept the alert '(click on the Ok button)'
             alert.accept();
-
             Delay(7);
-
             String newStatus = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[2]/td[2]/u/font")).getText();
-
             if (newStatus.equals("Cancelled") || newStatus.equals("Not Taken Up")) {
                 results = "Passed";
             } else {
                 results = "Failed";
             }
             writeResults("Policy-Servicing", "CancelPolicy", results, "");
-
         } catch (Exception e) {
 
             results = "Failed";
             writeResults("Policy-Servicing", "CancelPolicy", results, e.toString());
         }
     }
-    @Test
+    @Test(priority=4)
     public void ChangeCollectionMethod() throws InterruptedException {
         String results="";
         try {
@@ -339,7 +329,7 @@ public class PolicyServicing extends Base {
         }
     }
 
-    @Test
+    @Test(priority=5)
     public void ChangeCollectionNegative() throws InterruptedException {
 
         String results="";
@@ -442,7 +432,7 @@ public class PolicyServicing extends Base {
         }
     }
 
-    @Test
+
     private void PostDatedDowngrade() throws InterruptedException {
 
         String results="";
@@ -560,7 +550,7 @@ public class PolicyServicing extends Base {
         }
     }
 
-    @Test
+
     private void PostDatedUpgrade() throws InterruptedException {
         try
         {
@@ -680,7 +670,7 @@ public class PolicyServicing extends Base {
         writeResults("Policy-Servicing", "PostDatedUpgrade", results, e.toString());
     }
 }
-     @Test
+    @Test(priority=7)
     private void AddRole_NextMonth() throws InterruptedException {
 
     try {
@@ -930,7 +920,7 @@ public class PolicyServicing extends Base {
         writeResults("Policy-Servicing","AddRole_NextMonth","Failed",e.toString());
     }
     }
-    @Test
+    @Test(priority=8)
     private void TerminateRoleNext_month() throws InterruptedException {
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "TerminateRoleNext_month");
         clickOnMainMenu();
@@ -989,7 +979,7 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing", "TerminateRoleNext_month", "Failed", e.toString());
         }
     }
-    @Test
+    @Test(priority=10)
     private void TerminateRolePlayer() throws InterruptedException {
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "TerminateRolePlayer");
         clickOnMainMenu();
@@ -1380,7 +1370,7 @@ public class PolicyServicing extends Base {
 
     }
 
-    @Test
+    @Test(priority=6)
     private void AddaLife() throws InterruptedException {
 
         try
@@ -1627,7 +1617,7 @@ public class PolicyServicing extends Base {
         }
 
     }
-    @Test
+    @Test(priority=2)
     private void IncreaseSumAssured() throws InterruptedException {
 
         try
@@ -1741,7 +1731,7 @@ public class PolicyServicing extends Base {
         }
     }
 
-    @Test
+    @Test(priority=9)
     private void AddRolePlayer() throws InterruptedException {
         Dictionary testData = getDataFromSheet("AddRolePlayer");
         String title = testData.get("Title").toString(),

@@ -37,8 +37,7 @@ public class Base {
     private String _screenShotFolder;
     private String _connStr;
     private String target_url;
-    String path,gCODE;
-
+    String path, gCODE;
 
 
     private String screenShotDailyFolderName() {
@@ -92,24 +91,24 @@ public class Base {
     public void siteConnection() throws InterruptedException {
         System.setProperty("webdriver.chrome.driver", "C:\\Code\\bin\\chromeDriver.exe");
         _driver = new ChromeDriver();
-        _driver.get("http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w") ;
+        _driver.get("http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w");
         username = "SKA008PPE";
         password = "SKA008PPE/c";
         gCODE = "G992107";
-      //  _driver.get(target_url);
+        //  _driver.get(target_url);
         _driver.manage().window().maximize();
         Delay(2);
         _driver.findElement(By.name("fcUserCode")).sendKeys(username);
         Delay(5);
         _driver.findElement(By.name("fcPassword")).click();
-         _driver.findElement(By.name("fcPassword")).sendKeys(password);
+        _driver.findElement(By.name("fcPassword")).sendKeys(password);
         Delay(3);
         _driver.findElement(By.name("btnLogin")).click();
         Delay(2);
 
     }
-    public Dictionary getDataFromSheet(String ws)
-    {
+
+    public Dictionary getDataFromSheet(String ws) {
         Dictionary data = new Hashtable();
         ArrayList<String> colContents = new ArrayList<String>();
         ArrayList<String> headers = new ArrayList<String>();
@@ -123,41 +122,39 @@ public class Base {
             //looop through the rows
             for (int i = 0; i <= testDataworksheet.getLastRowNum(); i++) {
                 Row rw = testDataworksheet.getRow(i);
-                if (rw != null && i==0) {
-                    for (Cell cell:rw) {
+                if (rw != null && i == 0) {
+                    for (Cell cell : rw) {
                         headers.add(cell.getStringCellValue());
                     }
-                }
-                else if(rw!=null && i==1){
-                    for (Cell cell:rw) {
+                } else if (rw != null && i == 1) {
+                    for (Cell cell : rw) {
                         colContents.add(cell.getStringCellValue());
 
                     }
                     break;
-                }else {
+                } else {
                     break;
                 }
             }
             inputxls.close();
             //add data to dictionary
-            if(!headers.isEmpty() && !colContents.isEmpty()) {
+            if (!headers.isEmpty() && !colContents.isEmpty()) {
                 for (int i = 0; i < headers.size(); i++) {
                     data.put(headers.get(i), colContents.get(i));
                 }
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
         }
 
-        return  data;
+        return data;
     }
 
-    public String getPolicyNoFromExcel(String ws , String func) {
-        String policyNo=  "";
+    public String getPolicyNoFromExcel(String ws, String func) {
+        String policyNo = "";
 
-        try
-        {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
+        try {
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\" + gCODE + "\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
             String fun = func;
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
@@ -168,22 +165,20 @@ public class Base {
             //Iterate through each rows one by one
             Iterator<Row> rowIterator = sheet.iterator();
             int rw = 0;
-            while (rowIterator.hasNext())
-            {
+            while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
                 //For each row, iterate through all the columns
                 Iterator<Cell> cellIterator = row.cellIterator();
-                if(rw != 0){
-                    while (cellIterator.hasNext())
-                    {
+                if (rw != 0) {
+                    while (cellIterator.hasNext()) {
                         Cell cell = cellIterator.next();
                         int colNo = cell.getColumnIndex();
-                        if(colNo == 0){
+                        if (colNo == 0) {
                             policyNo = cell.getStringCellValue();
                         }
-                        if ( colNo == 1 ){
+                        if (colNo == 1) {
                             String exlFunc = cell.getStringCellValue();
-                            if(exlFunc.contains(fun)){
+                            if (exlFunc.contains(fun)) {
                                 return policyNo;
                             }
 
@@ -192,12 +187,10 @@ public class Base {
                     }
 
                 }
-                rw ++;
+                rw++;
             }
             file.close();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println(policyNo);
@@ -213,12 +206,11 @@ public class Base {
     }
 
 
-    public double getPremiumFromRateTable(double age, String rolePlayer, String sumAsured, String product)
-    {
+    public double getPremiumFromRateTable(double age, String rolePlayer, String sumAsured, String product) {
         double premium = 0.0;
         String cover = rolePlayer + "_" + sumAsured;
         try {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\" + gCODE + "\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
 
@@ -229,35 +221,32 @@ public class Base {
             Iterator<Row> rowIterator = sheet.iterator();
             int coverColNo = 0;
             int ageRowNo = 0;
-            while (rowIterator.hasNext())
-            {
+            while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
                 //For each row, iterate through all the columns
                 Iterator<Cell> cellIterator = row.cellIterator();
 
                 String band;
                 double exclAge;
-                while (cellIterator.hasNext())
-                {
+                while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
                     int colNo = cell.getColumnIndex();
                     int rowNo = cell.getRowIndex();
 
-                    if(rowNo < 1 && colNo > 0){
+                    if (rowNo < 1 && colNo > 0) {
                         band = cell.getStringCellValue();
-                        if(band.contains(cover)){
+                        if (band.contains(cover)) {
                             coverColNo = cell.getColumnIndex();
                             break;
                         }
                     }
-                    if(rowNo > 0 && colNo < 1){
+                    if (rowNo > 0 && colNo < 1) {
                         exclAge = cell.getNumericCellValue();
-                        if (exclAge == age){
+                        if (exclAge == age) {
                             ageRowNo = cell.getRowIndex();
                             break;
                         }
                     }
-
 
 
                 }
@@ -266,29 +255,25 @@ public class Base {
             file.close();
 
 
-
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return premium;
     }
-    public void writeResults(String ws,String function, String results, String commnents) {
-        try
-        {
 
-            FileInputStream inputxls = new FileInputStream("C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx");
+    public void writeResults(String ws, String function, String results, String commnents) {
+        try {
+            FileInputStream inputxls = new FileInputStream("C:\\Users\\" + gCODE + "\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx");
             XSSFWorkbook testDataSheet = new XSSFWorkbook(inputxls);
             XSSFSheet testDataworksheet = testDataSheet.getSheet(ws);
-
             ArrayList<String> colContents = new ArrayList<String>();
             //looop through the rows
-            int rwNum =  testDataworksheet.getPhysicalNumberOfRows();
-            for (int i = 1; i < testDataworksheet.getLastRowNum(); i++ )
-            {
+            int rwNum = testDataworksheet.getPhysicalNumberOfRows();
+            for (int i = 1; i < testDataworksheet.getLastRowNum(); i++) {
                 Row rw = testDataworksheet.getRow(i);
-                if(rw != null && rw.getCell(1).getStringCellValue().contains(function)) {
-                    int colNo = rw.getPhysicalNumberOfCells()-3;
+                if (rw != null && rw.getCell(1).getStringCellValue().contains(function)) {
+                    int colNo = rw.getPhysicalNumberOfCells() - 3;
                     for (int j = 0; j < colNo; j++) {
                         colContents.add(rw.getCell(j).getStringCellValue());
                     }
@@ -296,37 +281,30 @@ public class Base {
                 }
             }
             inputxls.close();
-
-
-            FileInputStream myxls = new FileInputStream("C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx");
+            FileInputStream myxls = new FileInputStream("C:\\Users\\" + gCODE + "\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx");
             XSSFWorkbook studentsSheet = new XSSFWorkbook(myxls);
             XSSFSheet worksheet = studentsSheet.getSheet(ws);
-
             //Append the datalist with test results
             colContents.add(results);
             colContents.add(commnents);
-
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
             colContents.add(dtf.format(now));
-
-            int lastRow=worksheet.getLastRowNum();
+            int lastRow = worksheet.getLastRowNum();
             System.out.println(lastRow);
             Row row = worksheet.createRow(++lastRow);
-            if(!colContents.isEmpty()) {
+            if (!colContents.isEmpty()) {
                 for (int i = 0; i < colContents.size(); i++) {
                     row.createCell(i).setCellValue(colContents.get(i));
                 }
             }
             myxls.close();
-            FileOutputStream output_file =new FileOutputStream(new File("C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx"));
+            FileOutputStream output_file = new FileOutputStream(new File("C:\\Users\\" + gCODE + "\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResults\\TestResults" + now.getHour() + "_" + now.getMinute() + "_" + now.getYear() + "_" + now.getDayOfMonth() + "_" + now.getDayOfMonth() + ".xlsx"));
             //write changes
             studentsSheet.write(output_file);
             output_file.close();
-            System.out.println(" is successfully written");
-        }
-        catch(Exception e)
-        {
+            System.out.println("has successfully written");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
