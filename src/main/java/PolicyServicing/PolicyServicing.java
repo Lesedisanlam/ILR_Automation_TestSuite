@@ -30,9 +30,8 @@ public class PolicyServicing extends Base {
     public WebDriver login() throws InterruptedException {
         super.siteConnection();
         return _driver;
-
     }
-    @Test(priority=11)
+    @Test(priority = 11)
     public void addBeneficiary() throws InterruptedException {
 
 
@@ -211,12 +210,11 @@ public class PolicyServicing extends Base {
             //Click on Cancel
             _driver.findElement(By.xpath("//table[@id='m0t0']/tbody/tr/td/div/div[3]/a/img")).click();
             Delay(5);
-            //Set Cancellation data
-            _driver.findElement(By.name("frmTerminationDate")).clear();
-            Delay(1);
-            _driver.findElement(By.name("frmTerminationDate")).sendKeys(commDate);
-            Select selecCom = new Select(_driver.findElement(By.name("frmCancelReason")));
-            selecCom.selectByValue("Cancelled by external service");
+
+            Select reasonc = new Select(_driver.findElement(By.name("frmCancelReason")));
+
+            reasonc.selectByValue("Cannot Afford (Follow up)");
+
             Delay(2);
             //cancel
             _driver.findElement(By.name("btnSubmit")).click();
@@ -239,6 +237,8 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing", "CancelPolicy", results, e.toString());
         }
     }
+
+
     @Test(priority=4)
     public void ChangeCollectionMethod() throws InterruptedException {
         String results="";
