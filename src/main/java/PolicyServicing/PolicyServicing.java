@@ -28,7 +28,8 @@ public class PolicyServicing extends Base {
 
 @BeforeClass
     public WebDriver login() throws InterruptedException {
-        super.siteConnection();
+        siteConnection();
+        createTesResultFile();
         return _driver;
 
     }
