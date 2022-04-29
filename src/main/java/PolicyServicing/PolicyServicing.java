@@ -701,7 +701,7 @@ public class PolicyServicing extends Base {
                 Comm_date = testData.get("Comm_date").toString();
         Delay(2);
 
-        SetproductName("AddRole_NextMonth");
+      //  SetproductName("AddRole_NextMonth");
         Delay(3);
 
         //get commencement date
@@ -861,7 +861,7 @@ public class PolicyServicing extends Base {
 
         Delay(2);
         //click contract summary
-        _driver.findElement(By.xpath(" //*[@id='t0_82']/table/tbody/tr/td[3]/a")).click();
+        _driver.findElement(By.xpath(" //*[@id='t0_771']/table/tbody/tr/td[3]/a")).click();
 
         Delay(3);
         // _driver.Navigate().Refresh();
@@ -930,6 +930,7 @@ public class PolicyServicing extends Base {
         writeResults("Policy-Servicing","AddRole_NextMonth","Failed",e.toString());
     }
     }
+    @Test
     private void TerminateRoleNext_month() throws InterruptedException {
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "TerminateRoleNext_month");
         clickOnMainMenu();
@@ -938,7 +939,7 @@ public class PolicyServicing extends Base {
 
 
             policySearch(PolicyNo);
-            SetproductName("TerminateRoleNext_month");
+          //  SetproductName("TerminateRoleNext_month");
             String results = "";
             Delay(2);
 
@@ -957,7 +958,7 @@ public class PolicyServicing extends Base {
             _driver.findElement(By.name("btnTerminate")).click();
             String alerttext = _driver.switchTo().alert().getText();
             _driver.switchTo().alert().accept();
-            assert expected == alerttext;
+           // assert expected == alerttext;
 
             //change effective to date
             Delay(2);
@@ -988,7 +989,65 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing", "TerminateRoleNext_month", "Failed", e.toString());
         }
     }
+    @Test
+    private void TerminateRolePlayer() throws InterruptedException {
+        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "TerminateRolePlayer");
+        clickOnMainMenu();
+        Delay(2);
+        try {
 
+
+            policySearch(PolicyNo);
+            SetproductName("TerminateRolePlayer");
+            String results = "";
+            Delay(2);
+
+            for (int i = 2; i < 23; i++) {
+                String txt = _driver.findElement(By.xpath(String.format("//*[@id='CntContentsDiv11']/table/tbody/tr[%1$s]/td[1]/span", String.valueOf(i)))).getText();
+                String relationship = _driver.findElement(By.xpath(String.format("//*[@id='CntContentsDiv11']/table/tbody/tr[%1$s]/td[3]", String.valueOf(i)))).getText();
+
+                if (txt.equals("Life Assured") && !relationship.equals("Self")) {
+                    _driver.findElement(By.xpath(String.format("//*[@id='CntContentsDiv11']/table/tbody/tr[%1$s]/td[1]/span", String.valueOf(i)))).click();
+                    break;
+                }
+
+            }
+            Delay(3);
+            String expected = "Are you sure you want to terminate this role";
+            _driver.findElement(By.name("btnTerminate")).click();
+            String alerttext = _driver.switchTo().alert().getText();
+            _driver.switchTo().alert().accept();
+           // assert expected == alerttext;
+
+            //change effective to date
+            Delay(2);
+            WebElement effectivefrom = _driver.findElement(By.name("frmEffectiveFromDate"));
+            String effectvalue = effectivefrom.getAttribute("value");
+
+            Delay(1);
+            _driver.findElement(By.name("frmEffectiveToDate")).clear();
+            _driver.findElement(By.name("frmEffectiveToDate")).sendKeys(effectvalue);
+
+            Delay(2);
+            //click terminate
+
+            _driver.findElement(By.name("btnTerminate")).click();
+
+            //validation
+            if (_driver.getCurrentUrl().equals("http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w?")) {
+                results = "Passed";
+
+            } else {
+                results = "Fail";
+
+
+            }
+
+            writeResults("Policy-Servicing", "TerminateRolePlayer", results, "");
+        }catch (Exception e) {
+            writeResults("Policy-Servicing", "TerminateRolePlayer", "Failed", e.toString());
+        }
+    }
     @Test
    private void ChangeLifeAssured() throws InterruptedException {
        String results;
@@ -1701,28 +1760,28 @@ public class PolicyServicing extends Base {
             Delay(2);
             policySearch(PolicyNo);
 
-            JavaScriptExecutor js2 = (JavaScriptExecutor)_driver;
+        //    JavaScriptExecutor js2 = (JavaScriptExecutor)_driver;
 
             String results = "";
 
             Delay(2);
 
-            SetproductName("AddRolePlayer");
+           // SetproductName("AddRolePlayer");
 
-            Delay(5);
+           // Delay(5);
 
 
 
             //get commencement date
             String commencementDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
-
+            Delay(3);
             //click add role player
             _driver.findElement(By.name("btnAddRolePlayer")).click();
 
             //Select role
             WebElement selectRole = _driver.findElement(By.name("frmRoleObj"));
             Select s = new Select(selectRole);
-            s.deselectByIndex(4);
+            s.selectByIndex(4);
             Delay(3);
             //Click calendar
 
@@ -1864,7 +1923,7 @@ public class PolicyServicing extends Base {
             String LifeA_ID = _driver.findElement(By.xpath(" //*[@id='frmSubCbmre']/tbody/tr[4]/td[4]")).getText();
 
             //validation
-            if (id_number == LifeA_ID)
+            if (id_number.contains(LifeA_ID))
             {
                 results = "Passed";
 
@@ -1890,7 +1949,7 @@ public class PolicyServicing extends Base {
 
         Delay(2);
         //click contract summary
-        _driver.findElement(By.xpath(" //*[@id='t0_82']/table/tbody/tr/td[3]/a")).click();
+        _driver.findElement(By.xpath(" //*[@id='t0_771']/table/tbody/tr/td[3]/a")).click();
 
         Delay(3);
         //  _driver.Navigate().Refresh();
