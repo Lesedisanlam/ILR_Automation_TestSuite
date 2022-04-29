@@ -150,7 +150,6 @@ public class Base {
 
         return  data;
     }
-
     public String getPolicyNoFromExcel(String ws , String func) {
         String policyNo=  "";
 
@@ -276,6 +275,7 @@ public class Base {
         try
         {
 
+
             FileInputStream inputxls = new FileInputStream("C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx");
             XSSFWorkbook testDataSheet = new XSSFWorkbook(inputxls);
             XSSFSheet testDataworksheet = testDataSheet.getSheet(ws);
@@ -318,11 +318,11 @@ public class Base {
                 }
             }
             myxls.close();
-            FileOutputStream output_file =new FileOutputStream(new File("C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx"));
+            FileOutputStream output_file =new FileOutputStream(new File("C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResults\\TestResults"+now.getHour()+"_"+now.getMinute()+"_"+now.getYear()+"_"+now.getDayOfMonth()+"_"+now.getDayOfMonth()+".xlsx"));
             //write changes
             studentsSheet.write(output_file);
             output_file.close();
-            System.out.println(" is successfully written");
+            System.out.println("has successfully written");
         }
         catch(Exception e)
         {

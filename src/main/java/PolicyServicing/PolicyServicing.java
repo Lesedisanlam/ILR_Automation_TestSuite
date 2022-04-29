@@ -187,7 +187,7 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing", "ReInstate", results, e.toString());
         }
     }
-    @Test(dependsOnMethods = {"ReInstate"},alwaysRun = true)
+    @Test
     public void CancelPolicy() throws InterruptedException {
 
         String results;
@@ -199,7 +199,7 @@ public class PolicyServicing extends Base {
             results = "";
             Delay(2);
             String commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
-            String dt = "commDate";
+
 
             Delay(3);
             //Hover on policy options
@@ -215,6 +215,14 @@ public class PolicyServicing extends Base {
             //Click on Cancel
             _driver.findElement(By.xpath("//table[@id='m0t0']/tbody/tr/td/div/div[3]/a/img")).click();
             Delay(5);
+
+            //Set Cancellation data
+            _driver.findElement(By.name("frmTerminationDate")).clear();
+            Delay(1);
+            _driver.findElement(By.name("frmTerminationDate")).sendKeys(commDate);
+
+
+
 
             Select selecCom = new Select(_driver.findElement(By.name("frmCancelReason")));
             selecCom.selectByValue("Cancelled by external service");
