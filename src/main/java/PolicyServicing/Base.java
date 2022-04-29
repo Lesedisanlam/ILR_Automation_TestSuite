@@ -1,16 +1,12 @@
 package src.main.java.PolicyServicing;
 import org.apache.commons.io.FileUtils;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.formula.atp.Switch;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -37,7 +33,7 @@ public class Base {
     private String _screenShotFolder;
     private String _connStr;
     private String target_url;
-    String path, gCODE;
+    String result_path, gCODE;
 
 
     private String screenShotDailyFolderName() {
@@ -94,7 +90,7 @@ public class Base {
         _driver.get("http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w");
         username = "SKA008PPE";
         password = "SKA008PPE/c";
-        gCODE = "G992107";
+        gCODE = "G992127";
         //  _driver.get(target_url);
         _driver.manage().window().maximize();
         Delay(2);
@@ -281,7 +277,7 @@ public class Base {
                 }
             }
             inputxls.close();
-            FileInputStream myxls = new FileInputStream("C:\\Users\\" + gCODE + "\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResult.xlsx");
+            FileInputStream myxls = new FileInputStream(result_path);
             XSSFWorkbook studentsSheet = new XSSFWorkbook(myxls);
             XSSFSheet worksheet = studentsSheet.getSheet(ws);
             //Append the datalist with test results
@@ -299,12 +295,80 @@ public class Base {
                 }
             }
             myxls.close();
-            FileOutputStream output_file = new FileOutputStream(new File("C:\\Users\\" + gCODE + "\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResults\\TestResults" + now.getHour() + "_" + now.getMinute() + "_" + now.getYear() + "_" + now.getDayOfMonth() + "_" + now.getDayOfMonth() + ".xlsx"));
+            FileOutputStream output_file = new FileOutputStream(new File(result_path));
             //write changes
             studentsSheet.write(output_file);
             output_file.close();
             System.out.println("has successfully written");
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createTesResultFile(){
+        try
+        {
+            LocalDateTime now = LocalDateTime.now();
+            result_path = "C:\\Users\\" + gCODE + "\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResults\\TestResults" + now.getHour() + "_" + now.getMinute() + "_" + now.getYear() + "_" + now.getDayOfMonth() + "_" + now.getDayOfMonth() + ".xlsx";
+
+            Workbook workbook = new XSSFWorkbook();
+
+            Sheet sheet = workbook.createSheet("Policy-Servicing");
+            Row header = sheet.createRow(0);
+
+            CellStyle headerStyle = workbook.createCellStyle();
+            headerStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            XSSFFont font = ((XSSFWorkbook) workbook).createFont();
+            font.setFontName("Arial");
+
+
+            font.setFontHeightInPoints((short) 16);
+            font.setBold(true);
+            font.setColor(IndexedColors.WHITE.getIndex());
+            headerStyle.setFont(font);
+
+            Cell headerCell = header.createCell(0);
+            headerCell.setCellValue("Policy No");
+            headerCell.setCellStyle(headerStyle);
+            headerCell = header.createCell(1);
+            headerCell.setCellValue("Function");
+            headerCell.setCellStyle(headerStyle);
+            headerCell = header.createCell(2);
+            headerCell.setCellValue("Scenario");
+            headerCell.setCellStyle(headerStyle);
+            headerCell = header.createCell(3);
+            headerCell.setCellValue("Scenario Detail");
+            headerCell.setCellStyle(headerStyle);
+            headerCell = header.createCell(4);
+            headerCell.setCellValue("Product");
+            headerCell.setCellStyle(headerStyle);
+
+            headerCell = header.createCell(5);
+            headerCell.setCellValue("Expected Results");
+            headerCell.setCellStyle(headerStyle);
+
+            headerCell = header.createCell(6);
+            headerCell.setCellValue("Actual Results");
+            headerCell.setCellStyle(headerStyle);
+
+            headerCell = header.createCell(7);
+            headerCell.setCellValue("Test Results");
+            headerCell.setCellStyle(headerStyle);
+
+            headerCell = header.createCell(8);
+            headerCell.setCellValue("Comments");
+            headerCell.setCellStyle(headerStyle);
+
+            headerCell = header.createCell(9);
+            headerCell.setCellValue("Test Date");
+            headerCell.setCellStyle(headerStyle);
+
+            FileOutputStream outputStream = new FileOutputStream(result_path);
+            workbook.write(outputStream);
+            workbook.close();
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
