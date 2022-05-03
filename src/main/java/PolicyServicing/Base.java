@@ -90,7 +90,7 @@ public class Base {
         _driver.get("http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w");
         username = "SKA008PPE";
         password = "SKA008PPE/c";
-        gCODE = "G992127";
+        gCODE = "G992107";
         //  _driver.get(target_url);
         _driver.manage().window().maximize();
         Delay(2);
