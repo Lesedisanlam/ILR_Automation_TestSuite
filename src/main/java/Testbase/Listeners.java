@@ -11,11 +11,14 @@ import org.testng.ITestResult;
 import org.testng.annotations.BeforeTest;
 import resources.ExtentReporter;
 
+import java.lang.annotation.Annotation;
+
 public class Listeners extends Tbase implements ITestListener{
 
     ExtentTest test;
  ExtentReports  extent =ExtentReporter.getReportObject();
 //threadlock makes execution to be thread safe to avoid overriding when tests run parallel
+
     ThreadLocal<ExtentTest> extentTest = new ThreadLocal<ExtentTest>();
 
     //before executing @tests
@@ -24,6 +27,7 @@ public class Listeners extends Tbase implements ITestListener{
         //test will be created for every method
          test = extent.createTest(result.getMethod().getMethodName()) ;
       extentTest.set(test);
+
     }
 
     public void onTestSuccess(ITestResult result) {
@@ -40,10 +44,11 @@ extentTest.get().log(Status.PASS,"Test Passed");
         String testMethodName = result.getMethod().getMethodName();
         // get access to any field in any class
         try {
-            //to get fields of any class
+
 
             driver =   (WebDriver)result.getTestClass().getRealClass().getDeclaredField("_driver").get(result.getInstance());
         } catch (Exception e) {
+
 
         }
        // By signing = By.
