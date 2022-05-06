@@ -9,10 +9,8 @@
 
     <test name="LoginTest">
     <classes>
-      <class name="Testbase.Tbase">
-      <methods>
-        <include name="Browser"/>
-      </methods>
+      <class name="Testbase.PolicyServicing">
+
       </class>
     </classes>
 
