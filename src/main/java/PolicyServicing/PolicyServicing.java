@@ -422,6 +422,7 @@ public class PolicyServicing extends Base {
         {
             results = "Failed";
         }
+        Assert.assertEquals("Debi-Check",_driver.findElement(By.xpath("//*[@id='frmCbmre']/tbody/tr[8]/td[4]")).getText());
 
 
         writeResults("Policy-Servicing","ChangeCollectionNegative",results,"");
