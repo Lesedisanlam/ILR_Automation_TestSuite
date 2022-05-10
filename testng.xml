@@ -9,7 +9,7 @@
 
     <test name="LoginTest">
     <classes>
-      <class name="Testbase.PolicyServicing">
+      <class name="Testbase.Tbase">
 
       </class>
     </classes>

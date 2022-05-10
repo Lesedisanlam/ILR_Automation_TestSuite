@@ -9,7 +9,7 @@ import org.testng.ITestListener;
 import org.testng.ITestResult;
 import resources.ExtentReporter;
 
-public class Listeners extends Base implements ITestListener{
+public class Listeners extends Tbase implements ITestListener{
 
     ExtentTest test;
  ExtentReports  extent =ExtentReporter.getReportObject();
