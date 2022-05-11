@@ -433,29 +433,41 @@ public class PolicyServicing extends Base {
         }
     }
 
-
+@Test
     private void PostDatedDowngrade() throws InterruptedException {
 
         String results="";
         try {
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","PostDatedDowngrade");
         Dictionary testData = getDataFromSheet("");
+        Delay(2);
         clickOnMainMenu();
-        Delay(2);
         policySearch(PolicyNo);
-        String date = String.format("%1$s", LocalDateTime.now());
         String currentSumAssured = "";
-
         Delay(2);
 
-        //SetproductName("PostDatedDowngrade");
+        //SetproductName("PostDatedDowngrade")
+            clickOnMainMenu();
+
+
 
         Delay(3);
 
         String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
 
-        //Click on user  component
-        _driver.findElement(By.name("fccComponentDescription1")).click();
+            //Click on user  contract summary
+            _driver.findElement(By.xpath("//*[@id='t0_761']/table/tbody/tr/td[1]/a/img[2]")).click();
+
+
+
+            //Click on user  component
+            _driver.findElement(By.name("Alf-ICF8_00000214")).click();
+
+
+            Delay(4);
+
+            //  click on user  component
+            _driver.findElement(By.name("fccComponentDescription1")).click();
 
         Delay(4);
         //Get The current Sum Assured for the life assured
@@ -551,7 +563,7 @@ public class PolicyServicing extends Base {
         }
     }
 
-
+@Test
     private void PostDatedUpgrade() throws InterruptedException {
         try
         {
@@ -569,16 +581,25 @@ public class PolicyServicing extends Base {
 
         Delay(2);
 
-        SetproductName("PostDatedUpgrade");
+       // SetproductName("PostDatedUpgrade");
 
         Delay(3);
 
         String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
 
+            //Click on user  contract summary
+            _driver.findElement(By.xpath("//*[@id='t0_771']/table/tbody/tr/td[1]/a/img[2]")).click();
 
 
-        //Click on user  component
-        _driver.findElement(By.name("fccComponentDescription1")).click();
+
+            //Click on user  component
+            _driver.findElement(By.xpath("//*[@id='t0_774']/a")).click();
+
+
+            Delay(4);
+
+            //  click on user  component
+            _driver.findElement(By.name("fccComponentDescription1")).click();
 
 
         Delay(4);
@@ -2046,6 +2067,8 @@ public class PolicyServicing extends Base {
 
         // String PolicyNo = "";
         //Click on contract search
+        Delay(2);
+
         _driver.findElement(By.name("alf-ICF8_00000222")).click();
         Delay(2);
 
