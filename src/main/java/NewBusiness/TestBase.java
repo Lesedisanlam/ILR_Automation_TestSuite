@@ -136,8 +136,12 @@ public class TestBase {
 
 
     }
+    @Test
+    public void testGetPoliciyHolderDta(){
+        getPolicyHolderDetails("1");
+    }
 
-    public Dictionary getPolicyHolderDetails(int scenario_id)
+    public Dictionary getPolicyHolderDetails(String scenario_id)
     {
         Dictionary policyHolderData = new Hashtable();
 
@@ -148,52 +152,68 @@ public class TestBase {
         sheets.add("BankDetails");
         sheets.add("PhysicalAddress");
 
-
-        sheets.forEach(ws ->{
-            ArrayList<Dictionary> roles = new ArrayList<Dictionary>();
-            try {
-                FileInputStream file = new FileInputStream(new File(_testDataUrl));
+        try {
+                FileInputStream file = new FileInputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData\\NewBusiness\\TestData.xlsx"));
                 //Create Workbook instance holding reference to .xlsx file
                 XSSFWorkbook workbook = new XSSFWorkbook(file);
-
                 //Get first/desired sheet from the workbook
-                XSSFSheet sheet = workbook.getSheet(ws);
 
-                //Iterate through each rows one by one
-                int lastRwNum = sheet.getLastRowNum();
-
-                for (int i = 0; i < lastRwNum; i++) {
-                    Row rw = sheet.getRow(i);
+                for (String ws:sheets) {
+                    XSSFSheet sheet = workbook.getSheet(ws);
+                    ArrayList<Dictionary> roles = new ArrayList<Dictionary>();
+                    //Iterate through each rows one by one
+                    int lastRwNum = sheet.getPhysicalNumberOfRows();
                     ArrayList<String> hearders = new ArrayList<String>();
-                    int lastColNum = rw.getPhysicalNumberOfCells();
-                    if(i==0){
-                        for (int j = 0; j < lastColNum; j++) {
-                            hearders.add(rw.getCell(j).getStringCellValue());
-                        }
-                    }
-                    else{
-                        if(rw.getCell(0).getNumericCellValue() == scenario_id ){
-                            Dictionary rowData = new Hashtable();
+                    for (int i = 0; i < lastRwNum; i++) {
+                        Row rw = sheet.getRow(i);
+                        int lastColNum = rw.getPhysicalNumberOfCells();
+                        if(i==0){
                             for (int j = 0; j < lastColNum; j++) {
-                                rowData.put(hearders.get(j),rw.getCell(j).getStringCellValue());
+                                hearders.add(rw.getCell(j).getStringCellValue());
                             }
                         }
+                        else{
+                            //get id from excel
+                            boolean checker;
+                            if(rw.getCell(0).getCellType().equals(CellType.STRING))
+                            {
+
+                                checker = rw.getCell(0).getStringCellValue().trim().equalsIgnoreCase(scenario_id);
+
+                            }else
+                            {
+                                checker = (int)rw.getCell(0).getNumericCellValue() == Integer.parseInt(scenario_id);
+                            }
+
+                            if(checker)
+                            {
+                                Dictionary rowData = new Hashtable();
+                                for (int j = 0; j < lastColNum; j++) {
+                                    String key = hearders.get(j);
+                                    String val ="";
+                                    if(rw.getCell(j).getCellType().equals(CellType.STRING))
+                                    {
+                                        val = rw.getCell(j).getStringCellValue();
+
+                                    }else
+                                    {
+                                        val = ""+(int)(rw.getCell(j).getNumericCellValue());
+                                    }
+                                    rowData.put(key,val);
+                                }
+                                roles.add(rowData);
+                            }
+                        }
+
                     }
-
+                    policyHolderData.put(ws,roles);
                 }
-
                 file.close();
 
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
-
-
-
-
-
         return policyHolderData;
     }
 
