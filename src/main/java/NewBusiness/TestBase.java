@@ -138,19 +138,31 @@ public class TestBase {
     }
     @Test
     public void testGetPoliciyHolderDta(){
-        getPolicyHolderDetails("1");
+        getPolicyHolderDetails("1",false);
     }
 
-    public Dictionary getPolicyHolderDetails(String scenario_id)
+    public Dictionary getPolicyData(String scenario_id, Boolean phd)
     {
         Dictionary policyHolderData = new Hashtable();
 
         //Sheets in the test data file that we want to access to extract Policy holder data
         ArrayList<String> sheets = new ArrayList<String>();
         sheets.add("PolicyHolder_Details");
-        sheets.add("Affordability_Check");
-        sheets.add("BankDetails");
-        sheets.add("PhysicalAddress");
+        if(phd)
+        {
+            sheets.add("Affordability_Check");
+            sheets.add("BankDetails");
+            sheets.add("PhysicalAddress");
+        }
+        else{
+
+            sheets.add("Extended");
+            sheets.add("Parents");
+            sheets.add("Children");
+            sheets.add("spouse");
+            sheets.add("PolicyPayer");
+            sheets.add("Beneficiaries");
+        }
 
         try {
                 FileInputStream file = new FileInputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData\\NewBusiness\\TestData.xlsx"));
