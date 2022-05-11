@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 public class TestBase {
     private ChromeOptions _chromeOptions;
     public WebDriver _driver;
-
     private String _salesAppUserName;
 
     private String _salesAppPassword;
@@ -39,7 +38,7 @@ public class TestBase {
     String result_path;
     public void setUp(){
         System.setProperty("webdriver.chrome.driver", "C:\\Code\\bin\\chromeDriver.exe");
-        _gcode = "G992127";
+        _gcode = "G992107";
         _chromeOptions = new ChromeOptions();
         _chromeOptions.addArguments("--incognito");
         _chromeOptions.addArguments("--ignore-certificate-errors");
@@ -81,9 +80,10 @@ public class TestBase {
 
     }
 
-    @Test
+@Test
     public void salesAppSiteConnection()
     {
+        setUp();
         _driver.get("https://uat-fe.safricansalesapp.net/advisor/dashboard/");
         try
         {
@@ -136,9 +136,9 @@ public class TestBase {
 
 
     }
-    @Test
+
     public void testGetPoliciyHolderDta(){
-        getPolicyHolderDetails("1",false);
+        //getPolicyHolderDetails("1",false);
     }
 
     public Dictionary getPolicyData(String scenario_id, Boolean phd)
