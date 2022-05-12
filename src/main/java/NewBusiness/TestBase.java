@@ -39,10 +39,6 @@ public class TestBase {
     public void setUp(){
         System.setProperty("webdriver.chrome.driver", "C:\\Code\\bin\\chromeDriver.exe");
         _gcode = "G992107";
-        _chromeOptions = new ChromeOptions();
-        _chromeOptions.addArguments("--incognito");
-        _chromeOptions.addArguments("--ignore-certificate-errors");
-        _driver = new ChromeDriver(_chromeOptions);
         _testDataUrl = "C:\\Users\\"+_gcode+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData\\NewBusiness\\TestData.xlsx";
         _screenShotFolder = "C:\\Users\\"+_gcode+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResults\\NewBusiness\\Failed_Scenarios\\" +screenShotDailyFolderName() +"\\";
         File theDir = new File(_screenShotFolder);
@@ -80,16 +76,19 @@ public class TestBase {
 
     }
 
-@Test
     public void salesAppSiteConnection()
     {
-        setUp();
+        System.setProperty("webdriver.chrome.driver", "C:\\Code\\bin\\chromeDriver.exe");
+        _chromeOptions = new ChromeOptions();
+        _chromeOptions.addArguments("--incognito");
+        _chromeOptions.addArguments("--ignore-certificate-errors");
+        _driver = new ChromeDriver(_chromeOptions);
         _driver.get("https://uat-fe.safricansalesapp.net/advisor/dashboard/");
         try
         {
-            _salesAppUserName = "G992127";//TODO add your user name and password
-            _salesAppPassword = "P@$$word47";
-            _salesAppPin = "119547";
+            _salesAppUserName = "G992092";//TODO add your user name and password
+            _salesAppPassword = "SCHggy024588";
+            _salesAppPin = "880808";
             TimeUnit.SECONDS.sleep(2);
             _driver.manage().window().maximize();
             TimeUnit.SECONDS.sleep(2);
@@ -123,8 +122,9 @@ public class TestBase {
             pin1.sendKeys(_salesAppPin);
             TimeUnit.SECONDS.sleep(3);
             _driver.findElement(By.name("pinConfirm")).sendKeys(_salesAppPin);
-            TimeUnit.SECONDS.sleep(3);
+            TimeUnit.SECONDS.sleep(4);
             WebElement create = _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div/section/form/button"));
+            TimeUnit.SECONDS.sleep(2);
             create.click();
             TimeUnit.SECONDS.sleep(4);
 
