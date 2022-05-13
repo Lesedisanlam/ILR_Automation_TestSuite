@@ -284,9 +284,9 @@ public class SalesApp extends TestBase {
         Tuple<String, String> validation;
 
 
-        for (var key : keys) {
+        for (String key : keys) {
 
-            for (var item : [key]) {
+            for (String item : [key]) {
 
                 if (item.Count > 0) {
                     if (key.equals("PolicyHolder_Details")) {
@@ -697,7 +697,7 @@ public class SalesApp extends TestBase {
     }
 
 
-    public void SlideBar(String coverAmount, int counts, String role) {
+    public void SlideBar(String coverAmount, int counts, String role) throws InterruptedException {
 
 
         if (role == "Myself") {
@@ -737,7 +737,7 @@ public class SalesApp extends TestBase {
             }
             WebElement sliderbar = _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[3]/div[4]/div[1]"));
 
-            int widthslider = sliderbar.Size.Width;
+            int widthslider = sliderbar.getSize().width;
 
             Delay(1);
 
@@ -749,7 +749,7 @@ public class SalesApp extends TestBase {
             Delay(1);
 
             //f = Mathf.Round(f * 100.0f) * 0.01f;
-            slideraction.moveToElement(Convert.ToInt32(V_Position), 0).Build().Perform();
+            slideraction.moveByOffset(Integer.parseInt(V_Position), 0).build().perform();
 
         }
 
@@ -791,7 +791,7 @@ public class SalesApp extends TestBase {
             }
             WebElement sliderbar = _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[3]/div[4]/div[1]"));
 
-            int widthslider = sliderbar.Size.Width;
+            int widthslider = sliderbar.getSize().width;
 
             Delay(1);
             WebElement slider = _driver.findElement(By.xpath($"//*[@id='/cover-details[{counts}].cover-amount']"));
@@ -799,7 +799,8 @@ public class SalesApp extends TestBase {
             slideraction.clickAndHold(slider);
             Delay(1);
             //f = Mathf.Round(f * 100.0f) * 0.01f;
-            slideraction.moveByOffset(Convert.ToInt32(V1_Position), 0).Build().Perform();
+            slideraction.moveByOffset(Integer.parseInt(V1_Position), 0).build().perform();
+
 
 
         }
@@ -827,12 +828,12 @@ public class SalesApp extends TestBase {
             }
 
             WebElement sliderbar = _driver.findElement(By.className("slider"));
-            int widthslider = sliderbar.Size.Width;
+            int widthslider = sliderbar.getSize().width;
             Delay(1);
-            WebElement slider = _driver.findElement(By.xpath($"//*[@id='/cover-details[{counts}].cover-amount']"));
+            WebElement slider = _driver.findElement(By.xpath("//*[@id='/cover-details[{counts}].cover-amount']"));
             Actions slideraction = new Actions(_driver);
             slideraction.clickAndHold(slider);
-            slideraction.moveByOffset(Convert.ToInt32(V2_Position), 0).Build().Perform();
+            slideraction.moveByOffset(Integer.parseInt(V2_Position), 0).build().perform();
 
 
             if (role == "Extended") {
@@ -860,14 +861,15 @@ public class SalesApp extends TestBase {
                         break;
                 }
                 WebElement sliderbar2 = _driver.findElement(By.className("slider"));
-                int widthslider2 = sliderbar.Size.Width;
+                int widthslider2 = sliderbar.getSize().width;
 
                 Delay(1);
 
-                WebElement slider2 = _driver.findElement(By.xpath($"//*[@id='/cover-details[{counts}].cover-amount']"));
+                WebElement slider2 = _driver.findElement(By.xpath("//*[@id='/cover-details[{counts}].cover-amount']"));
                 Actions slideraction2 = new Actions(_driver);
                 slideraction.clickAndHold(slider2);
-                slideraction.moveByOffset(Convert.ToInt32(V3_Position), 0).Build().Perform();
+                slideraction.moveByOffset(Integer.parseInt(V3_Position), 0).build().perform();
+
 
 
             }
@@ -906,8 +908,7 @@ public class SalesApp extends TestBase {
                 coverAmountsValidation = "Passed";
             } else {
                 coverAmountsValidation = "Failed";
-                comment += $
-                "Scenario Failed - max and min cover amounts validation erorr for {roleplayer} age {age} ";
+                comment += $"Scenario Failed - max and min cover amounts validation erorr for {roleplayer} age {age} ";
             }
 
         }
@@ -915,8 +916,7 @@ public class SalesApp extends TestBase {
 
         if (premiumFromRate != Convert.ToDecimal(expectedPrem)) {
             premValidation = "Failed";
-            comment += $
-            "Scenario Failed premium validation for {roleplayer}. Premuim on frontend does not match one in rate table";
+            comment += $"Scenario Failed premium validation for {roleplayer}. Premuim on frontend does not match one in rate table";
 
         } else {
             premValidation = "Passed";
