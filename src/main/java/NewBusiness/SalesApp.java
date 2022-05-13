@@ -13,6 +13,7 @@ import java.util.Random;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import jdk.jfr.Timespan;
 import org.openqa.selenium.Alert;
 import java.util.Dictionary;
 import java.util.Iterator;
@@ -296,12 +297,12 @@ public class SalesApp extends TestBase {
                             _driver.findElement(By.xpath(String.format("//*[@id='gatsby-focus-wrapper']/article/form/section[%1$s]/div[2]/div[1]/div/label[%2$s]", section, label))).Click();
                             //Cover Amount
                             DOB = _driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[3]/div[5]/input", section)));
-                            date_of_birth = DOB.GetAttribute("value");
+                            date_of_birth = DOB.getAttribute("value");
                             SlideBar(item["Cover_Amount"], lifeAsuredCounter, "Myself");
                             Delay(2);
-                            frontEndPrem = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/label/h2/strong[2]", section))).Text).Remove(0, 1).strip();
-                            frontEndMin = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/div[2]/span[1]", section))).Text).Remove(0, 1).replace(" ", "");
-                            frontEndMax = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/div[2]/span[2]", section))).Text).Remove(0, 1).replace(" ", "");
+                            frontEndPrem = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/label/h2/strong[2]", section))).getText()).Remove(0, 1).strip();
+                            frontEndMin = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/div[2]/span[1]", section))).getText()).Remove(0, 1).replace(" ", "");
+                            frontEndMax = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/div[2]/span[2]", section))).getText()).Remove(0, 1).replace(" ", "");
                             validation = RolePlayerValidation(_driver, item["Cover_Amount"], "ML", date_of_birth, frontEndPrem, frontEndMin, frontEndMax);
                             if (validation.Item1.equals("Failed")) {
                                 return Tuple.Create("Failed", validation.Item2);
@@ -314,28 +315,28 @@ public class SalesApp extends TestBase {
                     }
                     //click Add
                     Delay(2);
-                    _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/button")).Click();
+                    _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/button")).click();
 
                     //select relationship
                     Delay(2);
-                    _driver.findElement(By.xpath(String.format("//*[@id='gatsby-focus-wrapper']/article/form/section[%1$s]/div[2]/div[1]/div/label[%2$s]", section, label))).Click();
+                    _driver.findElement(By.xpath(String.format("//*[@id='gatsby-focus-wrapper']/article/form/section[%1$s]/div[2]/div[1]/div/label[%2$s]", section, label))).click();
                     if (key.equals("Extended")) {
                         //Extended Relationship Type
 
-                        WebElement RelationshipType = _driver.FindElement(By.Name(String.format("/cover-details[%1$s].relationship-extended-type", lifeAsuredCounter)));
+                        WebElement RelationshipType = _driver.findElement(By.name(String.format("/cover-details[%1$s].relationship-extended-type", lifeAsuredCounter)));
                         RelationshipType.sendKeys(item["Extended_RelationshipType"]);
                         RelationshipType.sendKeys(Keys.ArrowDown);
                         RelationshipType.sendKeys(Keys.Enter);
                     }
                     //FirstName
                     Delay(1);
-                    _driver.findElement(By.Name(String.format("/cover-details[%1$s].name", lifeAsuredCounter))).SendKeys(item["First_name"]);
+                    _driver.findElement(By.name(String.format("/cover-details[%1$s].name", lifeAsuredCounter))).sendKeys(item["First_name"]);
                     //Surname
                     Delay(2);
-                    _driver.findElement(By.Name(String.format("/cover-details[%1$s].surname", lifeAsuredCounter))).SendKeys(item["Surname"]);
+                    _driver.findElement(By.name(String.format("/cover-details[%1$s].surname", lifeAsuredCounter))).sendKeys(item["Surname"]);
                     //ID Number
                     Delay(1);
-                    _driver.findElement(By.Name(String.format("/cover-details[%1$s].id-number", lifeAsuredCounter))).SendKeys(item["ID_number"]);
+                    _driver.findElement(By.name(String.format("/cover-details[%1$s].id-number", lifeAsuredCounter))).sendKeys(item["ID_number"]);
                     //MaxMin Age validation
                     Tuple<String, String> ageValidationResults = MaxMinAgeValidation(section);
                     if (!ageValidationResults.Item1.equals("") && !ageValidationResults.Item2.equals("")) {
@@ -345,7 +346,7 @@ public class SalesApp extends TestBase {
 
                     //Cellphone
                     Delay(2);
-                    _driver.findElement(By.Name(String.format("/cover-details[%1$s].contact-number", lifeAsuredCounter))).SendKeys(item["Cellphone"]);
+                    _driver.findElement(By.name(String.format("/cover-details[%1$s].contact-number", lifeAsuredCounter))).SendKeys(item["Cellphone"]);
                     DOB = _driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[3]/div[5]/input", section)));
                     date_of_birth = DOB.GetAttribute("value");
                     SlideBar(item["Cover_Amount"], lifeAsuredCounter, key);
@@ -496,19 +497,24 @@ public class SalesApp extends TestBase {
         _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/section/div[3]/button")).click();
 
         //debicheck loading delay
+
+        WebElement ElementExists;
+        ElementExists = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
+        ElementExists.click();
         //Impletent implicit wait
-        WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(160));
+        WebDriverWait wait = new WebDriverWait(_driver, Timespan.FromSeconds(160));
         try {
 
-            wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
+            wait.Until(ExpectedConditions.ElementExists(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
         } catch
 
         {
             var tries = 2;
             for (int i = 0; i < tries; i++) {
-                WebDriverWait wt = new WebDriverWait(_driver, TimeSpan.FromSeconds(160));
-                wt.Until(ExpectedConditions.ElementExists(By.XPath("/html/body/div[1]/div[1]/article/section/div[3]/button")));
-                _driver.findElement(By.XPath("/html/body/div[1]/div[1]/article/section/div[3]/button")).Click();
+                WebDriverWait ElementExists = new WebDriverWait(_driver, Timespan.FromSeconds(160));
+                WebElement ElementExists;
+                ElementExists = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
+                ElementExists.click();
             }
 
 
@@ -872,7 +878,7 @@ public class SalesApp extends TestBase {
 
     }
 
-    public Tuple<string, string> RolePlayerValidation(IWebDriver _driver, string coverAmount, string roleplayer, string dob, string expectedPrem, string frondEndMin, string frondEndMax) {
+    public Tuple<string, string> RolePlayerValidation(WebDriver _driver, String coverAmount, String roleplayer, string dob, string expectedPrem, string frondEndMin, string frondEndMax) {
 
         //calulate age
         String premValidation = "", coverAmountsValidation = "", comment = "", age;
