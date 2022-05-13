@@ -26,7 +26,7 @@ import static java.lang.System.in;
 
 public class PolicyServicing extends Base {
 
-@BeforeClass
+    @BeforeClass
     public WebDriver login() throws InterruptedException {
         siteConnection();
         createTesResultFile();
@@ -244,84 +244,84 @@ public class PolicyServicing extends Base {
     public void ChangeCollectionMethod() throws InterruptedException {
         String results="";
         try {
-        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionMethod");
-        Dictionary testData = getDataFromSheet("CollectionM");
-        clickOnMainMenu();
-        Delay(2);
-        policySearch(PolicyNo);
-        String employee_number1 = "";
-        String date = String.format("%1$s", LocalDateTime.now());
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionMethod");
+            Dictionary testData = getDataFromSheet("CollectionM");
+            clickOnMainMenu();
+            Delay(2);
+            policySearch(PolicyNo);
+            String employee_number1 = "";
+            String date = String.format("%1$s", LocalDateTime.now());
 
-        Delay(4);
-
-
-
-        //click on policy payer
-        _driver.findElement(By.name("fcRoleEntityLink3")).click();
-
-        WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
-        //Creating object of an Actions class
-        Actions action = new Actions(_driver);
-        //Performing the mouse hover action on the target element.
-        action.moveToElement(policyOptionElement).perform();
-
-        //Click on options
-        Delay(1);
-        _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[3]/td/div/div[3]/a/img")).click();
-
-        Delay(4);
-        Select oSelect7 = new Select(_driver.findElement(By.name("fcCollectionMethod")));
-
-        oSelect7.selectByValue("108978.19");
-        Delay(5);
+            Delay(4);
 
 
-        //Click on EMPLOYEE NUMBER
-        _driver.findElement(By.name("fcEmployeeNumber")).click();
-        Delay(5);
 
-        //Click on EMPLOYEE NUMBER
-        _driver.findElement(By.name("fcEmployeeNumber")).sendKeys(testData.get("employee_number1").toString());
-        Delay(5);
+            //click on policy payer
+            _driver.findElement(By.name("fcRoleEntityLink3")).click();
+
+            WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
+            //Creating object of an Actions class
+            Actions action = new Actions(_driver);
+            //Performing the mouse hover action on the target element.
+            action.moveToElement(policyOptionElement).perform();
+
+            //Click on options
+            Delay(1);
+            _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[3]/td/div/div[3]/a/img")).click();
+
+            Delay(4);
+            Select oSelect7 = new Select(_driver.findElement(By.name("fcCollectionMethod")));
+
+            oSelect7.selectByValue("108978.19");
+            Delay(5);
 
 
-        //Search employee
-        _driver.findElement(By.name("fcEmployerButton")).click();
+            //Click on EMPLOYEE NUMBER
+            _driver.findElement(By.name("fcEmployeeNumber")).click();
+            Delay(5);
 
-        Delay(6);
-        String mainwindow = _driver.getWindowHandle();
-        Set<String> s2 = _driver.getWindowHandles();
-        Iterator<String> i1 = s2.iterator();
+            //Click on EMPLOYEE NUMBER
+            _driver.findElement(By.name("fcEmployeeNumber")).sendKeys(testData.get("employee_number1").toString());
+            Delay(5);
 
-        while (i1.hasNext()) {
-            String ChildWindow = i1.next();
-            if (!mainwindow.equalsIgnoreCase(ChildWindow)) {
-                _driver.switchTo().window(ChildWindow);
-                 _driver.findElement(By.xpath("//*[@id='lkpResultsTable']/tbody/tr[5]/td[5]")).click();
 
+            //Search employee
+            _driver.findElement(By.name("fcEmployerButton")).click();
+
+            Delay(6);
+            String mainwindow = _driver.getWindowHandle();
+            Set<String> s2 = _driver.getWindowHandles();
+            Iterator<String> i1 = s2.iterator();
+
+            while (i1.hasNext()) {
+                String ChildWindow = i1.next();
+                if (!mainwindow.equalsIgnoreCase(ChildWindow)) {
+                    _driver.switchTo().window(ChildWindow);
+                    _driver.findElement(By.xpath("//*[@id='lkpResultsTable']/tbody/tr[5]/td[5]")).click();
+
+                }
             }
-        }
-        //  Switch back to the main window which is the parent window.
-        _driver.switchTo().window(mainwindow);
-        Delay(5);
+            //  Switch back to the main window which is the parent window.
+            _driver.switchTo().window(mainwindow);
+            Delay(5);
 
 
-        //Click on submit
-        _driver.findElement(By.id("GBLbl-1")).click();
-        Delay(5);
+            //Click on submit
+            _driver.findElement(By.id("GBLbl-1")).click();
+            Delay(5);
 
-        String expectedcollectionM = _driver.findElement(By.xpath("//*[@id='frmCbmre']/tbody/tr[8]/td[4]")).getText();
+            String expectedcollectionM = _driver.findElement(By.xpath("//*[@id='frmCbmre']/tbody/tr[8]/td[4]")).getText();
 
 
-        Delay(3);
+            Delay(3);
 
-        if (expectedcollectionM.equals("Stop Order")) {
-            results = "Passed";
-        } else {
-            results = "Failed";
-        }
+            if (expectedcollectionM.equals("Stop Order")) {
+                results = "Passed";
+            } else {
+                results = "Failed";
+            }
 
-        writeResults("Policy-Servicing","ChangeCollectionMethod",results,"");
+            writeResults("Policy-Servicing","ChangeCollectionMethod",results,"");
 
         } catch (Exception e) {
 
@@ -335,97 +335,97 @@ public class PolicyServicing extends Base {
 
         String results="";
         try {
-        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionNegative");
-        Dictionary testData = getDataFromSheet("CollectionM");
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionNegative");
+            Dictionary testData = getDataFromSheet("CollectionM");
 
-        clickOnMainMenu();
-        Delay(2);
-        policySearch(PolicyNo);
-        String employee_number2 = "";
-        String date = String.format("%1$s", LocalDateTime.now());
+            clickOnMainMenu();
+            Delay(2);
+            policySearch(PolicyNo);
+            String employee_number2 = "";
+            String date = String.format("%1$s", LocalDateTime.now());
 
-        Delay(4);
+            Delay(4);
 
-        //SetproductName("ChangeCollectionNegative");
+            //SetproductName("ChangeCollectionNegative");
 
-        Delay(3);
-
-
-
-        //click on policy payer
-        _driver.findElement(By.name("fcRoleEntityLink3")).click();
+            Delay(3);
 
 
 
-        WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
-        //Creating object of an Actions class
-        Actions action = new Actions(_driver);
-        //Performing the mouse hover action on the target element.
-        action.moveToElement(policyOptionElement).perform();
-
-        //Click on options
-        Delay(1);
-        _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[3]/td/div/div[3]/a/img")).click();
+            //click on policy payer
+            _driver.findElement(By.name("fcRoleEntityLink3")).click();
 
 
-        Select oSelect8 = new Select(_driver.findElement(By.name("fcCollectionMethod")));
 
-        oSelect8.selectByValue("108978.19");
-        Delay(5);
-        //ExcelData
+            WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
+            //Creating object of an Actions class
+            Actions action = new Actions(_driver);
+            //Performing the mouse hover action on the target element.
+            action.moveToElement(policyOptionElement).perform();
 
-        //Click on EMPLOYEE NUMBER
-        _driver.findElement(By.name("fcEmployeeNumber")).click();
-        Delay(5);
+            //Click on options
+            Delay(1);
+            _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[3]/td/div/div[3]/a/img")).click();
 
-        //Click on EMPLOYEE NUMBER
-        _driver.findElement(By.name("fcEmployeeNumber")).sendKeys(testData.get("employee_number2").toString());
-        Delay(5);
-        //Search employee
-        _driver.findElement(By.name("fcEmployerButton")).click();
 
-        Delay(6);
-        String mainwindow = _driver.getWindowHandle();
-        Set<String> s2 = _driver.getWindowHandles();
-        Iterator<String> i1 = s2.iterator();
+            Select oSelect8 = new Select(_driver.findElement(By.name("fcCollectionMethod")));
 
-        while (i1.hasNext()) {
-            String ChildWindow = i1.next();
-            if (!mainwindow.equalsIgnoreCase(ChildWindow)) {
-                _driver.switchTo().window(ChildWindow);
-                _driver.findElement(By.xpath("//*[@id='lkpResultsTable']/tbody/tr[19]")).click();
+            oSelect8.selectByValue("108978.19");
+            Delay(5);
+            //ExcelData
 
+            //Click on EMPLOYEE NUMBER
+            _driver.findElement(By.name("fcEmployeeNumber")).click();
+            Delay(5);
+
+            //Click on EMPLOYEE NUMBER
+            _driver.findElement(By.name("fcEmployeeNumber")).sendKeys(testData.get("employee_number2").toString());
+            Delay(5);
+            //Search employee
+            _driver.findElement(By.name("fcEmployerButton")).click();
+
+            Delay(6);
+            String mainwindow = _driver.getWindowHandle();
+            Set<String> s2 = _driver.getWindowHandles();
+            Iterator<String> i1 = s2.iterator();
+
+            while (i1.hasNext()) {
+                String ChildWindow = i1.next();
+                if (!mainwindow.equalsIgnoreCase(ChildWindow)) {
+                    _driver.switchTo().window(ChildWindow);
+                    _driver.findElement(By.xpath("//*[@id='lkpResultsTable']/tbody/tr[19]")).click();
+
+                }
             }
-        }
-        //  Switch back to the main window which is the parent window.
-        _driver.switchTo().window(mainwindow);
-        Delay(5);
+            //  Switch back to the main window which is the parent window.
+            _driver.switchTo().window(mainwindow);
+            Delay(5);
 
 
 
 
-        //Click on submit
-        _driver.findElement(By.id("GBLbl-1")).click();
-        Delay(5);
+            //Click on submit
+            _driver.findElement(By.id("GBLbl-1")).click();
+            Delay(5);
 
-        String expectedcollectionM = _driver.findElement(By.xpath("//*[@id='frmCbmre']/tbody/tr[8]/td[4]")).getText();
-
-
-        TakeScreenshot(_driver, String.format("%1$s\\NegativeExpected\\"), "collectionMethodStopOrder");
-
-        Delay(3);
-
-        if (expectedcollectionM.equals("Debi-Check"))
-        {
-            results = "Passed";
-        }
-        else
-        {
-            results = "Failed";
-        }
+            String expectedcollectionM = _driver.findElement(By.xpath("//*[@id='frmCbmre']/tbody/tr[8]/td[4]")).getText();
 
 
-        writeResults("Policy-Servicing","ChangeCollectionNegative",results,"");
+            TakeScreenshot(_driver, String.format("%1$s\\NegativeExpected\\"), "collectionMethodStopOrder");
+
+            Delay(3);
+
+            if (expectedcollectionM.equals("Debi-Check"))
+            {
+                results = "Passed";
+            }
+            else
+            {
+                results = "Failed";
+            }
+
+
+            writeResults("Policy-Servicing","ChangeCollectionNegative",results,"");
         } catch (Exception e) {
 
             results = "Failed";
@@ -433,116 +433,128 @@ public class PolicyServicing extends Base {
         }
     }
 
-
+    @Test
     private void PostDatedDowngrade() throws InterruptedException {
 
         String results="";
         try {
-        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","PostDatedDowngrade");
-        Dictionary testData = getDataFromSheet("");
-        clickOnMainMenu();
-        Delay(2);
-        policySearch(PolicyNo);
-        String date = String.format("%1$s", LocalDateTime.now());
-        String currentSumAssured = "";
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","PostDatedDowngrade");
+            Dictionary testData = getDataFromSheet("");
+            Delay(2);
+            clickOnMainMenu();
+            policySearch(PolicyNo);
+            String currentSumAssured = "";
+            Delay(2);
 
-        Delay(2);
-
-        //SetproductName("PostDatedDowngrade");
-
-        Delay(3);
-
-        String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
-
-        //Click on user  component
-        _driver.findElement(By.name("fccComponentDescription1")).click();
-
-        Delay(4);
-        //Get The current Sum Assured for the life assured
-        currentSumAssured = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[8]/td[4]")).getText();
-
-
-        Delay(2);
-        WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
-
-
-        //Creating object of an Actions class
-        Actions action = new Actions(_driver);
-
-        //Performing the mouse hover action on the target element.
-        action.moveToElement(policyOptionElement).perform();
-
-        //Click on options
-        _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[1]/td/div/div[3]/a/img")).click();
+            //SetproductName("PostDatedDowngrade")
+            clickOnMainMenu();
 
 
 
-        Delay(3);
-        int year = LocalDateTime.now().getYear();
-        String month = (String.valueOf((LocalDateTime.now().getMonthValue())));
+            Delay(3);
 
-        if (month.equals("13"))
-        {
-            month = "01";
+            String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
 
-        }
-        else if (Integer.parseInt(month) < 10)
-        {
-            month = "0" + month;
-        }
-
-
-        String day = "01";
-        String dt = "" + year + month + day;
-        _driver.findElement(By.name("frmCCStartDate")).clear();
-        Delay(3);
-        _driver.findElement(By.name("frmCCStartDate")).sendKeys(dt);
-        String newSumAssured = "";
-
-
-        if (Integer.parseInt(currentSumAssured) > 10000 || Integer.parseInt(currentSumAssured) == 10000)
-        {
-            newSumAssured = Integer.toString((Integer.parseInt(currentSumAssured) - 10000));
-
-        }
-        else
-        {
-            newSumAssured = String.valueOf(5000);
-        }
-
-        Select oSelect = new Select(_driver.findElement(By.name("frmSPAmount")));
-
-        oSelect.selectByValue(newSumAssured);
+            //Click on user  contract summary
+            _driver.findElement(By.xpath("//*[@id='t0_761']/table/tbody/tr/td[1]/a/img[2]")).click();
 
 
 
-        //Click on next
-        _driver.findElement(By.name("btncbmcc13")).click();
-        Delay(2);
+            //Click on user  component
+            _driver.findElement(By.name("Alf-ICF8_00000214")).click();
 
 
-        //Click on next
-        _driver.findElement(By.name("btncbmcc17")).click();
-        Delay(2);
+            Delay(4);
 
-        Delay(3);
+            //  click on user  component
+            _driver.findElement(By.name("fccComponentDescription1")).click();
 
-
-
-        String expectedPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[4]")).getText();
-
-        String eventDescription = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[3]")).getText();
+            Delay(4);
+            //Get The current Sum Assured for the life assured
+            currentSumAssured = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[8]/td[4]")).getText();
 
 
-        if (Double.parseDouble(expectedPrem) < Double.parseDouble(contractPrem) && eventDescription.equals("Post Dated Downgrade"))
-        {
-            results = "Passed";
-        }
-        else
-        {
-            results = "Failed";
-        }
-        writeResults("Policy-Servicing", "PostDatedDowngrade", results, "");
+            Delay(2);
+            WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
+
+
+            //Creating object of an Actions class
+            Actions action = new Actions(_driver);
+
+            //Performing the mouse hover action on the target element.
+            action.moveToElement(policyOptionElement).perform();
+
+            //Click on options
+            _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[1]/td/div/div[3]/a/img")).click();
+
+
+
+            Delay(3);
+            int year = LocalDateTime.now().getYear();
+            String month = (String.valueOf((LocalDateTime.now().getMonthValue())));
+
+            if (month.equals("13"))
+            {
+                month = "01";
+
+            }
+            else if (Integer.parseInt(month) < 10)
+            {
+                month = "0" + month;
+            }
+
+
+            String day = "01";
+            String dt = "" + year + month + day;
+            _driver.findElement(By.name("frmCCStartDate")).clear();
+            Delay(3);
+            _driver.findElement(By.name("frmCCStartDate")).sendKeys(dt);
+            String newSumAssured = "";
+
+
+            if (Integer.parseInt(currentSumAssured) > 10000 || Integer.parseInt(currentSumAssured) == 10000)
+            {
+                newSumAssured = Integer.toString((Integer.parseInt(currentSumAssured) - 10000));
+
+            }
+            else
+            {
+                newSumAssured = String.valueOf(5000);
+            }
+
+            Select oSelect = new Select(_driver.findElement(By.name("frmSPAmount")));
+
+            oSelect.selectByValue(newSumAssured);
+
+
+
+            //Click on next
+            _driver.findElement(By.name("btncbmcc13")).click();
+            Delay(2);
+
+
+            //Click on next
+            _driver.findElement(By.name("btncbmcc17")).click();
+            Delay(2);
+
+            Delay(3);
+
+
+
+            String expectedPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[4]")).getText();
+
+            String eventDescription = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[3]")).getText();
+
+
+            if (Double.parseDouble(expectedPrem) < Double.parseDouble(contractPrem) && eventDescription.equals("Post Dated Downgrade"))
+            {
+                results = "Passed";
+            }
+            else
+            {
+                results = "Failed";
+            }
+            writeResults("Policy-Servicing", "PostDatedDowngrade", results, "");
 
         } catch (Exception e) {
 
@@ -551,375 +563,386 @@ public class PolicyServicing extends Base {
         }
     }
 
-
+    @Test
     private void PostDatedUpgrade() throws InterruptedException {
         try
         {
-        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","PostDatedUpgrade");;
-        clickOnMainMenu();
-        Delay(2);
-        policySearch(PolicyNo);
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","PostDatedUpgrade");;
+            clickOnMainMenu();
+            Delay(2);
+            policySearch(PolicyNo);
 
-        String results = "";
+            String results = "";
 
-        String date = String.format("%1$s", LocalDateTime.now());
+            String date = String.format("%1$s", LocalDateTime.now());
 
-        String currentSumAssured = "";
+            String currentSumAssured = "";
 
 
-        Delay(2);
+            Delay(2);
 
-        SetproductName("PostDatedUpgrade");
-
-        Delay(3);
-
-        String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
+            // SetproductName("PostDatedUpgrade");
+            clickOnMainMenu();
 
 
 
-        //Click on user  component
-        _driver.findElement(By.name("fccComponentDescription1")).click();
+            Delay(3);
 
+            String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
 
-        Delay(4);
-        //Get The current Sum Assured for the life assured
-        currentSumAssured = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[8]/td[4]")).getText();
-
-
-        Delay(2);
-        WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
-
-
-        //Creating object of an Actions class
-        Actions action = new Actions(_driver);
-
-        //Performing the mouse hover action on the target element.
-        action.moveToElement(policyOptionElement).perform();
-        Delay(4);
-        //Click on options
-        _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[1]/td/div/div[3]/a/img")).click();
+            //Click on user  contract summary
+            _driver.findElement(By.xpath("//*[@id='t0_761']/table/tbody/tr/td[1]/a/img[2]")).click();
 
 
 
-        Delay(3);
-        String year = String.valueOf(LocalDateTime.now().getYear());
-        String month = (String.valueOf((LocalDateTime.now().getMonthValue())));
+            //Click on user  component
+            _driver.findElement(By.name("Alf-ICF8_00000214")).click();
 
-        if (month.equals("13"))
+
+            Delay(4);
+
+            //  click on user  component
+            _driver.findElement(By.name("fccComponentDescription1")).click();
+
+            Delay(4);
+            //Get The current Sum Assured for the life assured
+            currentSumAssured = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[8]/td[4]")).getText();
+
+
+            Delay(2);
+            WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
+
+
+            //Creating object of an Actions class
+            Actions action = new Actions(_driver);
+
+            //Performing the mouse hover action on the target element.
+            action.moveToElement(policyOptionElement).perform();
+
+            //Click on options
+            _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[1]/td/div/div[3]/a/img")).click();
+
+
+
+            Delay(3);
+            String year = String.valueOf(LocalDateTime.now().getYear());
+            String month = (String.valueOf((LocalDateTime.now().getMonthValue())));
+
+            if (month.equals("13"))
+            {
+                month = "01";
+
+            }
+            else if (Integer.parseInt(month) < 10)
+            {
+                month = "0" + month;
+            }
+            String day = "01";
+            String dt = "" + year + month + day;
+            _driver.findElement(By.name("frmCCStartDate")).clear();
+            Delay(3);
+            _driver.findElement(By.name("frmCCStartDate")).sendKeys(dt);
+            String newSumAssured = "";
+            //Do a  upgrade on current sum assured by 5000
+            if (Integer.parseInt(currentSumAssured) > 10000 || Integer.parseInt(currentSumAssured) == 10000)
+            {
+                newSumAssured =  Integer.toString((Integer.parseInt(currentSumAssured) + 10000));
+            }
+            else
+            {
+                newSumAssured = String.valueOf(10000);
+            }
+
+            Select oSelect = new Select(_driver.findElement(By.name("frmSPAmount")));
+
+            oSelect.selectByValue(newSumAssured);
+
+
+            //Click on next
+            _driver.findElement(By.name("btncbmcc13")).click();
+            Delay(2);
+
+
+            //Click on next
+            _driver.findElement(By.name("btncbmcc17")).click();
+            Delay(2);
+
+            // Click on finish
+            _driver.findElement(By.name("btncbmcc23")).click();
+            Delay(5);
+
+
+            String expectedPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[4]")).getText();
+
+            String eventDescription = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[3]")).getText();
+
+
+
+            if (Double.parseDouble(expectedPrem) < Double.parseDouble(contractPrem) && eventDescription.equals("Post Dated Upgrade"))
+            {
+                results = "Passed";
+            }
+            else
+            {
+                results = "Failed";
+            }
+            writeResults("Policy-Servicing", "PostDatedUpgrade", results, "");
+        } catch (Exception e)
         {
-            month = "01";
 
+            String results = "Failed";
+            writeResults("Policy-Servicing", "PostDatedUpgrade", results, e.toString());
         }
-        else if (Integer.parseInt(month) < 10)
-        {
-            month = "0" + month;
-        }
-        String day = "01";
-        String dt = "" + year + month + day;
-        _driver.findElement(By.name("frmCCStartDate")).clear();
-        Delay(3);
-        _driver.findElement(By.name("frmCCStartDate")).sendKeys(dt);
-        String newSumAssured = "";
-        //Do a  upgrade on current sum assured by 5000
-        if (Integer.parseInt(currentSumAssured) > 10000 || Integer.parseInt(currentSumAssured) == 10000)
-        {
-            newSumAssured =  Integer.toString((Integer.parseInt(currentSumAssured) + 10000));
-        }
-        else
-        {
-            newSumAssured = String.valueOf(10000);
-        }
-
-        Select oSelect = new Select(_driver.findElement(By.name("frmSPAmount")));
-
-        oSelect.selectByValue(newSumAssured);
-
-
-        //Click on next
-        _driver.findElement(By.name("btncbmcc13")).click();
-        Delay(2);
-
-
-        //Click on next
-        _driver.findElement(By.name("btncbmcc17")).click();
-        Delay(2);
-
-        // Click on finish
-        _driver.findElement(By.name("btncbmcc23")).click();
-        Delay(5);
-
-
-        String expectedPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[4]")).getText();
-
-        String eventDescription = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[3]")).getText();
-
-
-
-        if (Double.parseDouble(expectedPrem) < Double.parseDouble(contractPrem) && eventDescription.equals("Post Dated Upgrade"))
-        {
-            results = "Passed";
-        }
-        else
-        {
-            results = "Failed";
-        }
-        writeResults("Policy-Servicing", "PostDatedUpgrade", results, "");
-    } catch (Exception e)
-    {
-
-        String results = "Failed";
-        writeResults("Policy-Servicing", "PostDatedUpgrade", results, e.toString());
     }
-}
     @Test(priority=7)
     private void AddRole_NextMonth() throws InterruptedException {
 
-    try {
-        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "AddRole_NextMonth");
-        Dictionary testData =  getDataFromSheet("AddRole_NextMonth");
-        clickOnMainMenu();
-        Delay(2);
-        policySearch(PolicyNo);
-        String results = "";
-        String title = testData.get("Title").toString(),
-                first_name = testData.get("First_Name").toString(),
-                surname = testData.get("Surname").toString(),
-                initials = testData.get("Initials").toString(),
-                dob = testData.get("DOB").toString(),
-                gender = testData.get("Gender").toString(),
-                id_number = testData.get("ID_number").toString(),
-                relationship = testData.get("Relationship").toString(),
-                Comm_date = testData.get("Comm_date").toString();
-        Delay(2);
+        try {
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "AddRole_NextMonth");
+            Dictionary testData =  getDataFromSheet("AddRole_NextMonth");
+            clickOnMainMenu();
+            Delay(2);
+            policySearch(PolicyNo);
+            String results = "";
+            String title = testData.get("Title").toString(),
+                    first_name = testData.get("First_Name").toString(),
+                    surname = testData.get("Surname").toString(),
+                    initials = testData.get("Initials").toString(),
+                    dob = testData.get("DOB").toString(),
+                    gender = testData.get("Gender").toString(),
+                    id_number = testData.get("ID_number").toString(),
+                    relationship = testData.get("Relationship").toString(),
+                    Comm_date = testData.get("Comm_date").toString();
+            Delay(2);
 
-      //  SetproductName("AddRole_NextMonth");
-        Delay(3);
+            //  SetproductName("AddRole_NextMonth");
+            Delay(3);
 
-        //get commencement date
-        String commencementDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
-        //click add role player
-        _driver.findElement(By.name("btnAddRolePlayer")).click();
+            //get commencement date
+            String commencementDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
+            //click add role player
+            _driver.findElement(By.name("btnAddRolePlayer")).click();
 
-        //Select role
-        WebElement selectRole = _driver.findElement(By.name("frmRoleObj"));
-        Select s = new Select(selectRole);
-        s.selectByIndex(4);
-        Delay(3);
-        //Click calendar
+            //Select role
+            WebElement selectRole = _driver.findElement(By.name("frmRoleObj"));
+            Select s = new Select(selectRole);
+            s.selectByIndex(4);
+            Delay(3);
+            //Click calendar
 
-        Delay(1);
-        _driver.findElement(By.name("frmEffectiveFromDate")).clear();
-        _driver.findElement(By.name("frmEffectiveFromDate")).sendKeys(commencementDate);
-
-
-        Delay(4);
+            Delay(1);
+            _driver.findElement(By.name("frmEffectiveFromDate")).clear();
+            _driver.findElement(By.name("frmEffectiveFromDate")).sendKeys(commencementDate);
 
 
-        _driver.findElement(By.xpath("//*[@id='GBLbl-4']/span/a")).click();
+            Delay(4);
 
 
-        //click next to enter new role player
-        _driver.findElement(By.xpath("//*[@id='GBLbl-5']/span/a")).click();
-
-        //enter initials
-        _driver.findElement(By.name("frmPersonInitials")).clear();
-        _driver.findElement(By.name("frmPersonInitials")).sendKeys(initials);
-        Delay(2);
-        //enter name
-        _driver.findElement(By.name("frmPersonFirstName")).clear();
-        _driver.findElement(By.name("frmPersonFirstName")).sendKeys(first_name);
-        Delay(2);
-        //enter surname
-        _driver.findElement(By.name("frmPersonLastName")).clear();
-        _driver.findElement(By.name("frmPersonLastName")).sendKeys(surname);
-        Delay(2);
-        //enter
+            _driver.findElement(By.xpath("//*[@id='GBLbl-4']/span/a")).click();
 
 
-        _driver.findElement(By.name("frmPersonIDNumber")).sendKeys(id_number);
-        Delay(2);
-        //enter
-        _driver.findElement(By.name("frmPersonDateOfBirth")).sendKeys(dob);
-        Delay(2);
-        //marital status
-        WebElement marital = _driver.findElement(By.name("frmPersonMaritalStatus"));
-        Select iselect = new Select(marital);
-        iselect.selectByIndex(1);
+            //click next to enter new role player
+            _driver.findElement(By.xpath("//*[@id='GBLbl-5']/span/a")).click();
+
+            //enter initials
+            _driver.findElement(By.name("frmPersonInitials")).clear();
+            _driver.findElement(By.name("frmPersonInitials")).sendKeys(initials);
+            Delay(2);
+            //enter name
+            _driver.findElement(By.name("frmPersonFirstName")).clear();
+            _driver.findElement(By.name("frmPersonFirstName")).sendKeys(first_name);
+            Delay(2);
+            //enter surname
+            _driver.findElement(By.name("frmPersonLastName")).clear();
+            _driver.findElement(By.name("frmPersonLastName")).sendKeys(surname);
+            Delay(2);
+            //enter
 
 
-        //Select gender
-        List<WebElement> rdos = _driver.findElements(By.xpath("//input[@name='frmPersonGender']"));
+            _driver.findElement(By.name("frmPersonIDNumber")).sendKeys(id_number);
+            Delay(2);
+            //enter
+            _driver.findElement(By.name("frmPersonDateOfBirth")).sendKeys(dob);
+            Delay(2);
+            //marital status
+            WebElement marital = _driver.findElement(By.name("frmPersonMaritalStatus"));
+            Select iselect = new Select(marital);
+            iselect.selectByIndex(1);
 
-        for (WebElement radio : rdos) {
 
-            if (radio.getAttribute("value").equals("er_AcPerGenMal")) {
+            //Select gender
+            List<WebElement> rdos = _driver.findElements(By.xpath("//input[@name='frmPersonGender']"));
 
-                radio.click();
-                break;
+            for (WebElement radio : rdos) {
+
+                if (radio.getAttribute("value").equals("er_AcPerGenMal")) {
+
+                    radio.click();
+                    break;
+
+                } else {
+
+                    radio.findElement(By.xpath("//*[@id='frmSubCbmre']/tbody/tr[1]/td[4]/table/tbody/tr/td[3]/input")).click();
+
+                }
+
+            }
+
+            //Select Relationship
+            var V_relationship = "";
+            switch (relationship) {
+
+                case "Additional parent":
+                    V_relationship = "951372577.488";
+                    break;
+                case "Spouse":
+                    V_relationship = "854651144.248";
+                    break;
+                case "Additional child":
+                    V_relationship = "905324120.488";
+                    break;
+                case "Child":
+                    V_relationship = "905324138.488";
+                    break;
+                case "Parent":
+                    V_relationship = "347901097.188";
+                    break;
+
+                case "Brother":
+                    V_relationship = "951371842.488";
+                    break;
+
+            }
+            WebElement relation = _driver.findElement(By.name("frmRelationshipCodeObj"));
+            Select oselect = new Select(relation);
+            oselect.selectByValue(V_relationship);
+            //Title
+            var value = "";
+            switch (title) {
+                case "Mr":
+                    value = "er_AcPerTitleMr";
+                    break;
+                case "Mrs":
+                    value = "er_AcPerTitleMrs";
+                    break;
+
+                case "Ms":
+                    value = "er_AcPerTitleMs";
+                    break;
+
+                case "Prf":
+                    value = "er_AcPerTitlePrf";
+                    break;
+                case "Dr":
+                    value = "er_AcPerTitleDoc";
+                    break;
+
+                case "Adm":
+                    value = "er_AcPerTitleADM";
+                    break;
+
+                case "Miss":
+                    value = "er_AcPerTitleMiss";
+                    break;
+
+                default:
+                    break;
+            }
+
+            Select oSelect = new Select(_driver.findElement(By.name("frmPersonTitle")));
+            oSelect.selectByValue(value);
+
+
+            Delay(2);
+            //save
+            _driver.findElement(By.xpath(" //*[@id='GBLbl-5']/span/a")).click();
+            Delay(2);
+            //Roleplayer ID
+            var LifeA_ID = _driver.findElement(By.xpath(" //*[@id='frmSubCbmre']/tbody/tr[4]/td[4]")).getText();
+
+            //validation
+            if (LifeA_ID.equals(id_number)) {
+                results = "Passed";
 
             } else {
+                results = "Fail";
 
-                radio.findElement(By.xpath("//*[@id='frmSubCbmre']/tbody/tr[1]/td[4]/table/tbody/tr/td[3]/input")).click();
+            }
+            writeResults("Policy-Servicing","AddRole_NextMonth",results,"");
+
+
+            clickOnMainMenu();
+
+            Delay(2);
+            //click contract summary
+            _driver.findElement(By.xpath(" //*[@id='t0_771']/table/tbody/tr/td[3]/a")).click();
+
+            Delay(3);
+            // _driver.Navigate().Refresh();
+            //click on add componet
+            _driver.findElement(By.xpath("   //*[@id='GBLbl-5']/span/a")).click();
+
+
+            Delay(3);
+
+            _driver.findElement(By.xpath("//*[@id='GBLbl-6']/span/a")).click();
+
+
+            Delay(3);
+            //Click calendar
+            _driver.findElement(By.name("frmCCStartDate")).clear();
+            _driver.findElement(By.name("frmCCStartDate")).sendKeys(Comm_date);
+
+
+            Delay(3);
+            _driver.findElement(By.xpath("//*[@id='GB-6']")).click();
+            Delay(2);
+
+            //Dropdown
+            WebElement elem = _driver.findElement(By.name("frmRolePlayers"));
+            Select option = new Select(elem);
+            option.deselectAll();
+            for (int i = 1; i < 30; i++) {
+                String roles = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[6]/td[2]/select/option[{i.ToString()}]")).getText();
+
+                String Ridno1 = roles.split(" ")[roles.split(" ").length - 1].toString();
+
+                String[] arrOfStr = roles.split("", -1);
+
+                String ID1 = Ridno1.substring(1, 13);
+
+                if (ID1 == id_number) {
+                    option.selectByVisibleText(roles);
+                    break;
+                }
+
 
             }
 
+            Delay(3);
+
+
+            //next
+            _driver.findElement(By.xpath(" //*[@id='GBLbl-7']/span/a")).click();
+
+            //Validate roleplayer ID number
+            Delay(2);
+
+            var RoleINno = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[9]/td[2]")).getText();
+
+            var Ridno = RoleINno.split(java.util.regex.Pattern.quote(" "), -1)[RoleINno.split(java.util.regex.Pattern.quote(" "), -1).length - 1].toString();
+            var ID = Ridno.substring(1, 14);
+
+            assert id_number == ID;
+
+            Delay(2);
+
+            _driver.findElement(By.xpath("//*[@id='GBLbl-7']/span/a")).click();
+
+            Delay(2);
+        }catch (Exception e){
+            writeResults("Policy-Servicing","AddRole_NextMonth","Failed",e.toString());
         }
-
-        //Select Relationship
-        var V_relationship = "";
-        switch (relationship) {
-
-            case "Additional parent":
-                V_relationship = "951372577.488";
-                break;
-            case "Spouse":
-                V_relationship = "854651144.248";
-                break;
-            case "Additional child":
-                V_relationship = "905324120.488";
-                break;
-            case "Child":
-                V_relationship = "905324138.488";
-                break;
-            case "Parent":
-                V_relationship = "347901097.188";
-                break;
-
-            case "Brother":
-                V_relationship = "951371842.488";
-                break;
-
-        }
-        WebElement relation = _driver.findElement(By.name("frmRelationshipCodeObj"));
-        Select oselect = new Select(relation);
-        oselect.selectByValue(V_relationship);
-        //Title
-        var value = "";
-        switch (title) {
-            case "Mr":
-                value = "er_AcPerTitleMr";
-                break;
-            case "Mrs":
-                value = "er_AcPerTitleMrs";
-                break;
-
-            case "Ms":
-                value = "er_AcPerTitleMs";
-                break;
-
-            case "Prf":
-                value = "er_AcPerTitlePrf";
-                break;
-            case "Dr":
-                value = "er_AcPerTitleDoc";
-                break;
-
-            case "Adm":
-                value = "er_AcPerTitleADM";
-                break;
-
-            case "Miss":
-                value = "er_AcPerTitleMiss";
-                break;
-
-            default:
-                break;
-        }
-
-        Select oSelect = new Select(_driver.findElement(By.name("frmPersonTitle")));
-        oSelect.selectByValue(value);
-
-
-        Delay(2);
-        //save
-        _driver.findElement(By.xpath(" //*[@id='GBLbl-5']/span/a")).click();
-        Delay(2);
-        //Roleplayer ID
-        var LifeA_ID = _driver.findElement(By.xpath(" //*[@id='frmSubCbmre']/tbody/tr[4]/td[4]")).getText();
-
-        //validation
-        if (LifeA_ID.equals(id_number)) {
-            results = "Passed";
-
-        } else {
-            results = "Fail";
-
-        }
-        writeResults("Policy-Servicing","AddRole_NextMonth",results,"");
-
-
-        clickOnMainMenu();
-
-        Delay(2);
-        //click contract summary
-        _driver.findElement(By.xpath(" //*[@id='t0_771']/table/tbody/tr/td[3]/a")).click();
-
-        Delay(3);
-        // _driver.Navigate().Refresh();
-        //click on add componet
-        _driver.findElement(By.xpath("   //*[@id='GBLbl-5']/span/a")).click();
-
-
-        Delay(3);
-
-        _driver.findElement(By.xpath("//*[@id='GBLbl-6']/span/a")).click();
-
-
-        Delay(3);
-        //Click calendar
-        _driver.findElement(By.name("frmCCStartDate")).clear();
-        _driver.findElement(By.name("frmCCStartDate")).sendKeys(Comm_date);
-
-
-        Delay(3);
-        _driver.findElement(By.xpath("//*[@id='GB-6']")).click();
-        Delay(2);
-
-        //Dropdown
-        WebElement elem = _driver.findElement(By.name("frmRolePlayers"));
-        Select option = new Select(elem);
-        option.deselectAll();
-        for (int i = 1; i < 30; i++) {
-            String roles = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[6]/td[2]/select/option[{i.ToString()}]")).getText();
-
-            String Ridno1 = roles.split(" ")[roles.split(" ").length - 1].toString();
-
-            String[] arrOfStr = roles.split("", -1);
-
-            String ID1 = Ridno1.substring(1, 13);
-
-            if (ID1 == id_number) {
-                option.selectByVisibleText(roles);
-                break;
-            }
-
-
-        }
-
-        Delay(3);
-
-
-        //next
-        _driver.findElement(By.xpath(" //*[@id='GBLbl-7']/span/a")).click();
-
-        //Validate roleplayer ID number
-        Delay(2);
-
-        var RoleINno = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[9]/td[2]")).getText();
-
-        var Ridno = RoleINno.split(java.util.regex.Pattern.quote(" "), -1)[RoleINno.split(java.util.regex.Pattern.quote(" "), -1).length - 1].toString();
-        var ID = Ridno.substring(1, 14);
-
-        assert id_number == ID;
-
-        Delay(2);
-
-        _driver.findElement(By.xpath("//*[@id='GBLbl-7']/span/a")).click();
-
-        Delay(2);
-    }catch (Exception e){
-        writeResults("Policy-Servicing","AddRole_NextMonth","Failed",e.toString());
-    }
     }
     @Test(priority=8)
     private void TerminateRoleNext_month() throws InterruptedException {
@@ -930,7 +953,7 @@ public class PolicyServicing extends Base {
 
 
             policySearch(PolicyNo);
-          //  SetproductName("TerminateRoleNext_month");
+            //  SetproductName("TerminateRoleNext_month");
             String results = "";
             Delay(2);
 
@@ -949,7 +972,7 @@ public class PolicyServicing extends Base {
             _driver.findElement(By.name("btnTerminate")).click();
             String alerttext = _driver.switchTo().alert().getText();
             _driver.switchTo().alert().accept();
-           // assert expected == alerttext;
+            // assert expected == alerttext;
 
             //change effective to date
             Delay(2);
@@ -1008,7 +1031,7 @@ public class PolicyServicing extends Base {
             _driver.findElement(By.name("btnTerminate")).click();
             String alerttext = _driver.switchTo().alert().getText();
             _driver.switchTo().alert().accept();
-           // assert expected == alerttext;
+            // assert expected == alerttext;
 
             //change effective to date
             Delay(2);
@@ -1040,286 +1063,286 @@ public class PolicyServicing extends Base {
         }
     }
     @Test
-   private void ChangeLifeAssured() throws InterruptedException {
-       String results;
-       try {
-           String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "ChangeLifeAssured");
-           Dictionary testData = getDataFromSheet("ChangeLifeData");
-           clickOnMainMenu();
-           Delay(2);
-           policySearch(PolicyNo);
-           results = "";
-           SetproductName("ChangeLifeAssured");
-           String title = testData.get("Title").toString(),
-                   surname = testData.get("Surname").toString(),
-                   MaritalStatus = testData.get("MaritalStatus").toString(),
-                   EducationLevel = testData.get("EducationLevel").toString(),
-                   Department = testData.get("Department").toString(),
-                   Profession = testData.get("Profession").toString();
+    private void ChangeLifeAssured() throws InterruptedException {
+        String results;
+        try {
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "ChangeLifeAssured");
+            Dictionary testData = getDataFromSheet("ChangeLifeData");
+            clickOnMainMenu();
+            Delay(2);
+            policySearch(PolicyNo);
+            results = "";
+            SetproductName("ChangeLifeAssured");
+            String title = testData.get("Title").toString(),
+                    surname = testData.get("Surname").toString(),
+                    MaritalStatus = testData.get("MaritalStatus").toString(),
+                    EducationLevel = testData.get("EducationLevel").toString(),
+                    Department = testData.get("Department").toString(),
+                    Profession = testData.get("Profession").toString();
 
-           Delay(2);
-           //click on life Assured
-           _driver.findElement(By.name("fcOwningEntityLink1")).click();
+            Delay(2);
+            //click on life Assured
+            _driver.findElement(By.name("fcOwningEntityLink1")).click();
 
-           Delay(2);
-           String oldMartialStatus = _driver.findElement(By.xpath("//*[@id='CntContentsDiv4']/table/tbody/tr[2]/td[4]")).getText();
+            Delay(2);
+            String oldMartialStatus = _driver.findElement(By.xpath("//*[@id='CntContentsDiv4']/table/tbody/tr[2]/td[4]")).getText();
 
-           //click oN Change
-           _driver.findElement(By.name("btnChangePerson")).click();
-
-
-           String value = "";
-           switch (title) {
-               case "Mr":
-                   value = "er_AcPerTitleMr";
-                   break;
-               case "Ms":
-                   value = "er_AcPerTitleMs";
-                   break;
-               case "Mrs":
-                   value = "er_AcPerTitleMrs";
-                   break;
-               case "Prf":
-                   value = "er_AcPerTitlePrf";
-                   break;
-               case "Dr":
-                   value = "er_AcPerTitleDr";
-                   break;
-               case "Adm":
-                   value = "er_AcPerTitleADM";
-                   break;
-               case "Adv":
-                   value = "er_AcPerTitleADV";
-                   break;
-               case "Capt":
-                   value = "er_AcPerTitleCAP";
-                   break;
-               case "Col":
-                   value = "er_AcPerTitleCOL";
-                   break;
-               case "Exec":
-                   value = "er_AcPerTitleEXE";
-                   break;
-               case "Gen":
-                   value = "er_AcPerTitleGEN";
-                   break;
-               case "Hon":
-                   value = "er_AcPerTitleHON";
-                   break;
-               case "Lt":
-                   value = "er_AcPerTitleLUI";
-                   break;
-               case "Maj":
-                   value = "er_AcPerTitleMAJ";
-                   break;
-               case "Messr":
-                   value = "er_AcPerTitleMES";
-                   break;
-               case "Pstr":
-                   value = "er_AcPerTitlePST";
-                   break;
-               case "Rev":
-                   value = "er_AcPerTitleREV";
-                   break;
-               case "Sir":
-                   value = "er_AcPerTitleSIR";
-                   break;
-               case "Brig":
-                   value = "er_AcPerTitleBRG";
-                   break;
-               case "Miss":
-                   value = "er_AcPerTitleMiss";
-                   break;
-
-               default:
-                   break;
-           }
-           Select oSelect = new Select(_driver.findElement(By.name("fcTitle")));
-           //Select title
-           oSelect.selectByValue(value);
-           Delay(2);
-
-           //Insert Surname
-           _driver.findElement(By.name("fcLastName")).clear();
-           _driver.findElement(By.name("fcLastName")).sendKeys(surname);
-
-           Delay(2);
-
-           //Insert MaritalStatus
-
-           switch (MaritalStatus) {
+            //click oN Change
+            _driver.findElement(By.name("btnChangePerson")).click();
 
 
-               case "Single":
-                   value = "er_AcStaMarSin";
-                   break;
-               case "Married":
-                   value = "er_AcStaMarMar";
-                   break;
-               case "Divorced":
-                   value = "er_AcStaMarDiv";
-                   break;
-               case "Widowed":
-                   value = "er_AcStaMarWid";
-                   break;
-               case "Separated":
-                   value = "er_AcStaMarSep";
-                   break;
-               case "Unknown":
-                   value = "er_AcStaMarUnk";
-                   break;
-               case "Married (in Community of Property)":
-                   value = "er_AcStaMarMac";
-                   break;
-               case "Married (not in Community of Property)":
-                   value = "er_AcStaMarMnc";
-                   break;
-               case "Domestic Partnership/Co-habiting":
-                   value = "er_AcStaMarDpp";
-                   break;
+            String value = "";
+            switch (title) {
+                case "Mr":
+                    value = "er_AcPerTitleMr";
+                    break;
+                case "Ms":
+                    value = "er_AcPerTitleMs";
+                    break;
+                case "Mrs":
+                    value = "er_AcPerTitleMrs";
+                    break;
+                case "Prf":
+                    value = "er_AcPerTitlePrf";
+                    break;
+                case "Dr":
+                    value = "er_AcPerTitleDr";
+                    break;
+                case "Adm":
+                    value = "er_AcPerTitleADM";
+                    break;
+                case "Adv":
+                    value = "er_AcPerTitleADV";
+                    break;
+                case "Capt":
+                    value = "er_AcPerTitleCAP";
+                    break;
+                case "Col":
+                    value = "er_AcPerTitleCOL";
+                    break;
+                case "Exec":
+                    value = "er_AcPerTitleEXE";
+                    break;
+                case "Gen":
+                    value = "er_AcPerTitleGEN";
+                    break;
+                case "Hon":
+                    value = "er_AcPerTitleHON";
+                    break;
+                case "Lt":
+                    value = "er_AcPerTitleLUI";
+                    break;
+                case "Maj":
+                    value = "er_AcPerTitleMAJ";
+                    break;
+                case "Messr":
+                    value = "er_AcPerTitleMES";
+                    break;
+                case "Pstr":
+                    value = "er_AcPerTitlePST";
+                    break;
+                case "Rev":
+                    value = "er_AcPerTitleREV";
+                    break;
+                case "Sir":
+                    value = "er_AcPerTitleSIR";
+                    break;
+                case "Brig":
+                    value = "er_AcPerTitleBRG";
+                    break;
+                case "Miss":
+                    value = "er_AcPerTitleMiss";
+                    break;
 
-               default:
-                   break;
+                default:
+                    break;
+            }
+            Select oSelect = new Select(_driver.findElement(By.name("fcTitle")));
+            //Select title
+            oSelect.selectByValue(value);
+            Delay(2);
 
-           }
-           Select oSelect2 = new Select(_driver.findElement(By.name("fcMaritalStatus")));
-           oSelect2.selectByValue(value);
-           Delay(2);
+            //Insert Surname
+            _driver.findElement(By.name("fcLastName")).clear();
+            _driver.findElement(By.name("fcLastName")).sendKeys(surname);
 
+            Delay(2);
 
-           //Insert EducationLevel
-           switch (EducationLevel) {
-               case "No Matric":
-                   value = "NMT";
-                   break;
-               case "Matric":
-                   value = "MTR";
-                   break;
-               case "Diploma (less than 3 years)":
-                   value = "DPL";
-                   break;
-               case "Diploma (3 years or more)":
-                   value = "DPM";
-                   break;
-               case "University/Undergraduate Degree":
-                   value = "UND";
-                   break;
-               case "Postgraduate Study":
-                   value = "PGD";
-                   break;
-               default:
-                   break;
-           }
+            //Insert MaritalStatus
 
-           Select oSelect1 = new Select(_driver.findElement(By.name("fcEducationLevel")));
-
-           //Select title
-           oSelect1.selectByValue(value);
-           Delay(2);
-
-           //Department
-           //Insert Surname
-           _driver.findElement(By.name("fcDepartment")).clear();
-           _driver.findElement(By.name("fcDepartment")).sendKeys(Department);
-           Delay(2);
-
-
-           switch (Profession) {
-               case "Accountant":
-                   value = "ACU";
-                   break;
-               case "Actor/Actress":
-                   value = "ACT";
-                   break;
-               case "Actuary":
-                   value = "ATY";
-                   break;
-               case "Adverting":
-                   value = "ADS";
-                   break;
-               case "Agriculture":
-                   value = "AGC";
-                   break;
-               case "Architect":
-                   value = "ARC";
-                   break;
-               case "Auditor":
-                   value = "AUD";
-                   break;
-               case "Banker":
-                   value = "BKR";
-                   break;
-               case "book keeper":
-                   value = "";
-                   break;
-               case "Broker":
-                   value = "BRK";
-                   break;
-               case "Doctor":
-                   value = "DTR";
-                   break;
-               case ("Engineer"):
-                   value = "EGR";
-                   break;
-               case ("Human Resources"):
-                   value = "HRC";
-                   break;
-               case ("Import/Export"):
-                   value = "IEX";
-                   break;
-               case ("Information Technology"):
-                   value = "ITC";
-                   break;
-               case ("Insurance"):
-                   value = "ISE";
-                   break;
-               case ("Lawyer"):
-                   value = "LAW";
-                   break;
-               case ("Military"):
-                   value = "MLY";
-                   break;
-               case ("Pilot"):
-                   value = "PLT";
-                   break;
-
-               default:
-                   break;
-           }
-
-           Select oSelect3 = new Select(_driver.findElement(By.name("fcProfession")));
-           //Select title
-           oSelect3.selectByValue(value);
-           Delay(2);
-
-           //Click on the submit btn
-           _driver.findElement(By.name("btnSubmit")).click();
+            switch (MaritalStatus) {
 
 
-           Delay(2);
-           String newMartialStatus = _driver.findElement(By.xpath("//*[@id='CntContentsDiv4']/table/tbody/tr[2]/td[4]")).getText();
+                case "Single":
+                    value = "er_AcStaMarSin";
+                    break;
+                case "Married":
+                    value = "er_AcStaMarMar";
+                    break;
+                case "Divorced":
+                    value = "er_AcStaMarDiv";
+                    break;
+                case "Widowed":
+                    value = "er_AcStaMarWid";
+                    break;
+                case "Separated":
+                    value = "er_AcStaMarSep";
+                    break;
+                case "Unknown":
+                    value = "er_AcStaMarUnk";
+                    break;
+                case "Married (in Community of Property)":
+                    value = "er_AcStaMarMac";
+                    break;
+                case "Married (not in Community of Property)":
+                    value = "er_AcStaMarMnc";
+                    break;
+                case "Domestic Partnership/Co-habiting":
+                    value = "er_AcStaMarDpp";
+                    break;
+
+                default:
+                    break;
+
+            }
+            Select oSelect2 = new Select(_driver.findElement(By.name("fcMaritalStatus")));
+            oSelect2.selectByValue(value);
+            Delay(2);
 
 
-           //Vaidation based Martial stat
+            //Insert EducationLevel
+            switch (EducationLevel) {
+                case "No Matric":
+                    value = "NMT";
+                    break;
+                case "Matric":
+                    value = "MTR";
+                    break;
+                case "Diploma (less than 3 years)":
+                    value = "DPL";
+                    break;
+                case "Diploma (3 years or more)":
+                    value = "DPM";
+                    break;
+                case "University/Undergraduate Degree":
+                    value = "UND";
+                    break;
+                case "Postgraduate Study":
+                    value = "PGD";
+                    break;
+                default:
+                    break;
+            }
 
-           if ((oldMartialStatus) != (newMartialStatus)) {
-               //Details sucessfully changed);
-               results = "Passed";
-           } else {
-               results = "Failed";
-           }
-           writeResults("Policy-Servicing", "ChangeLifeAssured", results, "");
-       } catch (Exception e) {
+            Select oSelect1 = new Select(_driver.findElement(By.name("fcEducationLevel")));
 
-           e.printStackTrace();
-           results = "Failed";
-           writeResults("Policy-Servicing", "ChangeLifeAssured", results, e.toString());
-       }
-   }
+            //Select title
+            oSelect1.selectByValue(value);
+            Delay(2);
 
-@Test
+            //Department
+            //Insert Surname
+            _driver.findElement(By.name("fcDepartment")).clear();
+            _driver.findElement(By.name("fcDepartment")).sendKeys(Department);
+            Delay(2);
+
+
+            switch (Profession) {
+                case "Accountant":
+                    value = "ACU";
+                    break;
+                case "Actor/Actress":
+                    value = "ACT";
+                    break;
+                case "Actuary":
+                    value = "ATY";
+                    break;
+                case "Adverting":
+                    value = "ADS";
+                    break;
+                case "Agriculture":
+                    value = "AGC";
+                    break;
+                case "Architect":
+                    value = "ARC";
+                    break;
+                case "Auditor":
+                    value = "AUD";
+                    break;
+                case "Banker":
+                    value = "BKR";
+                    break;
+                case "book keeper":
+                    value = "";
+                    break;
+                case "Broker":
+                    value = "BRK";
+                    break;
+                case "Doctor":
+                    value = "DTR";
+                    break;
+                case ("Engineer"):
+                    value = "EGR";
+                    break;
+                case ("Human Resources"):
+                    value = "HRC";
+                    break;
+                case ("Import/Export"):
+                    value = "IEX";
+                    break;
+                case ("Information Technology"):
+                    value = "ITC";
+                    break;
+                case ("Insurance"):
+                    value = "ISE";
+                    break;
+                case ("Lawyer"):
+                    value = "LAW";
+                    break;
+                case ("Military"):
+                    value = "MLY";
+                    break;
+                case ("Pilot"):
+                    value = "PLT";
+                    break;
+
+                default:
+                    break;
+            }
+
+            Select oSelect3 = new Select(_driver.findElement(By.name("fcProfession")));
+            //Select title
+            oSelect3.selectByValue(value);
+            Delay(2);
+
+            //Click on the submit btn
+            _driver.findElement(By.name("btnSubmit")).click();
+
+
+            Delay(2);
+            String newMartialStatus = _driver.findElement(By.xpath("//*[@id='CntContentsDiv4']/table/tbody/tr[2]/td[4]")).getText();
+
+
+            //Vaidation based Martial stat
+
+            if ((oldMartialStatus) != (newMartialStatus)) {
+                //Details sucessfully changed);
+                results = "Passed";
+            } else {
+                results = "Failed";
+            }
+            writeResults("Policy-Servicing", "ChangeLifeAssured", results, "");
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            results = "Failed";
+            writeResults("Policy-Servicing", "ChangeLifeAssured", results, e.toString());
+        }
+    }
+
+    @Test
     private void RemovalOfNonCompulsoryLife() throws InterruptedException
-{
+    {
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","RemovalOfNonCompulsoryLife");
         clickOnMainMenu();
         Delay(2);
@@ -1384,7 +1407,7 @@ public class PolicyServicing extends Base {
             Delay(2);
             String results = "";
 
-                    String title = testData.get("Title").toString(),
+            String title = testData.get("Title").toString(),
                     first_name = testData.get("First_Name").toString(),
                     surname = testData.get("Surname").toString(),
                     initials = testData.get("Initials").toString(),
@@ -1637,7 +1660,7 @@ public class PolicyServicing extends Base {
 
             Delay(3);
             //Get the Commencement date from contract summary screen
-             commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
+            commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
 
             //Scroll Down
             Delay(2);
@@ -1751,15 +1774,15 @@ public class PolicyServicing extends Base {
             Delay(2);
             policySearch(PolicyNo);
 
-        //    JavaScriptExecutor js2 = (JavaScriptExecutor)_driver;
+            //    JavaScriptExecutor js2 = (JavaScriptExecutor)_driver;
 
             String results = "";
 
             Delay(2);
 
-           // SetproductName("AddRolePlayer");
+            // SetproductName("AddRolePlayer");
 
-           // Delay(5);
+            // Delay(5);
 
 
 
@@ -1821,7 +1844,7 @@ public class PolicyServicing extends Base {
 
 
             //Select gender
-                List<WebElement> rdos = _driver.findElements(By.xpath("//input[@name='frmPersonGender']")); for (WebElement radio : rdos)
+            List<WebElement> rdos = _driver.findElements(By.xpath("//input[@name='frmPersonGender']")); for (WebElement radio : rdos)
         { if (radio.getAttribute("value").equals("er_AcPerGenMal"))
         { radio.click();
             break; }
@@ -2046,6 +2069,8 @@ public class PolicyServicing extends Base {
 
         // String PolicyNo = "";
         //Click on contract search
+        Delay(2);
+
         _driver.findElement(By.name("alf-ICF8_00000222")).click();
         Delay(2);
 
@@ -2069,6 +2094,5 @@ public class PolicyServicing extends Base {
     }
 
 }
-
 
 

@@ -138,7 +138,7 @@ public class TestBase {
     }
     @Test
     public void testGetPoliciyHolderDta(){
-        getPolicyHolderDetails("1",false);
+       // getPolicyHolderDetails("1",false);
     }
 
     public Dictionary getPolicyData(String scenario_id, Boolean phd)
