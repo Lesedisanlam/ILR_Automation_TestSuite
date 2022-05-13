@@ -348,7 +348,7 @@ public class SalesApp extends TestBase {
                     Delay(2);
                     _driver.findElement(By.name(String.format("/cover-details[%1$s].contact-number", lifeAsuredCounter))).SendKeys(item["Cellphone"]);
                     DOB = _driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[3]/div[5]/input", section)));
-                    date_of_birth = DOB.GetAttribute("value");
+                    date_of_birth = DOB.getAttribute("value");
                     SlideBar(item["Cover_Amount"], lifeAsuredCounter, key);
                     //
                     Delay(2);
@@ -438,7 +438,7 @@ public class SalesApp extends TestBase {
         _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")).click();
 
         /////////Payment Details
-        String bank = ["Bank"];
+        String bank = "Bank";
 
         //policy payer
         Delay(1);
@@ -458,29 +458,29 @@ public class SalesApp extends TestBase {
 
         //Account Type
         Delay(1);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[1]/div[2]/div[4]/div/label[2]")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[1]/div[2]/div[4]/div/label[2]")).click();
 
 
         /**debit - order - date / debit - order - date
          */
         Select oSelect = new Select(_driver.findElement(By.name("/debit-order-date")));
-        oSelect.selectByValue(policyHolderData["Debit_Order_Day"]);
+        oSelect.selectByValue(["Debit_Order_Day"]);
 
         //salarypaydate
         Delay(1);
-        _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section[1]/div[2]/div[6]/input")).SendKeys(policyHolderData["Salary_Date"]);
+        _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section[1]/div[2]/div[6]/input")).sendKeys(["Salary_Date"]);
 
         //click tickbox
         Delay(1);
-        _driver.findElement(By.xpath("//*[@id='/arrange-payment-gather-information-disclaimer']")).Click();
+        _driver.findElement(By.xpath("//*[@id='/arrange-payment-gather-information-disclaimer']")).click();
 
         //click yes
         Delay(1);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[2]/section/div[1]/div/div/label[1]")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[2]/section/div[1]/div/div/label[1]")).click();
 
         //click yes
         Delay(1);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[2]/section/div[2]/div/div/label[1]")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[2]/section/div[2]/div/div/label[1]")).click();
 
 
         //click next
