@@ -138,7 +138,7 @@ public class TestBase {
     }
     @Test
     public void testGetPoliciyHolderDta(){
-        getPolicyHolderDetails("1",false);
+        getPolicyData("1",false);
     }
 
     public Dictionary getPolicyData(String scenario_id, Boolean phd)
@@ -228,6 +228,7 @@ public class TestBase {
             }
         return policyHolderData;
     }
+
 
     public double getPremiumFromRateTable(double age, String rolePlayer, String sumAsured, String product) {
         double premium = 0.0;
