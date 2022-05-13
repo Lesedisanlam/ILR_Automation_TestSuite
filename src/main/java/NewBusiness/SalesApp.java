@@ -253,23 +253,23 @@ public class SalesApp extends TestBase {
         keys.add("Parents");
         keys.add("Extended");
 
-        var beneficiaries = policyplayers["Beneficiaries"];
+        var beneficiaries = "Beneficiaries";
 
         //click tickbox product
         Delay(1);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/section/div[1]/div[3]/button/span")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/section/div[1]/div[3]/button/span")).click();
 
         //click tickbox product
         Delay(1);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/div/div[2]/label/div")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/div/div[2]/label/div")).click();
 
 
         //click next
         Delay(1);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div[1]/a")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div[1]/a")).click();
         //click on No
         Delay(1);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[1]/div/div[2]/div/div/label[2]")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[1]/div/div[2]/div/div/label[2]")).click();
 
         //click on 5%
         Delay(1);
@@ -285,7 +285,7 @@ public class SalesApp extends TestBase {
 
         for (var key : keys) {
 
-            for (var item : policyplayers[key]) {
+            for (var item : [key]) {
 
                 if (item.Count > 0) {
                     if (key.equals("PolicyHolder_Details")) {
@@ -376,7 +376,7 @@ public class SalesApp extends TestBase {
 
         //Click next
         Delay(3);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div[1]/a[2]")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div[1]/a[2]")).click();
 
 
         var beneCounter = 0;
@@ -384,14 +384,14 @@ public class SalesApp extends TestBase {
         for (var item : beneficiaries) {
             //click relationship
             Delay(1);
-            _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/div/section/div[3]/div/div[1]/div/label[1]")).Click();
+            _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/div/section/div[3]/div/div[1]/div/label[1]")).click();
 
             //FirstName
             Delay(1);
-            _driver.findElement(By.name(String.format("/funeral-beneficiaries[%1$s].name", beneCounter))).SendKeys(item["First_name"]);
+            _driver.findElement(By.name(String.format("/funeral-beneficiaries[%1$s].name", beneCounter))).sendKeys(item["First_name"]);
             //Surname
             Delay(1);
-            _driver.findElement(By.name(String.format("/funeral-beneficiaries[%1$s].surname", beneCounter))).SendKeys(item["Surname"]);
+            _driver.findElement(By.name(String.format("/funeral-beneficiaries[%1$s].surname", beneCounter))).sendKeys(item["Surname"]);
 
             //ID Number
             Delay(1);
@@ -416,17 +416,17 @@ public class SalesApp extends TestBase {
 
         //Click next
         Delay(1);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div[1]/a[2]")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div[1]/a[2]")).click();
 
 
         //Word of advice
         Delay(1);
-        _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section/div[2]/div/textarea")).SendKeys("Test");
+        _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section/div[2]/div/textarea")).sendKeys("Test");
 
 
         //Click next
         Delay(1);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div[1]/a[2]")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div[1]/a[2]")).click();
 
         //Click No
         Delay(3);
@@ -434,25 +434,25 @@ public class SalesApp extends TestBase {
 
         //go to payment
         Delay(1);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")).click();
 
         /////////Payment Details
-        String bank = policyHolderData["Bank"];
+        String bank = ["Bank"];
 
         //policy payer
         Delay(1);
-        _driver.findElement(By.name("/same-as-fna")).Click();
+        _driver.findElement(By.name("/same-as-fna")).click();
 
 
         //bank details
         //Bank Selction
 
         Select oSelect1 = new Select(_driver.findElement(By.name("/bank-select")));
-        oSelect1.SelectByValue(bank);
+        oSelect1.selectByValue(bank);
 
         //Account Number
         Delay(1);
-        _driver.findElement(By.name("/account-number")).SendKeys(policyHolderData["Account_Number"]);
+        _driver.findElement(By.name("/account-number")).sendKeys(["Account_Number"]);
 
 
         //Account Type
@@ -463,7 +463,7 @@ public class SalesApp extends TestBase {
         /**debit - order - date / debit - order - date
          */
         Select oSelect = new Select(_driver.findElement(By.name("/debit-order-date")));
-        oSelect.SelectByValue(policyHolderData["Debit_Order_Day"]);
+        oSelect.selectByValue(policyHolderData["Debit_Order_Day"]);
 
         //salarypaydate
         Delay(1);
@@ -502,6 +502,7 @@ public class SalesApp extends TestBase {
 
             wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
         } catch
+
         {
             var tries = 2;
             for (int i = 0; i < tries; i++) {
@@ -656,7 +657,7 @@ public class SalesApp extends TestBase {
 
         try {
             String results = "";
-            String validationMsg = _driver.FindElement(By.XPath(String.format("//*[@id='gatsby-focus-wrapper']/article/form/section[%1$s]/div[4]/div[1]/label", section))).Text;
+            String validationMsg = _driver.findElement(By.xpath(String.format("//*[@id='gatsby-focus-wrapper']/article/form/section[%1$s]/div[4]/div[1]/label", section))).Text;
 
             switch (validationMsg) {
                 case "Cover is only available for parents from 26 to 85 years of age":
@@ -854,7 +855,9 @@ public class SalesApp extends TestBase {
                 }
                 WebElement sliderbar2 = _driver.findElement(By.className("slider"));
                 int widthslider2 = sliderbar.Size.Width;
+
                 Delay(1);
+
                 WebElement slider2 = _driver.findElement(By.xpath($"//*[@id='/cover-details[{counts}].cover-amount']"));
                 Actions slideraction2 = new Actions(_driver);
                 slideraction.clickAndHold(slider2);
