@@ -3,6 +3,7 @@ import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
+import org.testng.SkipException;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.openqa.selenium.WebDriver;
@@ -29,14 +30,19 @@ public class PolicyServicing extends Base {
     @BeforeClass
     public WebDriver login() throws InterruptedException {
         siteConnection();
+        getExcelMethods();
         createTesResultFile();
         return _driver;
 
     }
-    @Test(priority=11)
+
+
+    @Test
     public void addBeneficiary() throws InterruptedException {
-
-
+        if(!excelMethods.contains("addBeneficiary")){
+            throw new SkipException("Skipping this exception");
+        }
+        System.out.println("Executed Successfully");
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "addBeneficiary");
         Dictionary testData = getDataFromSheet("AddBeneficiary");
         clickOnMainMenu();
@@ -114,9 +120,10 @@ public class PolicyServicing extends Base {
         }
     }
 
-    @Test(priority=1)
+    @Test
     public void ReInstate() throws InterruptedException {
-
+        if(!excelMethods.contains("ReInstate"))
+            throw new SkipException("Skipping reinstate");
         String results;
         try {
             String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "ReInstate");
@@ -189,9 +196,10 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing", "ReInstate", results, e.toString());
         }
     }
-    @Test(priority=0)
+    @Test
     public void CancelPolicy() throws InterruptedException {
-
+        if(!excelMethods.contains("CancelPolicy"))
+            throw new SkipException("Skipping reinstate");
         String results;
         try {
             String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "CancelPolicy");
@@ -240,8 +248,11 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing", "CancelPolicy", results, e.toString());
         }
     }
-    @Test(priority=4)
+    @Test
     public void ChangeCollectionMethod() throws InterruptedException {
+        if (excelMethods.contains("ChangeCollectionMethod")){
+            throw new SkipException("Skipping reinstate");
+        }
         String results="";
         try {
             String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionMethod");
@@ -330,9 +341,11 @@ public class PolicyServicing extends Base {
         }
     }
 
-    @Test(priority=5)
+    @Test
     public void ChangeCollectionNegative() throws InterruptedException {
-
+        if (excelMethods.contains("ChangeCollectionMethodNegative")){
+            throw new SkipException("Skipping ChanegeCollectionNegative");
+        }
         String results="";
         try {
             String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","ChangeCollectionNegative");
@@ -435,7 +448,9 @@ public class PolicyServicing extends Base {
 
     @Test
     private void PostDatedDowngrade() throws InterruptedException {
-
+        if (excelMethods.contains("PostDatedDowngrade")){
+            throw new SkipException("Skipping ChanegeCollectionNegative");
+        }
         String results="";
         try {
             String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","PostDatedDowngrade");
@@ -565,6 +580,9 @@ public class PolicyServicing extends Base {
 
     @Test
     private void PostDatedUpgrade() throws InterruptedException {
+        if (excelMethods.contains("PostDatedUpgrade")){
+            throw new SkipException("Skipping ChanegeCollectionNegative");
+        }
         try
         {
             String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","PostDatedUpgrade");;
@@ -694,9 +712,11 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing", "PostDatedUpgrade", results, e.toString());
         }
     }
-    @Test(priority=7)
+    @Test
     private void AddRole_NextMonth() throws InterruptedException {
-
+        if (excelMethods.contains("AddRole_NextMonth")){
+            throw new SkipException("Skipping ChanegeCollectionNegative");
+        }
         try {
             String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "AddRole_NextMonth");
             Dictionary testData =  getDataFromSheet("AddRole_NextMonth");
@@ -944,8 +964,11 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing","AddRole_NextMonth","Failed",e.toString());
         }
     }
-    @Test(priority=8)
+    @Test
     private void TerminateRoleNext_month() throws InterruptedException {
+        if (excelMethods.contains("TerminateRoleNext_month")){
+            throw new SkipException("Skipping ChanegeCollectionNegative");
+        }
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "TerminateRoleNext_month");
         clickOnMainMenu();
         Delay(2);
@@ -1003,14 +1026,15 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing", "TerminateRoleNext_month", "Failed", e.toString());
         }
     }
-    @Test(priority=10)
+    @Test
     private void TerminateRolePlayer() throws InterruptedException {
-        String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "TerminateRolePlayer");
-        clickOnMainMenu();
-        Delay(2);
+        if (excelMethods.contains("TerminateRoleNext_month")){
+            throw new SkipException("Skipping ChanegeCollectionNegative");
+        }
         try {
-
-
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "TerminateRolePlayer");
+            clickOnMainMenu();
+            Delay(2);
             policySearch(PolicyNo);
             SetproductName("TerminateRolePlayer");
             String results = "";
@@ -1064,6 +1088,9 @@ public class PolicyServicing extends Base {
     }
     @Test
     private void ChangeLifeAssured() throws InterruptedException {
+        if (excelMethods.contains("ChangeLifeAssured")){
+            throw new SkipException("Skipping ChanegeCollectionNegative");
+        }
         String results;
         try {
             String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "ChangeLifeAssured");
@@ -1343,6 +1370,9 @@ public class PolicyServicing extends Base {
     @Test
     private void RemovalOfNonCompulsoryLife() throws InterruptedException
     {
+        if (excelMethods.contains("RemovalOfNonCompulsoryLife")){
+            throw new SkipException("Skipping ChanegeCollectionNegative");
+        }
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","RemovalOfNonCompulsoryLife");
         clickOnMainMenu();
         Delay(2);
@@ -1394,9 +1424,11 @@ public class PolicyServicing extends Base {
 
     }
 
-    @Test(priority=6)
+    @Test
     private void AddaLife() throws InterruptedException {
-
+        if (excelMethods.contains("AddaLife")){
+            throw new SkipException("Skipping ChanegeCollectionNegative");
+        }
         try
         {
             String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","AddaLife");
@@ -1641,9 +1673,11 @@ public class PolicyServicing extends Base {
         }
 
     }
-    @Test(priority=2)
+    @Test
     private void IncreaseSumAssured() throws InterruptedException {
-
+        if (excelMethods.contains("IncreaseSumAssured")){
+            throw new SkipException("Skipping ChanegeCollectionNegative");
+        }
         try
         {
             String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","IncreaseSumAssured");;
@@ -1755,8 +1789,11 @@ public class PolicyServicing extends Base {
         }
     }
 
-    @Test(priority=9)
+    @Test
     private void AddRolePlayer() throws InterruptedException {
+        if (excelMethods.contains("AddRolePlayer")){
+            throw new SkipException("Skipping ChanegeCollectionNegative");
+        }
         Dictionary testData = getDataFromSheet("AddRolePlayer");
         String title = testData.get("Title").toString(),
                 first_name = testData.get("First_Name").toString(),
@@ -2047,9 +2084,7 @@ public class PolicyServicing extends Base {
 
     }
 
-
     private void SetproductName(String methodname) {
-
     }
 
     private void clickOnMainMenu()

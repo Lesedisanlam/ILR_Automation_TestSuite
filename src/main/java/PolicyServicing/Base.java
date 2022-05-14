@@ -31,9 +31,9 @@ public class Base {
     private String username;
     private String password;
     private String _screenShotFolder;
-    private String _connStr;
-    private String target_url;
+    private String _testDataConnStr;
     String result_path, gCODE;
+    public ArrayList<String> excelMethods =  new ArrayList<String>();
 
 
     private String screenShotDailyFolderName() {
@@ -90,8 +90,8 @@ public class Base {
         _driver.get("http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w");
         username = "SKA008PPE";
         password = "SKA008PPE/c";
-        gCODE = "G992107";
-        //  _driver.get(target_url);
+        gCODE = "G992127";
+        _testDataConnStr = "C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData\\PolicyServicing\\TestData.xlsx";
         _driver.manage().window().maximize();
         Delay(2);
         _driver.findElement(By.name("fcUserCode")).sendKeys(username);
@@ -206,7 +206,7 @@ public class Base {
         double premium = 0.0;
         String cover = rolePlayer + "_" + sumAsured;
         try {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\" + gCODE + "\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
+            FileInputStream file = new FileInputStream(new File(_testDataConnStr));
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
 
@@ -371,5 +371,32 @@ public class Base {
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void getExcelMethods(){
+        try {
+            FileInputStream file = new FileInputStream(new File(_testDataConnStr));
+            //Create Workbook instance holding reference to .xlsx file
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+
+            //Get first/desired sheet from the workbook
+            XSSFSheet sheet = workbook.getSheet("Policy-Servicing");
+
+            int numberOfRows =  sheet.getPhysicalNumberOfRows();
+
+            for (int i = 1; i < numberOfRows; i++) {
+                Row rw = sheet.getRow(i);
+                excelMethods.add(rw.getCell(1).getStringCellValue());
+            }
+
+
+            file.close();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
