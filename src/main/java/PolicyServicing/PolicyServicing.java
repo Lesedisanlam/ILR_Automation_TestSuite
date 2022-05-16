@@ -1,4 +1,5 @@
-package src.main.java.PolicyServicing;
+package PolicyServicing;
+import lombok.var;
 import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -15,7 +16,7 @@ import java.util.Dictionary;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.List;
-import java.lang.System.Logger;
+//import java.lang.System.Logger;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
