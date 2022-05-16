@@ -85,7 +85,7 @@ public class Base {
 
 
     public void siteConnection() throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver", "C:\\Code\\bin\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\bin\\chromedriver.exe");
         _driver = new ChromeDriver();
         _driver.get("http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w");
         username = "e569123";
