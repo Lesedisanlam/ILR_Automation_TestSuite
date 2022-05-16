@@ -88,8 +88,8 @@ public class Base {
         System.setProperty("webdriver.chrome.driver", "C:\\Code\\bin\\chromeDriver.exe");
         _driver = new ChromeDriver();
         _driver.get("http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w");
-        username = "SKA008PPE";
-        password = "SKA008PPE/c";
+        username = "e569123";
+        password = "May@2022";
         gCODE = "G992127";
         _testDataConnStr = "C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData\\PolicyServicing\\TestData.xlsx";
         _driver.manage().window().maximize();
@@ -150,7 +150,7 @@ public class Base {
         String policyNo = "";
 
         try {
-            FileInputStream file = new FileInputStream(new File("C:\\Users\\" + gCODE + "\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx"));
+            FileInputStream file = new FileInputStream(new File(_testDataConnStr));
             String fun = func;
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
@@ -260,7 +260,7 @@ public class Base {
 
     public void writeResults(String ws, String function, String results, String commnents) {
         try {
-            FileInputStream inputxls = new FileInputStream("C:\\Users\\" + gCODE + "\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx");
+            FileInputStream inputxls = new FileInputStream(_testDataConnStr);
             XSSFWorkbook testDataSheet = new XSSFWorkbook(inputxls);
             XSSFSheet testDataworksheet = testDataSheet.getSheet(ws);
             ArrayList<String> colContents = new ArrayList<String>();

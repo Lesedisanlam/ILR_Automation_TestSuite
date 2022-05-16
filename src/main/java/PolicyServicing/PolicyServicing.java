@@ -35,7 +35,122 @@ public class PolicyServicing extends Base {
         return _driver;
 
     }
+    @Test(priority = 13)
+    public void IncreaseSumAssured() throws InterruptedException {
 
+        if (!excelMethods.contains("IncreaseSumAssured")){
+            throw new SkipException("Skipping ChanegeCollectionNegative");
+        }
+        try
+        {
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","IncreaseSumAssured");;
+            clickOnMainMenu();
+            Delay(2);
+            policySearch(PolicyNo);
+            String results = "";
+            String date = LocalDateTime.now().toString();
+            String currentSumAssured = "";
+            String commDate = "";
+            Delay(2);
+
+            SetproductName("IncreaseSumAssured");
+
+            Delay(3);
+            //Get the Commencement date from contract summary screen
+            commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
+
+            //Scroll Down
+            Delay(2);
+
+            String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
+
+            clickOnMainMenu();
+            //Click on user  contract summary
+            _driver.findElement(By.xpath("//*[@id='t0_771']/table/tbody/tr/td[1]/a/img[2]")).click();
+
+
+
+            //Click on user  component
+            _driver.findElement(By.xpath("//*[@id='t0_774']/a")).click();
+
+
+            Delay(4);
+
+            //  click on user  component
+            _driver.findElement(By.name("fccComponentDescription1")).click();
+
+            //Get The current Sum Assured for the life assured
+            currentSumAssured = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[8]/td[4]")).getText();
+
+
+            Delay(2);
+
+            WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
+            //Creating object of an Actions class
+            Actions action = new Actions(_driver);
+            //Performing the mouse hover action on the target element.
+            action.moveToElement(policyOptionElement).perform();
+            //Click on options
+            Delay(1);
+            _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[1]/td/div/div[3]/a/img")).click();
+
+            //Date selection
+            Delay(4);
+            _driver.findElement(By.name("frmCCStartDate")).clear();
+            Delay(2);
+            _driver.findElement(By.name("frmCCStartDate")).sendKeys(commDate);
+
+            Delay(5);
+
+            String newSumAssured = "";
+            //Do a  upgrade on current sum assured by 5000
+            if (Integer.parseInt(currentSumAssured) > 10000 || Integer.parseInt(currentSumAssured) == 10000)
+            {
+                newSumAssured =  Integer.toString((Integer.parseInt(currentSumAssured) + 10000));
+            }
+            else
+            {
+
+                newSumAssured = String.valueOf(60000);
+            }
+
+            Select oSelect = new Select(_driver.findElement(By.name("frmSPAmount")));
+
+            oSelect.selectByValue(newSumAssured);
+
+
+            //Click on next
+            _driver.findElement(By.name("btncbmcc13")).click();
+            Delay(2);
+
+
+            //Click on next
+            _driver.findElement(By.name("btncbmcc17")).click();
+            Delay(2);
+
+            // Click on finish
+            _driver.findElement(By.name("btncbmcc23")).click();
+            Delay(5);
+            var newPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr/td[2]")).getText();
+
+            if (Double.parseDouble(newPrem) > Double.parseDouble(contractPrem))
+            {
+                results = "Passed";
+            }
+            else
+            {
+                results = "Failed";
+            }
+
+            writeResults("Policy-Servicing","IncreaseSumAssured",results,"");
+        } catch (Exception e)
+        {
+
+            e.printStackTrace();
+            String results = "Failed";
+            writeResults("Policy-Servicing", "IncreaseSumAssured", results, e.toString());
+        }
+    }
 
     @Test
     public void addBeneficiary() throws InterruptedException {
@@ -119,8 +234,59 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing","addBeneficiary","Failed",ex.toString());
         }
     }
+    @Test(priority = 0)
+    public void CancelPolicy() throws InterruptedException {
+        if(!excelMethods.contains("CancelPolicy"))
+            throw new SkipException("Skipping reinstate");
+        String results;
+        try {
+            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "CancelPolicy");
+            clickOnMainMenu();
+            Delay(2);
+            policySearch(PolicyNo);
+            results = "";
+            Delay(2);
+            String commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
+            Delay(3);
+            //Hover on policy options
+            WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
+            //Creating object of an Actions class
+            Actions action = new Actions(_driver);
+            //Performing the mouse hover action on the target element.
+            action.moveToElement(policyOptionElement).perform();
+            Delay(5);
+            //Click on Cancel
+            _driver.findElement(By.xpath("//table[@id='m0t0']/tbody/tr/td/div/div[3]/a/img")).click();
+            Delay(5);
+            //Set Cancellation data
+            _driver.findElement(By.name("frmTerminationDate")).clear();
+            Delay(1);
+            _driver.findElement(By.name("frmTerminationDate")).sendKeys(commDate);
+            Select selecCom = new Select(_driver.findElement(By.name("frmCancelReason")));
+            selecCom.selectByValue("Cancelled by external service");
+            Delay(2);
+            //cancel
+            _driver.findElement(By.name("btnSubmit")).click();
+            Delay(2);
+            // Switching to Alert
+            Alert alert = _driver.switchTo().alert();
+            // '.Accept()' is used to accept the alert '(click on the Ok button)'
+            alert.accept();
+            Delay(7);
+            String newStatus = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[2]/td[2]/u/font")).getText();
+            if (newStatus.equals("Cancelled") || newStatus.equals("Not Taken Up")) {
+                results = "Passed";
+            } else {
+                results = "Failed";
+            }
+            writeResults("Policy-Servicing", "CancelPolicy", results, "");
+        } catch (Exception e) {
 
-    @Test
+            results = "Failed";
+            writeResults("Policy-Servicing", "CancelPolicy", results, e.toString());
+        }
+    }
+    @Test(priority = 1)
     public void ReInstate() throws InterruptedException {
         if(!excelMethods.contains("ReInstate"))
             throw new SkipException("Skipping reinstate");
@@ -196,61 +362,10 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing", "ReInstate", results, e.toString());
         }
     }
-    @Test
-    public void CancelPolicy() throws InterruptedException {
-        if(!excelMethods.contains("CancelPolicy"))
-            throw new SkipException("Skipping reinstate");
-        String results;
-        try {
-            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "CancelPolicy");
-            clickOnMainMenu();
-            Delay(2);
-            policySearch(PolicyNo);
-            results = "";
-            Delay(2);
-            String commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
-            Delay(3);
-            //Hover on policy options
-            WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
-            //Creating object of an Actions class
-            Actions action = new Actions(_driver);
-            //Performing the mouse hover action on the target element.
-            action.moveToElement(policyOptionElement).perform();
-            Delay(5);
-            //Click on Cancel
-            _driver.findElement(By.xpath("//table[@id='m0t0']/tbody/tr/td/div/div[3]/a/img")).click();
-            Delay(5);
-            //Set Cancellation data
-            _driver.findElement(By.name("frmTerminationDate")).clear();
-            Delay(1);
-            _driver.findElement(By.name("frmTerminationDate")).sendKeys(commDate);
-            Select selecCom = new Select(_driver.findElement(By.name("frmCancelReason")));
-            selecCom.selectByValue("Cancelled by external service");
-            Delay(2);
-            //cancel
-            _driver.findElement(By.name("btnSubmit")).click();
-            Delay(2);
-            // Switching to Alert
-            Alert alert = _driver.switchTo().alert();
-            // '.Accept()' is used to accept the alert '(click on the Ok button)'
-            alert.accept();
-            Delay(7);
-            String newStatus = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[2]/td[2]/u/font")).getText();
-            if (newStatus.equals("Cancelled") || newStatus.equals("Not Taken Up")) {
-                results = "Passed";
-            } else {
-                results = "Failed";
-            }
-            writeResults("Policy-Servicing", "CancelPolicy", results, "");
-        } catch (Exception e) {
 
-            results = "Failed";
-            writeResults("Policy-Servicing", "CancelPolicy", results, e.toString());
-        }
-    }
-    @Test
+    @Test(priority = 3)
     public void ChangeCollectionMethod() throws InterruptedException {
-        if (excelMethods.contains("ChangeCollectionMethod")){
+        if (!excelMethods.contains("ChangeCollectionMethod")){
             throw new SkipException("Skipping reinstate");
         }
         String results="";
@@ -341,9 +456,9 @@ public class PolicyServicing extends Base {
         }
     }
 
-    @Test
+    @Test(priority = 4)
     public void ChangeCollectionNegative() throws InterruptedException {
-        if (excelMethods.contains("ChangeCollectionMethodNegative")){
+        if (!excelMethods.contains("ChangeCollectionNegative")){
             throw new SkipException("Skipping ChanegeCollectionNegative");
         }
         String results="";
@@ -446,9 +561,9 @@ public class PolicyServicing extends Base {
         }
     }
 
-    @Test
-    private void PostDatedDowngrade() throws InterruptedException {
-        if (excelMethods.contains("PostDatedDowngrade")){
+    @Test (priority = 5)
+    public void PostDatedDowngrade() throws InterruptedException {
+        if (!excelMethods.contains("PostDatedDowngrade")){
             throw new SkipException("Skipping ChanegeCollectionNegative");
         }
         String results="";
@@ -578,9 +693,9 @@ public class PolicyServicing extends Base {
         }
     }
 
-    @Test
-    private void PostDatedUpgrade() throws InterruptedException {
-        if (excelMethods.contains("PostDatedUpgrade")){
+    @Test(priority = 6)
+    public void PostDatedUpgrade() throws InterruptedException {
+        if (!excelMethods.contains("PostDatedUpgrade")){
             throw new SkipException("Skipping ChanegeCollectionNegative");
         }
         try
@@ -712,9 +827,9 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing", "PostDatedUpgrade", results, e.toString());
         }
     }
-    @Test
-    private void AddRole_NextMonth() throws InterruptedException {
-        if (excelMethods.contains("AddRole_NextMonth")){
+    @Test(priority = 7)
+    public void AddRole_NextMonth() throws InterruptedException {
+        if (!excelMethods.contains("AddRole_NextMonth")){
             throw new SkipException("Skipping ChanegeCollectionNegative");
         }
         try {
@@ -964,9 +1079,9 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing","AddRole_NextMonth","Failed",e.toString());
         }
     }
-    @Test
-    private void TerminateRoleNext_month() throws InterruptedException {
-        if (excelMethods.contains("TerminateRoleNext_month")){
+    @Test(priority = 8)
+    public void TerminateRoleNext_month() throws InterruptedException {
+        if (!excelMethods.contains("TerminateRoleNext_month")){
             throw new SkipException("Skipping ChanegeCollectionNegative");
         }
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing", "TerminateRoleNext_month");
@@ -1026,9 +1141,9 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing", "TerminateRoleNext_month", "Failed", e.toString());
         }
     }
-    @Test
-    private void TerminateRolePlayer() throws InterruptedException {
-        if (excelMethods.contains("TerminateRoleNext_month")){
+    @Test(priority = 9)
+    public void TerminateRolePlayer() throws InterruptedException {
+        if (!excelMethods.contains("TerminateRolePlayer")){
             throw new SkipException("Skipping ChanegeCollectionNegative");
         }
         try {
@@ -1086,9 +1201,9 @@ public class PolicyServicing extends Base {
             writeResults("Policy-Servicing", "TerminateRolePlayer", "Failed", e.toString());
         }
     }
-    @Test
-    private void ChangeLifeAssured() throws InterruptedException {
-        if (excelMethods.contains("ChangeLifeAssured")){
+    @Test(priority = 10)
+    public void ChangeLifeAssured() throws InterruptedException {
+        if (!excelMethods.contains("ChangeLifeAssured")){
             throw new SkipException("Skipping ChanegeCollectionNegative");
         }
         String results;
@@ -1367,10 +1482,10 @@ public class PolicyServicing extends Base {
         }
     }
 
-    @Test
-    private void RemovalOfNonCompulsoryLife() throws InterruptedException
+    @Test(priority = 11)
+    public void RemovalOfNonCompulsoryLife() throws InterruptedException
     {
-        if (excelMethods.contains("RemovalOfNonCompulsoryLife")){
+        if (!excelMethods.contains("RemovalOfNonCompulsoryLife")){
             throw new SkipException("Skipping ChanegeCollectionNegative");
         }
         String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","RemovalOfNonCompulsoryLife");
@@ -1424,9 +1539,9 @@ public class PolicyServicing extends Base {
 
     }
 
-    @Test
-    private void AddaLife() throws InterruptedException {
-        if (excelMethods.contains("AddaLife")){
+    @Test(priority = 12)
+    public void AddaLife() throws InterruptedException {
+        if (!excelMethods.contains("AddaLife")){
             throw new SkipException("Skipping ChanegeCollectionNegative");
         }
         try
@@ -1673,125 +1788,11 @@ public class PolicyServicing extends Base {
         }
 
     }
-    @Test
-    private void IncreaseSumAssured() throws InterruptedException {
-        if (excelMethods.contains("IncreaseSumAssured")){
-            throw new SkipException("Skipping ChanegeCollectionNegative");
-        }
-        try
-        {
-            String PolicyNo = getPolicyNoFromExcel("Policy-Servicing","IncreaseSumAssured");;
-            clickOnMainMenu();
-            Delay(2);
-            policySearch(PolicyNo);
-            String results = "";
-            String date = LocalDateTime.now().toString();
-            String currentSumAssured = "";
-            String commDate = "";
-            Delay(2);
-
-            SetproductName("IncreaseSumAssured");
-
-            Delay(3);
-            //Get the Commencement date from contract summary screen
-            commDate = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr[6]/td[2]")).getText();
-
-            //Scroll Down
-            Delay(2);
-
-            String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
-
-            clickOnMainMenu();
-            //Click on user  contract summary
-            _driver.findElement(By.xpath("//*[@id='t0_771']/table/tbody/tr/td[1]/a/img[2]")).click();
 
 
-
-            //Click on user  component
-            _driver.findElement(By.xpath("//*[@id='t0_774']/a")).click();
-
-
-            Delay(4);
-
-            //  click on user  component
-            _driver.findElement(By.name("fccComponentDescription1")).click();
-
-            //Get The current Sum Assured for the life assured
-            currentSumAssured = _driver.findElement(By.xpath("//*[@id='frmCbmcc']/tbody/tr[8]/td[4]")).getText();
-
-
-            Delay(2);
-
-            WebElement policyOptionElement = _driver.findElement(By.xpath("//*[@id='m0i0o1']"));
-            //Creating object of an Actions class
-            Actions action = new Actions(_driver);
-            //Performing the mouse hover action on the target element.
-            action.moveToElement(policyOptionElement).perform();
-            //Click on options
-            Delay(1);
-            _driver.findElement(By.xpath("//*[@id='m0t0']/tbody/tr[1]/td/div/div[3]/a/img")).click();
-
-            //Date selection
-            Delay(4);
-            _driver.findElement(By.name("frmCCStartDate")).clear();
-            Delay(2);
-            _driver.findElement(By.name("frmCCStartDate")).sendKeys(commDate);
-
-            Delay(5);
-
-            String newSumAssured = "";
-            //Do a  upgrade on current sum assured by 5000
-            if (Integer.parseInt(currentSumAssured) > 10000 || Integer.parseInt(currentSumAssured) == 10000)
-            {
-                newSumAssured =  Integer.toString((Integer.parseInt(currentSumAssured) + 10000));
-            }
-            else
-            {
-
-                newSumAssured = String.valueOf(60000);
-            }
-
-            Select oSelect = new Select(_driver.findElement(By.name("frmSPAmount")));
-
-            oSelect.selectByValue(newSumAssured);
-
-
-            //Click on next
-            _driver.findElement(By.name("btncbmcc13")).click();
-            Delay(2);
-
-
-            //Click on next
-            _driver.findElement(By.name("btncbmcc17")).click();
-            Delay(2);
-
-            // Click on finish
-            _driver.findElement(By.name("btncbmcc23")).click();
-            Delay(5);
-            var newPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv8']/table/tbody/tr/td[2]")).getText();
-
-            if (Double.parseDouble(newPrem) > Double.parseDouble(contractPrem))
-            {
-                results = "Passed";
-            }
-            else
-            {
-                results = "Failed";
-            }
-
-            writeResults("Policy-Servicing","IncreaseSumAssured",results,"");
-        } catch (Exception e)
-        {
-
-            e.printStackTrace();
-            String results = "Failed";
-            writeResults("Policy-Servicing", "IncreaseSumAssured", results, e.toString());
-        }
-    }
-
-    @Test
-    private void AddRolePlayer() throws InterruptedException {
-        if (excelMethods.contains("AddRolePlayer")){
+    @Test(priority = 14)
+    public void AddRolePlayer() throws InterruptedException {
+        if (!excelMethods.contains("AddRolePlayer")){
             throw new SkipException("Skipping ChanegeCollectionNegative");
         }
         Dictionary testData = getDataFromSheet("AddRolePlayer");
@@ -2084,7 +2085,7 @@ public class PolicyServicing extends Base {
 
     }
 
-    private void SetproductName(String methodname) {
+    public void SetproductName(String methodname) {
     }
 
     private void clickOnMainMenu()
