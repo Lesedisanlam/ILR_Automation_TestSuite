@@ -381,7 +381,6 @@ public class PolicyServicing extends Base {
             Delay(4);
 
 
-
             //click on policy payer
             _driver.findElement(By.name("fcRoleEntityLink3")).click();
 
@@ -586,7 +585,7 @@ public class PolicyServicing extends Base {
             String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
 
             //Click on user  contract summary
-            _driver.findElement(By.xpath("//*[@id='t0_761']/table/tbody/tr/td[1]/a/img[2]")).click();
+            _driver.findElement(By.xpath("//*[@id='t0_762']/table/tbody/tr/td[1]/a/img[2]")).click();
 
 
 
@@ -724,8 +723,7 @@ public class PolicyServicing extends Base {
             String contractPrem = _driver.findElement(By.xpath("//*[@id='CntContentsDiv9']/table/tbody/tr[2]/td[2]")).getText();
 
             //Click on user  contract summary
-            _driver.findElement(By.xpath("//*[@id='t0_761']/table/tbody/tr/td[1]/a/img[2]")).click();
-
+            _driver.findElement(By.xpath("//*[@id='t0_762']/table/tbody/tr/td[1]/a/img[2]")).click();
 
 
             //Click on user  component
@@ -1010,7 +1008,7 @@ public class PolicyServicing extends Base {
 
             Delay(2);
             //click contract summary
-            _driver.findElement(By.xpath(" //*[@id='t0_771']/table/tbody/tr/td[3]/a")).click();
+            _driver.findElement(By.xpath(" //*[@id='t0_762']/table/tbody/tr/td[3]/a")).click();
 
             Delay(3);
             // _driver.Navigate().Refresh();
@@ -1577,7 +1575,7 @@ public class PolicyServicing extends Base {
             //Select role
             WebElement selectRole = _driver.findElement(By.name("frmRoleObj"));
             Select s = new Select(selectRole);
-            s.selectByIndex(4);
+            s.selectByValue("41666.19");
 
             Delay(2);
             _driver.findElement(By.name("frmEffectiveFromDate")).clear();
@@ -2001,7 +1999,7 @@ public class PolicyServicing extends Base {
 
         Delay(2);
         //click contract summary
-        _driver.findElement(By.xpath(" //*[@id='t0_771']/table/tbody/tr/td[3]/a")).click();
+        _driver.findElement(By.xpath(" //*[@id='t0_762']/table/tbody/tr/td[3]/a")).click();
 
         Delay(3);
         //  _driver.Navigate().Refresh();

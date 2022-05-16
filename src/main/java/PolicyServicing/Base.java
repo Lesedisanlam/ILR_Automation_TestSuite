@@ -90,7 +90,7 @@ public class Base {
         _driver.get("http://ilr-tst.safrican.co.za/web/wspd_cgi.sh/WService=wsb_ilrtst/run.w");
         username = "e569123";
         password = "May@2022";
-        gCODE = "G992127";
+        gCODE = "G992107";
         _testDataConnStr = "C:\\Users\\"+gCODE+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData\\PolicyServicing\\TestData.xlsx";
         _driver.manage().window().maximize();
         Delay(2);
@@ -110,7 +110,7 @@ public class Base {
         ArrayList<String> headers = new ArrayList<String>();
         try {
 
-            FileInputStream inputxls = new FileInputStream("C:\\Users\\" + gCODE + "\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData.xlsx");
+            FileInputStream inputxls = new FileInputStream(_testDataConnStr);
             XSSFWorkbook testDataSheet = new XSSFWorkbook(inputxls);
             XSSFSheet testDataworksheet = testDataSheet.getSheet(ws);
 
