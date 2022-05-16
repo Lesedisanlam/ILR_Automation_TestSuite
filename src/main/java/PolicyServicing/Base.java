@@ -1,4 +1,4 @@
-package src.main.java.PolicyServicing;
+package PolicyServicing;
 import org.apache.commons.io.FileUtils;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
