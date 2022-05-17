@@ -1,5 +1,6 @@
 package src.main.java.NewBusiness;
 
+import org.apache.poi.hwpf.converter.FontReplacer;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -14,10 +15,13 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import jdk.jfr.Timespan;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.Alert;
 import java.util.Dictionary;
 import java.util.Iterator;
 import java.util.Set;
+import org.testng.annotations.AfterMethod;
 import java.util.ArrayList;
 import org.openqa.selenium.Keys;
 import java.time.LocalDateTime;
@@ -274,19 +278,19 @@ public class SalesApp extends TestBase {
 
         //click on 5%
         Delay(1);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[2]/div/div[2]/div/div/label[1]")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[2]/div/div[2]/div/div/label[1]")).click();
         //Add Provided LAs
         var lifeAsuredCounter = 0;
         var label = 1;
         var section = 3;
         WebElement DOB;
         String date_of_birth = "", frontEndPrem = "", frontEndMin = "", frontEndMax = "";
-        Tuple<String, String> validation;
+        FontReplacer.Triplet<String, String> validation;
 
 
         for (String key : keys) {
 
-            for (String item : [key]) {
+            for (String item : [key]){
 
                 if (item.Count > 0) {
                     if (key.equals("PolicyHolder_Details")) {
@@ -294,13 +298,13 @@ public class SalesApp extends TestBase {
 
                             //add main life
                             Delay(1);
-                            _driver.findElement(By.xpath(String.format("//*[@id='gatsby-focus-wrapper']/article/form/section[%1$s]/div[2]/div[1]/div/label[%2$s]", section, label))).Click();
+                            _driver.findElement(By.xpath(String.format("//*[@id='gatsby-focus-wrapper']/article/form/section[%1$s]/div[2]/div[1]/div/label[%2$s]", section, label))).click();
                             //Cover Amount
                             DOB = _driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[3]/div[5]/input", section)));
                             date_of_birth = DOB.getAttribute("value");
                             SlideBar(item["Cover_Amount"], lifeAsuredCounter, "Myself");
                             Delay(2);
-                            frontEndPrem = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/label/h2/strong[2]", section))).getText()).Remove(0, 1).strip();
+                            frontEndPrem = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/label/h2/strong[2]", section))).getText()).remove(0, 1).strip();
                             frontEndMin = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/div[2]/span[1]", section))).getText()).Remove(0, 1).replace(" ", "");
                             frontEndMax = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/div[2]/span[2]", section))).getText()).Remove(0, 1).replace(" ", "");
                             validation = RolePlayerValidation(_driver, item["Cover_Amount"], "ML", date_of_birth, frontEndPrem, frontEndMin, frontEndMax);
@@ -325,8 +329,8 @@ public class SalesApp extends TestBase {
 
                         WebElement RelationshipType = _driver.findElement(By.name(String.format("/cover-details[%1$s].relationship-extended-type", lifeAsuredCounter)));
                         RelationshipType.sendKeys(item["Extended_RelationshipType"]);
-                        RelationshipType.sendKeys(Keys.ArrowDown);
-                        RelationshipType.sendKeys(Keys.Enter);
+                        RelationshipType.sendKeys(Keys.ARROW_DOWN);
+                        RelationshipType.sendKeys(Keys.ENTER);
                     }
                     //FirstName
                     Delay(1);
@@ -404,7 +408,7 @@ public class SalesApp extends TestBase {
 
             //Percentage
             WebElement sliderbar5 = _driver.findElement(By.className("slider"));
-            int widthslider5 = sliderbar5.Size.Width;
+            int widthslider5 = sliderbar5.getSize().width;
             Delay(1);
             WebElement slider5 = _driver.findElement(By.className("slider"));
             Actions slideraction5 = new Actions(_driver);
@@ -453,7 +457,7 @@ public class SalesApp extends TestBase {
 
         //Account Number
         Delay(1);
-        _driver.findElement(By.name("/account-number")).sendKeys(["Account_Number"]);
+        _driver.findElement(By.name("/account-number")).sendKeys("Account_Number");
 
 
         //Account Type
@@ -464,11 +468,11 @@ public class SalesApp extends TestBase {
         /**debit - order - date / debit - order - date
          */
         Select oSelect = new Select(_driver.findElement(By.name("/debit-order-date")));
-        oSelect.selectByValue(["Debit_Order_Day"]);
+        oSelect.selectByValue("Debit_Order_Day");
 
         //salarypaydate
         Delay(1);
-        _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section[1]/div[2]/div[6]/input")).sendKeys(["Salary_Date"]);
+        _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section[1]/div[2]/div[6]/input")).sendKeys("Salary_Date");
 
         //click tickbox
         Delay(1);
@@ -498,22 +502,28 @@ public class SalesApp extends TestBase {
 
         //debicheck loading delay
 
-        WebElement ElementExists;
-        ElementExists = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
-        ElementExists.click();
-        //Impletent implicit wait
-        WebDriverWait wait = new WebDriverWait(_driver, Timespan.FromSeconds(160));
+
         try {
 
-            wait.Until(ExpectedConditions.ElementExists(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
-        } catch
+            WebDriverWait wait = new WebDriverWait(_driver, 160);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
+            // click on the compose button as soon as the "compose" button is visible
+            _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")).click();
+            WebElement ElementExists;
+            ElementExists = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
+            ElementExists.click();
 
+        } catch
         {
             var tries = 2;
             for (int i = 0; i < tries; i++) {
-                WebDriverWait ElementExists = new WebDriverWait(_driver, Timespan.FromSeconds(160));
+
+                WebDriverWait wait = new WebDriverWait(_driver,150);
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[1]/div[1]/article/section/div[3]/button")));
+                // click on the compose button as soon as the "compose" button is visible
+                _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/section/div[3]/button")).click();
                 WebElement ElementExists;
-                ElementExists = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
+                ElementExists = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[1]/div[1]/article/section/div[3]/button")));
                 ElementExists.click();
             }
 
@@ -524,23 +534,16 @@ public class SalesApp extends TestBase {
         var Errormessage = _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/section/div[2]/div[2]/div[2]/p")).getText();
 
         if (Errormessage == "DebiCheck accepted by customer") {
-
-
             Delay(1);
             //Click next
             _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")).click();
 
-
         } else {
-
             comment = "Debicheck Failed";
             results = "Failed";
-
             return Tuple.Create(results, comment);
 
-
         }
-
 
         //Physical Address
 
@@ -633,7 +636,7 @@ public class SalesApp extends TestBase {
         Delay(1);
         _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/nav/div/div/button")).click();
 
-        var appStatus = _driver.findElement(By.cssSelector("#gatsby-focus-wrapper > article > div.card.tab-container > div.tab-body > section > section:nth-child(1) > div > div.final-block > span")).Text;
+        var appStatus = _driver.findElement(By.cssSelector("#gatsby-focus-wrapper > article > div.card.tab-container > div.tab-body > section > section:nth-child(1) > div > div.final-block > span")).getText();
 
 
         for (int i = 0; i < 5; i++) {
@@ -641,7 +644,7 @@ public class SalesApp extends TestBase {
             _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/nav/div/div/button")).click();
             Delay(10);
 
-            appStatus = _driver.findElement(By.cssSelector("#gatsby-focus-wrapper > article > div.card.tab-container > div.tab-body > section > section:nth-child(1) > div > div.final-block > span")).Text;
+            appStatus = _driver.findElement(By.cssSelector("#gatsby-focus-wrapper > article > div.card.tab-container > div.tab-body > section > section:nth-child(1) > div > div.final-block > span")).getText();
             if (appStatus.equals("Uploaded")) {
                 break;
             }
@@ -667,22 +670,22 @@ public class SalesApp extends TestBase {
 
             switch (validationMsg) {
                 case "Cover is only available for parents from 26 to 85 years of age":
-                    TakeScreenshot(_driver, String.format("%1$s\\Failed_Scenarios\\", _screenShotFolder), "ParentAgeValidation");
+                    takeSnapShot(_driver, String.format("%1$s\\Failed_Scenarios\\", _screenShotFolder), "ParentAgeValidation");
                     results = "Failed";
                     return Tuple.Create(results, validationMsg);
 
                 case "Cover is only available for spouses from 18 to 64 years of age":
-                    TakeScreenshot(_driver, String.format("%1$s\\Failed_Scenarios\\", _screenShotFolder), "SpouseAgeValidation");
+                    takeSnapShot(_driver, String.format("%1$s\\Failed_Scenarios\\", _screenShotFolder), "SpouseAgeValidation");
                     results = "Failed";
                     return Tuple.Create(results, validationMsg);
 
 
                 case "Cover is only available for persons up to 85 years of age":
-                    TakeScreenshot(_driver, String.format("%1$s\\Failed_Scenarios\\", _screenShotFolder), "ExtendedAgeValidation");
+                    takeSnapShot(_driver, String.format("%1$s\\Failed_Scenarios\\", _screenShotFolder), "ExtendedAgeValidation");
                     results = "Failed";
                     return Tuple.Create(results, validationMsg);
                 case "Cover is only available for children up to 25 years of age":
-                    TakeScreenshot(_driver, String.format("%1$s\\Failed_Scenarios\\", _screenShotFolder), "ChildAgeValidation");
+                    takeSnapShot(_driver, String.format("%1$s\\Failed_Scenarios\\", _screenShotFolder), "ChildAgeValidation");
                     results = "Failed";
                     return Tuple.Create(results, validationMsg);
             }
@@ -802,7 +805,6 @@ public class SalesApp extends TestBase {
             slideraction.moveByOffset(Integer.parseInt(V1_Position), 0).build().perform();
 
 
-
         }
         if (role == "Parents") {
 
@@ -871,7 +873,6 @@ public class SalesApp extends TestBase {
                 slideraction.moveByOffset(Integer.parseInt(V3_Position), 0).build().perform();
 
 
-
             }
 
 
@@ -880,18 +881,18 @@ public class SalesApp extends TestBase {
 
     }
 
-    public Tuple<string, string> RolePlayerValidation(WebDriver _driver, String coverAmount, String roleplayer, string dob, string expectedPrem, string frondEndMin, string frondEndMax) {
+    public Tuple<String, String> RolePlayerValidation(WebDriver _driver, String coverAmount, String roleplayer, String dob, String expectedPrem, String frondEndMin, String frondEndMax) throws InterruptedException {
 
         //calulate age
         String premValidation = "", coverAmountsValidation = "", comment = "", age;
-        var birthYear = dob.Split("-")[0];
-        var birthMonth = dob.Split("-")[1];
-        var birthDay = dob.Split("-")[2];
+        var birthYear = dob.split("-")[0];
+        var birthMonth = dob.split("-")[1];
+        var birthDay = dob.split("-")[2];
 
-        age = (DateTime.Now.Year - Convert.ToInt32(birthYear)).ToString();
+        age = (LocalDateTime.now().getYear() - Integer.parseInt(birthYear)).toString();
 
-        if (Convert.ToInt32(birthMonth) > DateTime.Now.Month || (Convert.ToInt32(birthMonth) == DateTime.Now.Month && Convert.ToInt32(birthDay) > DateTime.Now.Day)) {
-            age = (Convert.ToInt32(age) - 1).ToString();
+        if (Integer.parseInt(birthMonth) > LocalDateTime.now().getDayOfMonth() || (Integer.parseInt(birthMonth) == DateTime.Now.Month && Integer.parseInt(birthDay) > DateTime.Now.Day)) {
+            age = (Integer.parseInt(age) - 1).toString();
         }
 
 
@@ -902,13 +903,13 @@ public class SalesApp extends TestBase {
         //Validate Cover Limits
 
         //Check if age falls between ages from spreadsheet
-        if (Convert.ToInt32(age) >= Convert.ToInt32(minAge) && Convert.ToInt32(age) <= Convert.ToInt32(maxAge)) {
+        if (Integer.parseInt(age) >= Integer.parseInt(minAge) && Integer.parseInt(age) <= Integer.parseInt(maxAge)) {
             //check the amount is between
             if (minCover == frondEndMin && maxCover == frondEndMax) {
                 coverAmountsValidation = "Passed";
             } else {
                 coverAmountsValidation = "Failed";
-                comment += $"Scenario Failed - max and min cover amounts validation erorr for {roleplayer} age {age} ";
+                comment += $ "Scenario Failed - max and min cover amounts validation erorr for {roleplayer} age {age} ";
             }
 
         }
@@ -916,7 +917,8 @@ public class SalesApp extends TestBase {
 
         if (premiumFromRate != Convert.ToDecimal(expectedPrem)) {
             premValidation = "Failed";
-            comment += $"Scenario Failed premium validation for {roleplayer}. Premuim on frontend does not match one in rate table";
+            comment += $
+            "Scenario Failed premium validation for {roleplayer}. Premuim on frontend does not match one in rate table";
 
         } else {
             premValidation = "Passed";
@@ -939,24 +941,9 @@ public class SalesApp extends TestBase {
 
     }
 
-
-     [TearDown]
-    public void closeBrowser()
-    {
-        base.DisconnectBrowser();
+    @AfterMethod
+    public void teardown() {
+// closes all the browser windows opened by web driver
+        _driver.quit();
     }
-
-
-}
-
-
-
-
-            [TearDown]
-    public void closeBrowser()
-    {
-        base.DisconnectBrowser();
-    }
-
-
 }
