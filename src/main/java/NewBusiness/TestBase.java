@@ -33,7 +33,7 @@ public class TestBase {
 
     public String _screenShotFolder;
 
-    public String _testDataUrl;
+    public String _testDataUrl = "C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData\\NewBusiness\\TestData.xlsx";
     public String _gcode;
     String result_path;
     public void setUp(){
@@ -140,19 +140,24 @@ public class TestBase {
     public void testGetPoliciyHolderDta(){
         //getPolicyHolderDetails("1",false);
     }
-
-    public Dictionary getPolicyData(String scenario_id, Boolean phd)
+    @Test
+    public void testGetData(){
+        Hashtable<String,ArrayList<Dictionary>> dta = getPolicyData("1",false);
+        System.out.println((dta.get("PolicyHolder_Details")));
+    }
+    public Hashtable<String,ArrayList<Dictionary>> getPolicyData(String scenario_id, Boolean phd)
     {
-        Dictionary policyHolderData = new Hashtable();
+        Hashtable<String,ArrayList<Dictionary>> policyHolderData = new Hashtable<String,ArrayList<Dictionary>>();
 
         //Sheets in the test data file that we want to access to extract Policy holder data
         ArrayList<String> sheets = new ArrayList<String>();
-        sheets.add("PolicyHolder_Details");
+
         if(phd)
         {
             sheets.add("Affordability_Check");
             sheets.add("BankDetails");
             sheets.add("PhysicalAddress");
+            sheets.add("PolicyHolder_Details");
         }
         else{
 
@@ -165,7 +170,7 @@ public class TestBase {
         }
 
         try {
-                FileInputStream file = new FileInputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData\\NewBusiness\\TestData.xlsx"));
+                FileInputStream file = new FileInputStream(new File(_testDataUrl));
                 //Create Workbook instance holding reference to .xlsx file
                 XSSFWorkbook workbook = new XSSFWorkbook(file);
                 //Get first/desired sheet from the workbook

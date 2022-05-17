@@ -9,16 +9,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.BeforeSuite;
-import java.util.Random;
+
+import java.util.*;
+
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import jdk.jfr.Timespan;
 import org.openqa.selenium.Alert;
-import java.util.Dictionary;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.ArrayList;
 import org.openqa.selenium.Keys;
 import java.time.LocalDateTime;
 
@@ -33,7 +31,7 @@ public class SalesApp extends TestBase {
         salesAppSiteConnection();
         createTesResultFile();
         Delay(22);
-        PositiveTestProcess();
+        PositiveTestProcess("1");
 
 
         return _driver;
@@ -53,14 +51,14 @@ public class SalesApp extends TestBase {
     }
 
     @Test
-    public final void PositiveTestProcess() throws InterruptedException {
+    public final void PositiveTestProcess(String scenarioId) throws InterruptedException {
 
         var upload_file = "C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\upload";
         Delay(10);
         String results = "", comment = "";
 
         //get policy holder data
-        //String policyHolderData = getPolicyHolderDetails(scenario_ID);
+        Dictionary policyHolderData = (getPolicyData(scenarioId,true)).get("PolicyHolder_Details").get(0);
         _driver.switchTo().activeElement();
         _driver.findElement(By.xpath("//*[@id='___gatsby']"));
         Delay(20);
@@ -70,21 +68,21 @@ public class SalesApp extends TestBase {
         // action.MoveToElement(new_client).Perform()
         Delay(2);
         WebElement town = _driver.findElement(By.name("town"));
-        town.sendKeys("Johannesburg");
+        town.sendKeys(policyHolderData.get("Town").toString());
         Delay(1);
         town.sendKeys(Keys.ARROW_DOWN);
         Delay(1);
         town.sendKeys(Keys.ENTER);
         Delay(4);
         WebElement worksite = _driver.findElement(By.name("worksite"));
-        worksite.sendKeys("Nike");
+        worksite.sendKeys(policyHolderData.get("Worksite").toString());
         Delay(1);
         worksite.sendKeys(Keys.ARROW_DOWN);
         Delay(1);
         worksite.sendKeys(Keys.ENTER);
         Delay(2);
         WebElement employer = _driver.findElement(By.name("employer-name"));
-        employer.sendKeys("Nike");
+        employer.sendKeys(policyHolderData.get("Employment").toString());
         Delay(1);
         employer.sendKeys(Keys.ARROW_DOWN);
         Delay(1);
@@ -102,10 +100,10 @@ public class SalesApp extends TestBase {
         //Personal Details
         Delay(2);
         //firstname
-        _driver.findElement(By.xpath("//*[@id='/name']")).sendKeys("Firstname");
+        _driver.findElement(By.xpath("//*[@id='/name']")).sendKeys(policyHolderData.get("First_name").toString());
         Delay(2);
         //maiden name
-        _driver.findElement(By.xpath("//*[@id='/maiden-surname']")).sendKeys("MaidenSurname");
+        _driver.findElement(By.xpath("//*[@id='/maiden-surname']")).sendKeys(policyHolderData.get("Maiden_Surname").toString());
         Delay(2);
         //Id
         Delay(3);
@@ -133,14 +131,14 @@ public class SalesApp extends TestBase {
         _driver.findElement(By.xpath("//*[@id='/gross-monthly-income']")).sendKeys("50000");
         Delay(2);
         //Select employent type
-        if ("Permanent".equals("Yes")) {
+        if ((policyHolderData.get("Permanent").toString()).equals("Yes")) {
             _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/section/form/div/div[16]/div/label[1]")).click();
         } else {
             _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/section/form/div/div[16]/div/label[2]")).click();
         }
         Delay(2);
         //Salary frequency
-        switch ("Salary_frequency") {
+        switch (policyHolderData.get("Salary_frequency").toString()) {
             case "Weekly":
                 _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/section/form/div/div[17]/div/label[1]")).click();
                 break;
@@ -246,15 +244,18 @@ public class SalesApp extends TestBase {
         Delay(1);
         _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div[1]/a[2]")).click();
 
-        String policyplayers = ("");
+        Hashtable<String,ArrayList<Dictionary>> policyplayers = getPolicyData(scenarioId,false);
         ArrayList<String> keys = new ArrayList<String>();
         keys.add("PolicyHolder_Details");
         keys.add("spouse");
         keys.add("Children");
         keys.add("Parents");
         keys.add("Extended");
+        keys.add("Extended");
 
-        var beneficiaries = "Beneficiaries";
+        //Beneficiaries
+        ArrayList<Dictionary> beneficiaries = policyplayers.get("Beneficiaries");
+
 
         //click tickbox product
         Delay(1);
@@ -276,99 +277,16 @@ public class SalesApp extends TestBase {
         Delay(1);
         _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[2]/div/div[2]/div/div/label[1]")).Click();
         //Add Provided LAs
-        var lifeAsuredCounter = 0;
-        var label = 1;
-        var section = 3;
+        int lifeAsuredCounter = 0;
+        int label = 1;
+        int section = 3;
         WebElement DOB;
         String date_of_birth = "", frontEndPrem = "", frontEndMin = "", frontEndMax = "";
-        Tuple<String, String> validation;
+        ArrayList<String>  validation;
+
 
 
         for (String key : keys) {
-
-            for (String item : [key]) {
-
-                if (item.Count > 0) {
-                    if (key.equals("PolicyHolder_Details")) {
-                        if (item["Covered"].equals("Yes")) {
-
-                            //add main life
-                            Delay(1);
-                            _driver.findElement(By.xpath(String.format("//*[@id='gatsby-focus-wrapper']/article/form/section[%1$s]/div[2]/div[1]/div/label[%2$s]", section, label))).Click();
-                            //Cover Amount
-                            DOB = _driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[3]/div[5]/input", section)));
-                            date_of_birth = DOB.getAttribute("value");
-                            SlideBar(item["Cover_Amount"], lifeAsuredCounter, "Myself");
-                            Delay(2);
-                            frontEndPrem = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/label/h2/strong[2]", section))).getText()).Remove(0, 1).strip();
-                            frontEndMin = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/div[2]/span[1]", section))).getText()).Remove(0, 1).replace(" ", "");
-                            frontEndMax = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/div[2]/span[2]", section))).getText()).Remove(0, 1).replace(" ", "");
-                            validation = RolePlayerValidation(_driver, item["Cover_Amount"], "ML", date_of_birth, frontEndPrem, frontEndMin, frontEndMax);
-                            if (validation.Item1.equals("Failed")) {
-                                return Tuple.Create("Failed", validation.Item2);
-                            }
-                            //ID ,cover
-                            section++;
-                            lifeAsuredCounter++;
-                            break;
-                        }
-                    }
-                    //click Add
-                    Delay(2);
-                    _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/button")).click();
-
-                    //select relationship
-                    Delay(2);
-                    _driver.findElement(By.xpath(String.format("//*[@id='gatsby-focus-wrapper']/article/form/section[%1$s]/div[2]/div[1]/div/label[%2$s]", section, label))).click();
-                    if (key.equals("Extended")) {
-                        //Extended Relationship Type
-
-                        WebElement RelationshipType = _driver.findElement(By.name(String.format("/cover-details[%1$s].relationship-extended-type", lifeAsuredCounter)));
-                        RelationshipType.sendKeys(item["Extended_RelationshipType"]);
-                        RelationshipType.sendKeys(Keys.ArrowDown);
-                        RelationshipType.sendKeys(Keys.Enter);
-                    }
-                    //FirstName
-                    Delay(1);
-                    _driver.findElement(By.name(String.format("/cover-details[%1$s].name", lifeAsuredCounter))).sendKeys(item["First_name"]);
-                    //Surname
-                    Delay(2);
-                    _driver.findElement(By.name(String.format("/cover-details[%1$s].surname", lifeAsuredCounter))).sendKeys(item["Surname"]);
-                    //ID Number
-                    Delay(1);
-                    _driver.findElement(By.name(String.format("/cover-details[%1$s].id-number", lifeAsuredCounter))).sendKeys(item["ID_number"]);
-                    //MaxMin Age validation
-                    Tuple<String, String> ageValidationResults = MaxMinAgeValidation(section);
-                    if (!ageValidationResults.Item1.equals("") && !ageValidationResults.Item2.equals("")) {
-                        return Tuple.Create(ageValidationResults.Item1, ageValidationResults.Item2);
-                    }
-
-
-                    //Cellphone
-                    Delay(2);
-                    _driver.findElement(By.name(String.format("/cover-details[%1$s].contact-number", lifeAsuredCounter))).SendKeys(item["Cellphone"]);
-                    DOB = _driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[3]/div[5]/input", section)));
-                    date_of_birth = DOB.getAttribute("value");
-                    SlideBar(item["Cover_Amount"], lifeAsuredCounter, key);
-                    //
-                    Delay(2);
-                    frontEndPrem = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/label/h2/strong[2]", section))).Text).Remove(0, 1).strip();
-                    frontEndMin = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/div[2]/span[1]", section))).Text).Remove(0, 1).replace(" ", "");
-                    frontEndMax = (_driver.findElement(By.xpath(String.format("/html/body/div[1]/div[1]/article/form/section[%1$s]/div[4]/div[1]/div[2]/span[2]", section))).Text).Remove(0, 1).replace(" ", "");
-                    validation = RolePlayerValidation(_driver, item["Cover_Amount"], key, date_of_birth, frontEndPrem, frontEndMin, frontEndMax);
-                    if (validation.Item1.equals("Failed")) {
-                        return Tuple.Create("Failed", validation.Item2);
-                    }
-
-
-                    section++;
-                    lifeAsuredCounter++;
-                } else {
-                    break;
-                }
-            }
-
-            label++;
 
         }
 
@@ -380,31 +298,31 @@ public class SalesApp extends TestBase {
         _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div[1]/a[2]")).click();
 
 
-        var beneCounter = 0;
+        int beneCounter = 0;
         //payment reciever(Beneficiary)
-        for (var item : beneficiaries) {
+        for (Dictionary item : beneficiaries) {
             //click relationship
             Delay(1);
             _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/div/section/div[3]/div/div[1]/div/label[1]")).click();
 
             //FirstName
             Delay(1);
-            _driver.findElement(By.name(String.format("/funeral-beneficiaries[%1$s].name", beneCounter))).sendKeys(item["First_name"]);
+            _driver.findElement(By.name(String.format("/funeral-beneficiaries[%1$s].name", beneCounter))).sendKeys(item.get("First_name").toString());
             //Surname
             Delay(1);
-            _driver.findElement(By.name(String.format("/funeral-beneficiaries[%1$s].surname", beneCounter))).sendKeys(item["Surname"]);
+            _driver.findElement(By.name(String.format("/funeral-beneficiaries[%1$s].surname", beneCounter))).sendKeys(item.get("Surname").toString());
 
             //ID Number
             Delay(1);
-            _driver.findElement(By.name(String.format("/funeral-beneficiaries[%1$s].id-number", beneCounter))).sendKeys(item["ID_number"]);
+            _driver.findElement(By.name(String.format("/funeral-beneficiaries[%1$s].id-number", beneCounter))).sendKeys(item.get("ID_number").toString());
 
             //Cellphone
             Delay(1);
-            _driver.findElement(By.name(String.format("/funeral-beneficiaries[%1$s].contact-number", beneCounter))).sendKeys(item["Cellphone"]);
+            _driver.findElement(By.name(String.format("/funeral-beneficiaries[%1$s].contact-number", beneCounter))).sendKeys(item.get("Cellphone").toString());
 
             //Percentage
             WebElement sliderbar5 = _driver.findElement(By.className("slider"));
-            int widthslider5 = sliderbar5.Size.Width;
+            int widthslider5 = sliderbar5.getSize().width;
             Delay(1);
             WebElement slider5 = _driver.findElement(By.className("slider"));
             Actions slideraction5 = new Actions(_driver);
@@ -453,7 +371,7 @@ public class SalesApp extends TestBase {
 
         //Account Number
         Delay(1);
-        _driver.findElement(By.name("/account-number")).sendKeys(["Account_Number"]);
+        _driver.findElement(By.name("/account-number")).sendKeys("Account_Number");
 
 
         //Account Type
@@ -464,7 +382,7 @@ public class SalesApp extends TestBase {
         /**debit - order - date / debit - order - date
          */
         Select oSelect = new Select(_driver.findElement(By.name("/debit-order-date")));
-        oSelect.selectByValue(["Debit_Order_Day"]);
+        oSelect.selectByValue("Debit_Order_Day");
 
         //salarypaydate
         Delay(1);
@@ -499,7 +417,7 @@ public class SalesApp extends TestBase {
         //debicheck loading delay
 
         WebElement ElementExists;
-        ElementExists = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
+        ElementExists =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
         ElementExists.click();
         //Impletent implicit wait
         WebDriverWait wait = new WebDriverWait(_driver, Timespan.FromSeconds(160));
@@ -659,17 +577,18 @@ public class SalesApp extends TestBase {
     }
 
 
-    private Tuple<String, String> MaxMinAgeValidation(int section) {
+    private Hashtable<String,String> MaxMinAgeValidation(int section) {
 
         try {
-            String results = "";
+            Hashtable<String,String>  results = new Hashtable<String,String>();
             String validationMsg = _driver.findElement(By.xpath(String.format("//*[@id='gatsby-focus-wrapper']/article/form/section[%1$s]/div[4]/div[1]/label", section))).Text;
 
             switch (validationMsg) {
                 case "Cover is only available for parents from 26 to 85 years of age":
                     TakeScreenshot(_driver, String.format("%1$s\\Failed_Scenarios\\", _screenShotFolder), "ParentAgeValidation");
-                    results = "Failed";
-                    return Tuple.Create(results, validationMsg);
+                    results.put("Results","Failed");
+                    results.put("Comments","");
+                    return results;
 
                 case "Cover is only available for spouses from 18 to 64 years of age":
                     TakeScreenshot(_driver, String.format("%1$s\\Failed_Scenarios\\", _screenShotFolder), "SpouseAgeValidation");
