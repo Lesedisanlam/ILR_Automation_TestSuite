@@ -1,5 +1,10 @@
 package src.main.java.NewBusiness;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -10,6 +15,9 @@ import org.testng.Assert;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.BeforeSuite;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.time.Duration;
 import java.util.*;
 
 import org.openqa.selenium.interactions.Actions;
@@ -25,38 +33,56 @@ import java.time.format.DateTimeFormatter;
 
 
 public class SalesApp extends TestBase {
-
-    @BeforeClass
-    public WebDriver Login() throws InterruptedException {
-        salesAppSiteConnection();
-        createTesResultFile();
-        Delay(22);
-        PositiveTestProcess("1");
-
-
-        return _driver;
-
-
-    }
-
-    public final void RunTest() throws InterruptedException {
-
-        Delay(4);
-        //Click on Menu
-        _driver.findElement(By.xpath("/html/body/div[1]/div[1]/nav/button")).click();
-        Delay(4);
-        //Click on Dashbaord
-        _driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[1]/section[1]/a[1]")).click();
-
-    }
-
     @Test
-    public final void PositiveTestProcess(String scenarioId) throws InterruptedException {
+    public void RunTest() throws InterruptedException {
+        salesAppSiteConnection();
+        //createTesResultFile();
+        Delay(120);
+
+        try {
+            FileInputStream file = new FileInputStream(new File("C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData\\NewBusiness\\TestData.xlsx"));
+            //Create Workbook instance holding reference to .xlsx file
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            //Get first/desired sheet from the workbook
+
+                XSSFSheet sheet = workbook.getSheet("Scenarios");
+                //Iterate through each rows one by one
+                int lastRwNum = sheet.getPhysicalNumberOfRows();
+                for (int i = 1; i < lastRwNum; i++) {
+                    Row rw =  sheet.getRow(1);
+                    String scenario_id;
+                    scenario_id = rw.getCell(0).getStringCellValue();
+                    executeScenario(scenario_id);
+                    Delay(4);
+                    //Click on Menu
+                    _driver.findElement(By.xpath("/html/body/div[1]/div[1]/nav/button")).click();
+                    Delay(4);
+                    //Click on Dashbaord
+                    _driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[1]/section[1]/a[1]")).click();
+
+
+
+                }
+
+            file.close();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    }
+
+
+    public Hashtable<String,String> executeScenario(String scenarioId) throws InterruptedException {
 
         var upload_file = "C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\upload";
         Delay(10);
         String results = "", comment = "";
-
+        Hashtable<String,String> testResults =  new Hashtable<String, String>();
         //get policy holder data
         Dictionary policyHolderData = (getPolicyData(scenarioId,true)).get("PolicyHolder_Details").get(0);
         _driver.switchTo().activeElement();
@@ -275,19 +301,105 @@ public class SalesApp extends TestBase {
 
         //click on 5%
         Delay(1);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[2]/div/div[2]/div/div/label[1]")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section[2]/div/div[2]/div/div/label[1]")).click();
         //Add Provided LAs
         int lifeAsuredCounter = 0;
         int label = 1;
         int section = 3;
         WebElement DOB;
         String date_of_birth = "", frontEndPrem = "", frontEndMin = "", frontEndMax = "";
-        ArrayList<String>  validation;
+        Hashtable<String, String> validation;
 
 
 
         for (String key : keys) {
+            for (Dictionary item:policyplayers.get(key))
+            {
+                if (item.size() > 0)
+                {
+                    if (key == "PolicyHolder_Details")
+                    {
+                        if(item.get("Covered").equals("Yes"))
+                        {
 
+                            //add main life
+                            Delay(1);
+                            _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section["+section+"]/div[2]/div[1]/div/label[{label}]")).click();
+                            //Cover Amount
+                            DOB = _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section["+section+"]/div[3]/div[5]/input"));
+                            date_of_birth = DOB.getAttribute("value");
+                            SlideBar(item.get("Cover_Amount").toString(), lifeAsuredCounter, "Myself");
+                            Delay(2);
+                            frontEndPrem = (_driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section["+section+"]/div[4]/div[1]/label/h2/strong[2]")).getText()).replace("R","").trim();
+                            frontEndMin = (_driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section["+section+"]/div[4]/div[1]/div[2]/span[1]")).getText()).replace("R","").trim();
+                            frontEndMax = (_driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section[{section}]/div[4]/div[1]/div[2]/span[2]")).getText()).replace(" ", "");
+                            validation = RolePlayerValidation(_driver, item.get("Cover").toString(), "ML", date_of_birth, frontEndPrem , frontEndMin, frontEndMax);
+                            if (validation.get("Results").equals("Failed"))
+                            {
+                                return validation;
+                            }
+                            //ID ,cover
+                            section++;
+                            lifeAsuredCounter++;
+                            break;
+                        }
+                    }
+                    //click Add
+                    Delay(2);
+                    _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/button")).click();
+
+                    //select relationship
+                    Delay(2);
+                    _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/form/section["+section+"]/div[2]/div[1]/div/label[{label}]")).click();
+                    if (key == "Extended")
+                    {
+                        //Extended Relationship Type
+
+                        WebElement RelationshipType = _driver.findElement(By.name("/cover-details["+lifeAsuredCounter+"].relationship-extended-type"));
+                        RelationshipType.sendKeys(item.get("Extended_RelationshipType").toString());
+                        RelationshipType.sendKeys(Keys.ARROW_DOWN);
+                        RelationshipType.sendKeys(Keys.ENTER);
+                    }
+                    //FirstName
+                    Delay(1);
+                    _driver.findElement(By.name("/cover-details["+lifeAsuredCounter+"].name")).sendKeys(item.get("First_name").toString());
+                    //Surname
+                    Delay(2);
+                    _driver.findElement(By.name("/cover-details["+lifeAsuredCounter+"].surname")).sendKeys(item.get("Surname").toString());
+                    //ID Number
+                    Delay(1);
+                    _driver.findElement(By.name("/cover-details["+lifeAsuredCounter+"].id-number")).sendKeys(item.get("ID_number").toString());
+                    //MaxMin Age validation
+                    Hashtable<String, String> ageValidationResults = MaxMinAgeValidation(section);
+                    if(ageValidationResults.get("Results")!= "" && ageValidationResults.get("Comment") !="")
+                    {
+                        return  ageValidationResults;
+                    }
+
+                    //Cellphone
+                    Delay(2);
+                    _driver.findElement(By.name("/cover-details["+lifeAsuredCounter+"].contact-number")).sendKeys(item.get("Cellphone").toString());
+                    DOB = _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section["+section+"]/div[3]/div[5]/input"));
+                    date_of_birth = DOB.getAttribute("value");
+                    SlideBar( item.get("Cover_Amount").toString(), lifeAsuredCounter, key);
+                    //
+                    Delay(2);
+                    frontEndPrem = (_driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section[{section}]/div[4]/div[1]/label/h2/strong[2]")).getText()).replace("R","").replace(" ","").trim();
+                    frontEndMin = (_driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section[{section}]/div[4]/div[1]/div[2]/span[1]")).getText()).replace("R","").replace(" ","").trim();
+                    frontEndMax = (_driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section[{section}]/div[4]/div[1]/div[2]/span[2]")).getText()).replace("R","").replace(" ","").trim();
+                    validation = RolePlayerValidation(_driver, item.get("Cover_Amount").toString(), key, date_of_birth, frontEndPrem, frontEndMin, frontEndMax);
+                    if (validation.get("Results") == "Failed")
+                    {
+                        return validation;
+                    }
+                    section++;
+                    lifeAsuredCounter++;
+                }
+                else{
+                    break;
+                }
+            }
+            label++;
         }
 
 
@@ -349,7 +461,7 @@ public class SalesApp extends TestBase {
 
         //Click No
         Delay(3);
-        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/section/div[2]/form/div[2]/div/label[2]")).Click();
+        _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/section/div[2]/form/div[2]/div/label[2]")).click();
 
         //go to payment
         Delay(1);
@@ -386,7 +498,7 @@ public class SalesApp extends TestBase {
 
         //salarypaydate
         Delay(1);
-        _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section[1]/div[2]/div[6]/input")).sendKeys(["Salary_Date"]);
+        _driver.findElement(By.xpath("/html/body/div[1]/div[1]/article/form/section[1]/div[2]/div[6]/input")).sendKeys("Salary_Date");
 
         //click tickbox
         Delay(1);
@@ -416,30 +528,27 @@ public class SalesApp extends TestBase {
 
         //debicheck loading delay
 
-        WebElement ElementExists;
-        ElementExists =  wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
-        ElementExists.click();
-        //Impletent implicit wait
-        WebDriverWait wait = new WebDriverWait(_driver, Timespan.FromSeconds(160));
+
+        WebDriverWait wait = new WebDriverWait(_driver, Duration.ofSeconds(160));
+
+
+
         try {
 
-            wait.Until(ExpectedConditions.ElementExists(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
-        } catch
+            WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
 
-        {
+        } catch(Exception exception) {
             var tries = 2;
             for (int i = 0; i < tries; i++) {
-                WebDriverWait ElementExists = new WebDriverWait(_driver, Timespan.FromSeconds(160));
-                WebElement ElementExists;
-                ElementExists = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
-                ElementExists.click();
+
+                WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='gatsby-focus-wrapper']/div[2]/div/a[2]")));
+                element.click();
             }
 
 
         }
 
-
-        var Errormessage = _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/section/div[2]/div[2]/div[2]/p")).getText();
+        String Errormessage = _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/article/section/div[2]/div[2]/div[2]/p")).getText();
 
         if (Errormessage == "DebiCheck accepted by customer") {
 
@@ -453,8 +562,9 @@ public class SalesApp extends TestBase {
 
             comment = "Debicheck Failed";
             results = "Failed";
-
-            return Tuple.Create(results, comment);
+            testResults.put("Results",results);
+            testResults.put("Comment",comment);
+            return testResults;
 
 
         }
@@ -551,7 +661,7 @@ public class SalesApp extends TestBase {
         Delay(1);
         _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/nav/div/div/button")).click();
 
-        var appStatus = _driver.findElement(By.cssSelector("#gatsby-focus-wrapper > article > div.card.tab-container > div.tab-body > section > section:nth-child(1) > div > div.final-block > span")).Text;
+        var appStatus = _driver.findElement(By.cssSelector("#gatsby-focus-wrapper > article > div.card.tab-container > div.tab-body > section > section:nth-child(1) > div > div.final-block > span")).getText();
 
 
         for (int i = 0; i < 5; i++) {
@@ -559,7 +669,7 @@ public class SalesApp extends TestBase {
             _driver.findElement(By.xpath("//*[@id='gatsby-focus-wrapper']/nav/div/div/button")).click();
             Delay(10);
 
-            appStatus = _driver.findElement(By.cssSelector("#gatsby-focus-wrapper > article > div.card.tab-container > div.tab-body > section > section:nth-child(1) > div > div.final-block > span")).Text;
+            appStatus = _driver.findElement(By.cssSelector("#gatsby-focus-wrapper > article > div.card.tab-container > div.tab-body > section > section:nth-child(1) > div > div.final-block > span")).getText();
             if (appStatus.equals("Uploaded")) {
                 break;
             }
@@ -571,17 +681,18 @@ public class SalesApp extends TestBase {
             results = "Failed";
             comment = "Application was not succesfull";
         }
+        testResults.put("Results",results);
+        testResults.put("Comment",comment);
 
-
-        return Tuple.Create(results, comment);
+        return testResults;
     }
 
 
     private Hashtable<String,String> MaxMinAgeValidation(int section) {
-
+        Hashtable<String,String>  results = new Hashtable<String,String>();
         try {
-            Hashtable<String,String>  results = new Hashtable<String,String>();
-            String validationMsg = _driver.findElement(By.xpath(String.format("//*[@id='gatsby-focus-wrapper']/article/form/section[%1$s]/div[4]/div[1]/label", section))).Text;
+
+            String validationMsg = _driver.findElement(By.xpath(String.format("//*[@id='gatsby-focus-wrapper']/article/form/section[%1$s]/div[4]/div[1]/label", section))).getText();
 
             switch (validationMsg) {
                 case "Cover is only available for parents from 26 to 85 years of age":
@@ -592,26 +703,31 @@ public class SalesApp extends TestBase {
 
                 case "Cover is only available for spouses from 18 to 64 years of age":
                     TakeScreenshot(_driver, String.format("%1$s\\Failed_Scenarios\\", _screenShotFolder), "SpouseAgeValidation");
-                    results = "Failed";
-                    return Tuple.Create(results, validationMsg);
+                    results.put("Results","Failed");
+                    results.put("Comment",validationMsg);
+                    return results;
 
 
                 case "Cover is only available for persons up to 85 years of age":
                     TakeScreenshot(_driver, String.format("%1$s\\Failed_Scenarios\\", _screenShotFolder), "ExtendedAgeValidation");
-                    results = "Failed";
-                    return Tuple.Create(results, validationMsg);
+                    results.put("Results","Failed");
+                    results.put("Comment",validationMsg);
+                    return results;
                 case "Cover is only available for children up to 25 years of age":
                     TakeScreenshot(_driver, String.format("%1$s\\Failed_Scenarios\\", _screenShotFolder), "ChildAgeValidation");
-                    results = "Failed";
-                    return Tuple.Create(results, validationMsg);
+                    results.put("Results","Failed");
+                    results.put("Comment",validationMsg);
+                    return results;
             }
         } catch (java.lang.Exception e) {
-
-            return Tuple.Create("", "");
+            results.put("Results","");
+            results.put("Comment","");
+            return results;
 
         }
-
-        return Tuple.Create("", "");
+        results.put("Results","");
+        results.put("Comment","");
+        return results;
 
     }
 
@@ -660,7 +776,7 @@ public class SalesApp extends TestBase {
 
             Delay(1);
 
-            WebElement slider = _driver.findElement(By.xpath($"//*[@id='/cover-details[{counts}].cover-amount']"));
+            WebElement slider = _driver.findElement(By.xpath("//*[@id='/cover-details["+counts+"].cover-amount']"));
 
             Actions slideraction = new Actions(_driver);
             slideraction.clickAndHold(slider);
@@ -713,7 +829,7 @@ public class SalesApp extends TestBase {
             int widthslider = sliderbar.getSize().width;
 
             Delay(1);
-            WebElement slider = _driver.findElement(By.xpath($"//*[@id='/cover-details[{counts}].cover-amount']"));
+            WebElement slider = _driver.findElement(By.xpath("//*[@id='/cover-details"+counts+".cover-amount']"));
             Actions slideraction = new Actions(_driver);
             slideraction.clickAndHold(slider);
             Delay(1);
@@ -799,83 +915,103 @@ public class SalesApp extends TestBase {
 
     }
 
-    public Tuple<string, string> RolePlayerValidation(WebDriver _driver, String coverAmount, String roleplayer, string dob, string expectedPrem, string frondEndMin, string frondEndMax) {
+    public Hashtable<String, String> RolePlayerValidation(WebDriver _driver, String coverAmount, String roleplayer, String dob, String expectedPrem, String frondEndMin, String frondEndMax) {
 
+
+        Hashtable<String,String> results = new Hashtable<String, String>();
         //calulate age
         String premValidation = "", coverAmountsValidation = "", comment = "", age;
-        var birthYear = dob.Split("-")[0];
-        var birthMonth = dob.Split("-")[1];
-        var birthDay = dob.Split("-")[2];
+        String birthYear = dob.split("-")[0];
+        String birthMonth = dob.split("-")[1];
+        String birthDay = dob.split("-")[2];
 
-        age = (DateTime.Now.Year - Convert.ToInt32(birthYear)).ToString();
+        age = (LocalDateTime.now().getYear() - Integer.parseInt(birthYear))+"";
 
-        if (Convert.ToInt32(birthMonth) > DateTime.Now.Month || (Convert.ToInt32(birthMonth) == DateTime.Now.Month && Convert.ToInt32(birthDay) > DateTime.Now.Day)) {
-            age = (Convert.ToInt32(age) - 1).ToString();
+        if (Integer.parseInt(birthMonth) > LocalDateTime.now().getMonthValue() || (Integer.parseInt(birthMonth) == LocalDateTime.now().getMonthValue() && Integer.parseInt(birthDay) > LocalDateTime.now().getDayOfMonth())) {
+            age = (Integer.parseInt(age) - 1)+"";
         }
 
-
-        Delay(2);
-        var premiumFromRate = getPremuimFromRateTable(age, "ML", coverAmount, "Serenity_Funeral_Core");
+        var premiumFromRate = getPremiumFromRateTable(Double.parseDouble(age), "ML", coverAmount, "Serenity_Funeral_Core");
 
 
         //Validate Cover Limits
+        try {
 
-        //Check if age falls between ages from spreadsheet
-        if (Convert.ToInt32(age) >= Convert.ToInt32(minAge) && Convert.ToInt32(age) <= Convert.ToInt32(maxAge)) {
-            //check the amount is between
-            if (minCover == frondEndMin && maxCover == frondEndMax) {
-                coverAmountsValidation = "Passed";
-            } else {
-                coverAmountsValidation = "Failed";
-                comment += $"Scenario Failed - max and min cover amounts validation erorr for {roleplayer} age {age} ";
+            FileInputStream inputxls = new FileInputStream("");
+            XSSFWorkbook testDataSheet = new XSSFWorkbook(inputxls);
+            XSSFSheet testDataworksheet = testDataSheet.getSheet("Limits");
+
+
+            //looop through the rows
+            for (int i = 0; i <= testDataworksheet.getLastRowNum(); i++) {
+                Row rw = testDataworksheet.getRow(i);
+                String rolePl = rw.getCell(4).getStringCellValue();
+                String product = rw.getCell(5).getStringCellValue();
+
+                if(rolePl == roleplayer && product == "Serenity_Funeral_Core")
+                {
+                    String minAge = rw.getCell(0).getStringCellValue();
+                    String maxAge = rw.getCell(1).getStringCellValue();
+                    String minCover = rw.getCell(2).getStringCellValue();
+                    String maxCover = rw.getCell(3).getStringCellValue();
+
+                    //Check if age falls between ages from spreadsheet
+                    if (Integer.parseInt(age) >= Integer.parseInt(minAge) && Integer.parseInt(age) <= Integer.parseInt(maxAge))
+                    {
+                        //check the amount is between
+                        if(minCover == frondEndMin && maxCover == frondEndMax)
+                        {
+                            coverAmountsValidation = "Passed";
+                        }
+                        else
+                        {
+                            coverAmountsValidation = "Failed";
+                            comment += "Scenario Failed - max and min cover amounts validation erorr for "+roleplayer+ "age" +" age ";
+                        }
+
+                    }
+
+
+                }
             }
+            inputxls.close();
+
+        } catch (Exception ex) {
 
         }
 
-
-        if (premiumFromRate != Convert.ToDecimal(expectedPrem)) {
+        if (premiumFromRate != Double.parseDouble(expectedPrem)) {
             premValidation = "Failed";
-            comment += $"Scenario Failed premium validation for {roleplayer}. Premuim on frontend does not match one in rate table";
+            comment += "Scenario Failed premium validation for"+ roleplayer +" Premuim on frontend does not match one in rate table";
 
         } else {
             premValidation = "Passed";
         }
 
         if (premValidation == "Passed" && coverAmountsValidation == "Passed") {
-            return Tuple.Create("Passed", "");
+            results.put("Results","Passed");
+            results.put("Comment","");
+
+            return results;
         } else {
 
-            TakeScreenshot(_driver, $"C:/Users/G992107/Documents/GitHub/ILR_TestSuite/ILR_TestSuite/New Business/{DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day}​/validations/", $"{roleplayer}_premiumValidation");
-            return Tuple.Create("Failed", comment);
+            TakeScreenshot(_driver, "C:/Users/G992107/Documents/GitHub/ILR_TestSuite/ILR_TestSuite/New Business/"+LocalDateTime.now().getYear() + LocalDateTime.now().getMonth() + LocalDateTime.now().getDayOfMonth() +"/validations/", roleplayer+"_premiumValidation");
+            results.put("Results","Failed");
+            results.put("Comment","");
 
+            return results;
 
         }
     }
 
-    public final void Delay(int delaySeconds) throws InterruptedException {
+    public void Delay(int delaySeconds) throws InterruptedException {
 
         Thread.sleep(delaySeconds * 1000);
 
     }
 
 
-     [TearDown]
-    public void closeBrowser()
-    {
-        base.DisconnectBrowser();
-    }
 
-
-}
-
-
-
-
-            [TearDown]
-    public void closeBrowser()
-    {
-        base.DisconnectBrowser();
-    }
 
 
 }

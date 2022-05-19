@@ -14,6 +14,9 @@ import org.testng.annotations.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,18 +36,58 @@ public class TestBase {
 
     public String _screenShotFolder;
 
-    public String _testDataUrl = "C:\\Users\\G992107\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData\\NewBusiness\\TestData.xlsx";
+    public String _testDataUrl = "C:\\Users\\G992127\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData\\NewBusiness\\TestData.xlsx";
     public String _gcode;
     String result_path;
     public void setUp(){
         System.setProperty("webdriver.chrome.driver", "C:\\Code\\bin\\chromeDriver.exe");
-        _gcode = "G992107";
+        _gcode = "G992127";
         _testDataUrl = "C:\\Users\\"+_gcode+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestData\\NewBusiness\\TestData.xlsx";
         _screenShotFolder = "C:\\Users\\"+_gcode+"\\Documents\\GitHub\\ILR_Automation_TestSuite\\TestResults\\NewBusiness\\Failed_Scenarios\\" +screenShotDailyFolderName() +"\\";
         File theDir = new File(_screenShotFolder);
         if (!theDir.exists()){
             theDir.mkdirs();
         }
+    }
+
+    public void TakeScreenshot(WebDriver driver, String filePath, String fileName) {
+
+        //check if dir exists
+        Path tempDirectory = null;
+        try {
+            tempDirectory = Files.createTempDirectory(filePath);
+            if (!Files.exists(tempDirectory)) {
+                File file = new File(filePath);
+                //Creating the directory
+                file.mkdir();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        TakesScreenshot scrShot = ((TakesScreenshot) driver);
+        File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
+        //Move image file to new destination
+        fileName = fileName + screenShotTime() + ".png";
+
+
+        File DestFile = new File(filePath + fileName);
+
+        //Copy file at destination
+
+        try {
+            FileUtils.copyFile(SrcFile, DestFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private String screenShotTime() {
+
+        int hour = LocalDateTime.now().getHour();
+        int min = LocalDateTime.now().getMinute();
+        return hour + "_" + min;
+
     }
 
     private String screenShotDailyFolderName()
@@ -86,9 +129,9 @@ public class TestBase {
         _driver.get("https://uat-fe.safricansalesapp.net/advisor/dashboard/");
         try
         {
-            _salesAppUserName = "G992092";//TODO add your user name and password
-            _salesAppPassword = "SCHggy024588";
-            _salesAppPin = "880808";
+            _salesAppUserName = "G992127";//TODO add your user name and password
+            _salesAppPassword = "P@$$word47";
+            _salesAppPin = "119547";
             TimeUnit.SECONDS.sleep(2);
             _driver.manage().window().maximize();
             TimeUnit.SECONDS.sleep(2);
@@ -115,8 +158,7 @@ public class TestBase {
             TimeUnit.SECONDS.sleep(3);
             //_driver.SwitchTo().DefaultContent();
 
-            TimeUnit.SECONDS.sleep(10);
-
+            TimeUnit.SECONDS.sleep(30);
             //create pin
             var pin1 = _driver.findElement(By.name("pin"));
             pin1.sendKeys(_salesAppPin);
@@ -140,7 +182,7 @@ public class TestBase {
     public void testGetPoliciyHolderDta(){
         //getPolicyHolderDetails("1",false);
     }
-    @Test
+
     public void testGetData(){
         Hashtable<String,ArrayList<Dictionary>> dta = getPolicyData("1",false);
         System.out.println((dta.get("PolicyHolder_Details")));
@@ -151,13 +193,13 @@ public class TestBase {
 
         //Sheets in the test data file that we want to access to extract Policy holder data
         ArrayList<String> sheets = new ArrayList<String>();
+        sheets.add("PolicyHolder_Details");
 
         if(phd)
         {
             sheets.add("Affordability_Check");
             sheets.add("BankDetails");
             sheets.add("PhysicalAddress");
-            sheets.add("PolicyHolder_Details");
         }
         else{
 
